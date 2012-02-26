@@ -32,6 +32,7 @@ var express = require('express');
 var path = require('path');
 var minify = require('./utils/Minify');
 var formidable = require('formidable');
+var authHandler;
 var apiHandler;
 var exportHandler;
 var importHandler;
@@ -112,6 +113,7 @@ async.waterfall([
     });
 
     //load modules that needs a initalized db
+    authHandler = require('./handler/AuthHandler')
     readOnlyManager = require("./db/ReadOnlyManager");
     exporthtml = require("./utils/ExportHtml");
     exportHandler = require('./handler/ExportHandler');
@@ -132,7 +134,10 @@ async.waterfall([
       // Not installing the log4js connect logger when the log level has a higher severity than INFO since it would not log at that level anyway.
       if (!(settings.loglevel === "WARN" || settings.loglevel == "ERROR"))
         app.use(log4js.connectLogger(httpLogger, { level: log4js.levels.INFO, format: ':status, :method :url'}));
+      
       app.use(express.cookieParser());
+      app.use(express.session({ secret: 'sciflowwriter super secret string'}));
+      app.use(authHandler.middleware());
     });
     
     app.error(function(err, req, res, next){
@@ -401,6 +406,9 @@ async.waterfall([
         }
       });
     });
+
+    // add everyauth express helper
+    authHandler.helpExpress(app);
     
     //let the server listen
     app.listen(settings.port, settings.ip);
