@@ -131,6 +131,29 @@ exports.createAuthor = function(name, callback)
 }
 
 /**
+ * Internal function that creates the database entry for an author 
+ * @param {String} authorID The ID of the author 
+ * @param {String} name The name of the author 
+ */
+exports.createAuthorWithID = function(authorID, name, callback)
+{
+  //create the new author name
+  var author = "a." + authorID;
+
+  // first check if the autor exists
+  exports.doesAuthorExists(author, function(err, result) {
+    if(!result) {
+      //create the globalAuthors db entry
+      var authorObj = {"colorId" : Math.floor(Math.random()*32), "name": name, "timestamp": new Date().getTime()};
+              
+      //set the global author db entry
+      db.set("globalAuthor:" + author, authorObj);
+    }
+    callback(null, {authorID: author});
+  });
+}
+
+/**
  * Returns the Author Obj of the author
  * @param {String} author The id of the author
  * @param {Function} callback callback(err, authorObj)
