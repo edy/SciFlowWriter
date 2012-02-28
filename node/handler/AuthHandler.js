@@ -1,5 +1,8 @@
 var db = require('../db/DB');
 var everyauth = module.exports = require('everyauth');
+var CommonCode = require('../utils/common_code');
+var randomString = CommonCode.require('/pad_utils').randomString;
+var async = require('async');
 
 // No timeout
 everyauth.everymodule.moduleTimeout(-1);
@@ -8,8 +11,9 @@ everyauth.debug = true;
 
 // called on every http request
 everyauth.everymodule.findUserById( function (userID, callback) {
-	db.db.get("user:" + userID, function (err, user) {
-		callback(null, user);
+	console.log('findUserById');
+	require("../db/AuthorManager").getAuthor(userID, function(err, author){
+		callback(null, author);
 	});
 });
 
@@ -20,48 +24,71 @@ var groupID;
 everyauth.twitter
 	.consumerKey('QZYOC1GTGOElxST7bIwYLg')
 	.consumerSecret('VeVauPHGfJqeGgOhpeiYINyVEeJEygug1aPMZpDhdM')
-	.findOrCreateUser( function (sess, accessToken, accessSecret, twitUser) {
-		var promise = this.Promise(); // async "return" for everyauth
-		var userID = "twitter" + twitUser.id;
+	.findOrCreateUser( function (sess, accessToken, accessSecret, twitUser, reqres) {
+		console.log('findOrCreateUser');
+		
+		var token;
 
-		// load user from database
-		db.db.get('user:'+userID, function (err, user) {
-			
-			// user does not exist. create a new database entry
-			if(user === undefined) {
-				console.log('user does not exist. create a new database entry');
+		if (reqres.req.cookies && reqres.req.cookies.token) {
+			token = reqres.req.cookies.token;
+		}
 
-				user = {
-					'id' : userID, // Ohne user.id funktionierts nicht
-					'user_id' : twitUser.id,
-					'name' : twitUser.name,
-					'screen_name': twitUser.screen_name,
-					'image' : twitUser.profile_image_url,
-					'url' : twitUser.url,
-					'accessToken' : accessToken,
-					'accessSecret' : accessSecret
-				};
-				
-				db.db.set('user:'+userID, user);
-			}
-			
-			require('async').parallel({
-				// create author
-				author: function(callback) {
-					require("../db/AuthorManager").createAuthorWithID(userID, user.name, callback);
-				},
-				// create group
-				group: function(callback) {
-					require("../db/GroupManager").createGroup(callback);
-				}
-			}, function(err, result) {
-				groupID = result.group.groupID;
-				// Session für den eingeloggten benutzer erstellen
-				require('../db/SessionManager').createSession(result.group.groupID, result.author.authorID, (new Date()).getTime() + 360000, function (err, result) {
-					sessionID = result.sessionID;
-					promise.fulfill(user);
+		// create new token of it not exists
+		if (!token) {
+			token = 't.' + randomString();
+			reqres.res.cookie('token', token, {path: '/'});
+		}
+
+		// load author
+		var promise = this.Promise();
+		async.waterfall([
+			// first get author from token
+			function(callback) {
+				require("../db/AuthorManager").getAuthor4Token(token, function(err, author){
+					callback(null, author);
 				});
-			});
+			},
+			// load author object
+			function(authorID, callback) {
+				require("../db/AuthorManager").getAuthor(authorID, function(err, author){
+					callback(null, authorID, author);
+				});
+			},
+			// generate auth object if necessary
+			function(authorID, author, callback) {
+				if (!author.id) {
+					author.id = authorID;
+					author.name = twitUser.name;
+					author.auth = {
+						'user_id' : twitUser.id,
+						'screen_name': twitUser.screen_name,
+						'image' : twitUser.profile_image_url,
+						'url' : twitUser.url,
+						'accessToken' : accessToken,
+						'accessSecret' : accessSecret
+					};
+
+					db.db.set("globalAuthor:" + authorID, author);
+				}
+
+				callback(null, author);
+			},
+			// create a group
+			function(author, callback) {
+				require("../db/GroupManager").createGroup(function(err, group){
+					groupID = group.groupID;
+					callback(null, author, groupID);
+				});
+			},
+			// create a user session for the group
+			function(author, groupID, callback) {
+				require('../db/SessionManager').createSession(groupID, author.id, (new Date()).getTime() + 3600000, function (err, result) {
+					sessionID = result.sessionID;
+					callback(null, author);
+				});
+			}
+		], function(err, result) {
+			promise.fulfill(result);
 		});
 
 		return promise;
