@@ -34,6 +34,7 @@ var minify = require('./utils/Minify');
 var CachingMiddleware = require('./utils/caching_middleware');
 var Yajsml = require('yajsml');
 var formidable = require('formidable');
+var DirtyStore = require('./db/DirtyStore');
 var authHandler;
 var apiHandler;
 var exportHandler;
@@ -137,7 +138,10 @@ async.waterfall([
         app.use(log4js.connectLogger(httpLogger, { level: log4js.levels.INFO, format: ':status, :method :url'}));
       
       app.use(express.cookieParser());
-      app.use(express.session({ secret: 'sciflowwriter super secret string'}));
+      app.use(express.session({
+        secret: 'sciflowwriter super secret string',
+        store: new DirtyStore()
+      }));
       app.use(authHandler.middleware());
     });
     
