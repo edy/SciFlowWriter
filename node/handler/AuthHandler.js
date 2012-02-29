@@ -17,6 +17,9 @@ everyauth.everymodule.findUserById( function (userID, callback) {
 	});
 });
 
+everyauth.everymodule.logoutPath('/logout');
+everyauth.everymodule.logoutRedirectPath('/login');
+
 var sessionID;
 var groupID;
 

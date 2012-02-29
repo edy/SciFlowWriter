@@ -143,6 +143,33 @@ async.waterfall([
         store: new DirtyStore()
       }));
       app.use(authHandler.middleware());
+
+      // check if user is logged in
+      app.use(function(req, res, next) {
+        var loggedIn = req.user;
+        var allowedPaths = ['\/login', '\/static/.*'];
+        var isAllowedPath = false;
+
+        if (!loggedIn) {
+          allowedPaths.every(function(path){
+            if (req.url.match('^'+path+'$')) {
+              isAllowedPath = true;
+              return false;
+            }
+
+            return true;
+          });
+
+          if (!isAllowedPath) {
+            // redirect
+            res.redirect('/login', 302);
+          } else {
+            next();
+          }
+        } else {
+          next();
+        }
+      });
     });
     
     app.error(function(err, req, res, next){
@@ -211,6 +238,16 @@ async.waterfall([
         res.send('Authentication required', 401);
       }
     }
+
+    // serve the login page
+    app.get('/login', function(req, res) {
+      if (req.user) {
+        res.send('you are logged in');
+      } else {
+        var filePath = path.normalize(__dirname + "/../static/login.html");
+        res.sendfile(filePath, { maxAge: exports.maxAge });
+      }
+    });
     
     //serve read only pad
     app.get('/ro/:id', function(req, res)
