@@ -1,4 +1,4 @@
-var db = require('../db/DB');
+var db = require('../db/DB').db;
 var everyauth = module.exports = require('everyauth');
 var CommonCode = require('../utils/common_code');
 var randomString = CommonCode.require('/pad_utils').randomString;
@@ -71,7 +71,7 @@ everyauth.twitter
 						'accessSecret' : accessSecret
 					};
 
-					db.db.set("globalAuthor:" + authorID, author);
+					db.set("globalAuthor:" + authorID, author);
 				}
 
 				callback(null, author);
