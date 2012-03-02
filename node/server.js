@@ -147,7 +147,7 @@ async.waterfall([
       // check if user is logged in
       app.use(function(req, res, next) {
         var loggedIn = req.user;
-        var allowedPaths = ['\/login', '\/static/.*'];
+        var allowedPaths = ['\/favicon.ico', '\/login', '\/static\/.*', '\/minified\/.*'];
         var isAllowedPath = false;
 
         if (!loggedIn) {
