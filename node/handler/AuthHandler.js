@@ -36,7 +36,7 @@ everyauth.twitter
 			token = reqres.req.cookies.token;
 		}
 
-		// create new token of it not exists
+		// create new token if it not exists
 		if (!token) {
 			token = 't.' + randomString();
 			reqres.res.cookie('token', token, {path: '/'});
