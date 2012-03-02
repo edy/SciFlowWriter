@@ -149,24 +149,29 @@ async.waterfall([
         var loggedIn = req.user;
         var allowedPaths = ['\/favicon.ico', '\/login', '\/static\/.*', '\/minified\/.*'];
         var isAllowedPath = false;
-
-        if (!loggedIn) {
-          allowedPaths.every(function(path){
-            if (req.url.match('^'+path+'$')) {
-              isAllowedPath = true;
-              return false;
-            }
-
-            return true;
-          });
-
-          if (!isAllowedPath) {
-            // redirect
-            res.redirect('/login', 302);
-          } else {
-            next();
+        console.log('URL:', req.url);
+        if (loggedIn) {
+          console.log('logged in');
+          next();
+          return;
+        }
+        
+        allowedPaths.every(function(path){
+          if (req.url.match('^'+path+'$')) {
+            isAllowedPath = true;
+            return false;
           }
+
+          return true;
+        });
+
+        if (!isAllowedPath) {
+          console.log('not allowed path');
+          // redirect
+          res.redirect('/login', 302);
+          res.end();
         } else {
+          console.log('allowed path');
           next();
         }
       });
