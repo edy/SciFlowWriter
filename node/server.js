@@ -145,36 +145,7 @@ async.waterfall([
       app.use(authHandler.middleware());
 
       // check if user is logged in
-      app.use(function(req, res, next) {
-        var loggedIn = req.user;
-        var allowedPaths = ['\/favicon.ico', '\/login', '\/static\/.*', '\/minified\/.*'];
-        var isAllowedPath = false;
-        console.log('URL:', req.url);
-        if (loggedIn) {
-          console.log('logged in');
-          next();
-          return;
-        }
-        
-        allowedPaths.every(function(path){
-          if (req.url.match('^'+path+'$')) {
-            isAllowedPath = true;
-            return false;
-          }
-
-          return true;
-        });
-
-        if (!isAllowedPath) {
-          console.log('not allowed path');
-          // redirect
-          res.redirect('/login', 302);
-          res.end();
-        } else {
-          console.log('allowed path');
-          next();
-        }
-      });
+      app.use(authHandler.loginRedirect);
     });
     
     app.error(function(err, req, res, next){

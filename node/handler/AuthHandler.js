@@ -110,3 +110,51 @@ everyauth.twitter
 			res.redirect(p);
 		});
 	});
+
+// checks if the user is logged in
+everyauth.isLoggedIn = function (req) {
+	return typeof req.user !== 'undefined'
+};
+
+// checks if requested url is in allowed paths
+everyauth.isAllowedPath = function (url) {
+	var isAllowedPath = false;
+
+	// regex paths
+	var allowedPaths = [
+		'\/favicon.ico',
+		'\/login',
+		'\/static\/.*',
+		'\/minified\/.*'
+	];
+
+	allowedPaths.every(function(path){
+		if (url.match('^'+path+'$')) {
+			isAllowedPath = true;
+			return false;
+		}
+
+		return true;
+	});
+
+	return isAllowedPath;
+};
+
+// express middleware to redirect not logged in users
+everyauth.loginRedirect = function (req, res, next) {
+	console.log('URL:', req.url);
+	if (everyauth.isLoggedIn(req)) {
+	  console.log('logged in');
+	  next();
+	  return;
+	}
+	
+	if (!everyauth.isAllowedPath(req.url)) {
+		console.log('not allowed path');
+		res.redirect('/login', 302);
+	  	res.end();
+	} else {
+		console.log('allowed path');
+		next();
+	}
+}
