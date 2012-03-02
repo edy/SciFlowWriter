@@ -27,6 +27,10 @@ var groupID;
 everyauth.twitter
 	.consumerKey('QZYOC1GTGOElxST7bIwYLg')
 	.consumerSecret('VeVauPHGfJqeGgOhpeiYINyVEeJEygug1aPMZpDhdM')
+	.handleAuthCallbackError( function (req, res) {
+		console.log('handleAuthCallbackError');
+		res.send('access denied');
+	})
 	.findOrCreateUser( function (sess, accessToken, accessSecret, twitUser, reqres) {
 		console.log('findOrCreateUser');
 		
