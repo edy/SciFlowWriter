@@ -21,7 +21,6 @@ everyauth.everymodule.logoutPath('/logout');
 everyauth.everymodule.logoutRedirectPath('/login');
 
 var sessionID;
-var groupID;
 
 // twitter OAuth
 everyauth.twitter
@@ -82,14 +81,19 @@ everyauth.twitter
 			},
 			// create a group
 			function(author, callback) {
-				require("../db/GroupManager").createGroup(function(err, group){
-					groupID = group.groupID;
-					callback(null, author, groupID);
-				});
+				if (!author.groupID) {
+					require("../db/GroupManager").createGroup(function(err, group){
+						author.groupID = group.groupID
+						db.set("globalAuthor:" + author.id, author);
+						callback(null, author);
+					});
+				} else {
+					callback(null, author);
+				}
 			},
 			// create a user session for the group
-			function(author, groupID, callback) {
-				require('../db/SessionManager').createSession(groupID, author.id, (new Date()).getTime() + 3600000, function (err, result) {
+			function(author, callback) {
+				require('../db/SessionManager').createSession(author.groupID, author.id, (new Date()).getTime() + 3600000, function (err, result) {
 					sessionID = result.sessionID;
 					callback(null, author);
 				});
@@ -102,7 +106,7 @@ everyauth.twitter
 	})
 	.sendResponse(function(res, data) {
 		// create group pad and redirect user to his new pad
-		require("../db/GroupManager").createGroupPad(groupID, 'welcome', 'Welcome, ' + data.user.name, function(err, result) {
+		require("../db/GroupManager").createGroupPad(data.user.groupID, 'welcome', 'Welcome, ' + data.user.name, function(err, result) {
 			var p = '/p/' + result.padID;
 			res.cookie('sessionID', sessionID, {
 				path: p
