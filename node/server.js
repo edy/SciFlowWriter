@@ -217,7 +217,7 @@ async.waterfall([
 
     // serve the login page
     app.get('/login', function(req, res) {
-      if (req.user) {
+      if (authHandler.isLoggedIn(req)) {
         res.send('you are logged in');
       } else {
         var filePath = path.normalize(__dirname + "/../static/login.html");

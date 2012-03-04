@@ -4,24 +4,29 @@ var CommonCode = require('../utils/common_code');
 var settings = require('../utils/Settings');
 var randomString = CommonCode.require('/pad_utils').randomString;
 var async = require('async');
+var authorManager = require('../db/AuthorManager');
+var groupManager = require('../db/GroupManager');
+var sessionManager = require('../db/SessionManager');
+var sessionID;
 
-// No timeout
-everyauth.everymodule.moduleTimeout(-1);
+// TODO diese methode gehört hier nicht hin
+authorManager.setAuthor = function(authorID, author, callback) {
+	db.set("globalAuthor:" + authorID, author);
+	callback(null, author);
+}
 
-everyauth.debug = true;
+everyauth.debug = settings.auth.debug;
+everyauth.everymodule.moduleTimeout(settings.auth.timeout);
+everyauth.everymodule.logoutPath('/logout');
+everyauth.everymodule.logoutRedirectPath('/login');
 
 // called on every http request
 everyauth.everymodule.findUserById( function (userID, callback) {
 	console.log('findUserById');
-	require("../db/AuthorManager").getAuthor(userID, function(err, author){
+	authorManager.getAuthor(userID, function(err, author){
 		callback(null, author);
 	});
 });
-
-everyauth.everymodule.logoutPath('/logout');
-everyauth.everymodule.logoutRedirectPath('/login');
-
-var sessionID;
 
 // twitter OAuth
 everyauth.twitter
@@ -51,13 +56,13 @@ everyauth.twitter
 		async.waterfall([
 			// first get author from token
 			function(callback) {
-				require("../db/AuthorManager").getAuthor4Token(token, function(err, author){
-					callback(null, author);
+				authorManager.getAuthor4Token(token, function(err, authorID){
+					callback(null, authorID);
 				});
 			},
 			// load author object
 			function(authorID, callback) {
-				require("../db/AuthorManager").getAuthor(authorID, function(err, author){
+				authorManager.getAuthor(authorID, function(err, author){
 					callback(null, authorID, author);
 				});
 			},
@@ -75,7 +80,7 @@ everyauth.twitter
 						'accessSecret' : accessSecret
 					};
 
-					db.set("globalAuthor:" + authorID, author);
+					authorManager.setAuthor(authorID, author, callback);
 				}
 
 				callback(null, author);
@@ -83,10 +88,9 @@ everyauth.twitter
 			// create a group
 			function(author, callback) {
 				if (!author.groupID) {
-					require("../db/GroupManager").createGroup(function(err, group){
+					groupManager.createGroup(function(err, group){
 						author.groupID = group.groupID
-						db.set("globalAuthor:" + author.id, author);
-						callback(null, author);
+						authorManager.setAuthor(author.id, author, callback);
 					});
 				} else {
 					callback(null, author);
@@ -94,7 +98,7 @@ everyauth.twitter
 			},
 			// create a user session for the group
 			function(author, callback) {
-				require('../db/SessionManager').createSession(author.groupID, author.id, (new Date()).getTime() + 3600000, function (err, result) {
+				sessionManager.createSession(author.groupID, author.id, (new Date()).getTime() + 3600000, function (err, result) {
 					sessionID = result.sessionID;
 					callback(null, author);
 				});
@@ -107,7 +111,7 @@ everyauth.twitter
 	})
 	.sendResponse(function(res, data) {
 		// create group pad and redirect user to his new pad
-		require("../db/GroupManager").createGroupPad(data.user.groupID, 'welcome', 'Welcome, ' + data.user.name, function(err, result) {
+		groupManager.createGroupPad(data.user.groupID, 'welcome', 'Welcome, ' + data.user.name, function(err, result) {
 			var p = '/p/' + result.padID;
 			res.cookie('sessionID', sessionID, {
 				path: p
@@ -118,7 +122,7 @@ everyauth.twitter
 
 // checks if the user is logged in
 everyauth.isLoggedIn = function (req) {
-	return typeof req.user !== 'undefined'
+	return Boolean(req.user);
 };
 
 // checks if requested url is in allowed paths

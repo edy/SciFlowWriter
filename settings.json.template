@@ -51,5 +51,14 @@
   // "httpAuth" : "user:pass",
 
   /* The log level we are using, can be: DEBUG, INFO, WARN, ERROR */
-  "loglevel": "INFO"
+  "loglevel": "INFO",
+
+  "auth" : {
+    "debug": false,
+    "timeout": 60,
+    "twitter": {
+      "consumerKey": "0",
+      "consumerSecret": "0"
+    }
+  }
 }
