@@ -81,6 +81,11 @@ exports.loglevel = "INFO";
  */
 exports.httpAuth = null;
 
+/**
+ * OAuth settings
+ */
+exports.auth = null;
+
 //checks if abiword is avaiable
 exports.abiwordAvailable = function()
 {

@@ -1,6 +1,7 @@
 var db = require('../db/DB').db;
 var everyauth = module.exports = require('everyauth');
 var CommonCode = require('../utils/common_code');
+var settings = require('../utils/Settings');
 var randomString = CommonCode.require('/pad_utils').randomString;
 var async = require('async');
 
@@ -24,8 +25,8 @@ var sessionID;
 
 // twitter OAuth
 everyauth.twitter
-	.consumerKey('QZYOC1GTGOElxST7bIwYLg')
-	.consumerSecret('VeVauPHGfJqeGgOhpeiYINyVEeJEygug1aPMZpDhdM')
+	.consumerKey(settings.auth.twitter.consumerKey)
+	.consumerSecret(settings.auth.twitter.consumerSecret)
 	.handleAuthCallbackError( function (req, res) {
 		console.log('handleAuthCallbackError');
 		res.send('access denied');
