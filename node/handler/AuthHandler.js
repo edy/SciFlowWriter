@@ -230,3 +230,24 @@ padManager.addUserToPad = function (userID, padID, callback) {
 		});
 	});
 };
+
+// removes an user from the pads access list
+padManager.removeUserFromPad = function (userID, padID, callback) {
+	padManager.doesPadExists(padID, function(err, padExists) {
+		if (!padExists) {
+			console.log('pad', padID, 'does not exists')
+			callback && callback(null);
+			return;
+		}
+		db.get('padaccess:'+padID, function(err, padAccess) {
+			// delete user if he is not the owner
+			if (padAccess &&  padAccess.owner !== userID && padAccess.user.indexOf(userID) !== -1) {
+				console.log('user', userID, 'removed from pad', padID);
+				padAccess.user.splice(padAccess.user.indexOf(userID), 1);
+				db.set('padaccess:'+padID, padAccess);
+			}
+
+			callback && callback(null);
+		});
+	});
+};
