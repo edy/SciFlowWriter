@@ -80,6 +80,11 @@ everyauth.twitter
 						'accessToken' : accessToken,
 						'accessSecret' : accessSecret
 					};
+					author.pads = {
+						'my' : [],
+						'other' : [],
+						'review' : []
+					};
 
 					authorManager.setAuthor(authorID, author, callback);
 				}
