@@ -14,7 +14,7 @@ var sessionID;
 authorManager.setAuthor = function(authorID, author, callback) {
 	db.set("globalAuthor:" + authorID, author);
 	callback(null, author);
-}
+};
 
 everyauth.debug = settings.auth.debug;
 everyauth.everymodule.moduleTimeout(settings.auth.timeout);
@@ -90,7 +90,7 @@ everyauth.twitter
 			function(author, callback) {
 				if (!author.groupID) {
 					groupManager.createGroup(function(err, group){
-						author.groupID = group.groupID
+						author.groupID = group.groupID;
 						authorManager.setAuthor(author.id, author, callback);
 					});
 				} else {
@@ -154,20 +154,20 @@ everyauth.isAllowedPath = function (url) {
 everyauth.loginRedirect = function (req, res, next) {
 	console.log('URL:', req.url);
 	if (everyauth.isLoggedIn(req)) {
-	  console.log('logged in');
-	  next();
-	  return;
+		console.log('logged in');
+		next();
+		return;
 	}
 	
 	if (!everyauth.isAllowedPath(req.url)) {
 		console.log('not allowed path');
 		res.redirect('/login', 302);
-	  	res.end();
+		res.end();
 	} else {
 		console.log('allowed path');
 		next();
 	}
-}
+};
 
 // checks if the iser has assess to requested pad id
 everyauth.hasPadAccess = function (req, res, next) {
