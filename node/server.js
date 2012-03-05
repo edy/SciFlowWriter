@@ -36,6 +36,7 @@ var Yajsml = require('yajsml');
 var formidable = require('formidable');
 var DirtyStore = require('./db/DirtyStore');
 var authHandler;
+var profileHandler;
 var apiHandler;
 var exportHandler;
 var importHandler;
@@ -115,7 +116,8 @@ async.waterfall([
     });
 
     //load modules that needs a initalized db
-    authHandler = require('./handler/AuthHandler')
+    authHandler = require('./handler/AuthHandler');
+    profileHandler = require('./handler/ProfileHandler');
     readOnlyManager = require("./db/ReadOnlyManager");
     exporthtml = require("./utils/ExportHtml");
     exportHandler = require('./handler/ExportHandler');
@@ -224,6 +226,8 @@ async.waterfall([
         res.sendfile(filePath, { maxAge: exports.maxAge });
       }
     });
+
+    app.get('/profile/:action?', profileHandler.handler);
     
     //serve read only pad
     app.get('/ro/:id', function(req, res)
