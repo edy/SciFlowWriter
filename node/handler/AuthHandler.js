@@ -7,6 +7,7 @@ var async = require('async');
 var authorManager = require('../db/AuthorManager');
 var groupManager = require('../db/GroupManager');
 var sessionManager = require('../db/SessionManager');
+var padManager = require('../db/PadManager');
 var sessionID;
 
 // TODO diese methode gehört hier nicht hin
@@ -166,4 +167,9 @@ everyauth.loginRedirect = function (req, res, next) {
 		console.log('allowed path');
 		next();
 	}
+}
+
+// checks if the iser has assess to requested pad id
+everyauth.hasPadAccess = function (req, res, next) {
+	next();
 }

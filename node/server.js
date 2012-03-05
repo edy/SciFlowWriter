@@ -283,7 +283,7 @@ async.waterfall([
     });
     
     //serve pad.html under /p
-    app.get('/p/:pad', function(req, res, next)
+    app.get('/p/:pad', authHandler.hasPadAccess, function(req, res, next)
     {    
       var filePath = path.normalize(__dirname + "/../static/pad.html");
       res.sendfile(filePath, { maxAge: exports.maxAge });
