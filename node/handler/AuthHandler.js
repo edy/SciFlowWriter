@@ -171,5 +171,29 @@ everyauth.loginRedirect = function (req, res, next) {
 
 // checks if the iser has assess to requested pad id
 everyauth.hasPadAccess = function (req, res, next) {
-	next();
-}
+	var padID = req.params.pad;
+	var userID = req.user.id;
+	
+	// does the pad exist?
+	padManager.doesPadExists(padID, function(err, padExists) {
+		if (! padExists) {
+			console.log('pad not found: ', padID);
+			res.send('pad not found', 404);
+			//res.end();
+			return;
+		}
+
+		// TODO check access
+		db.get('padaccess:'+padID, function(err, padAccess) {
+			if (padAccess && padAccess.user.indexOf(userID) !== -1) {
+				console.log(userID+', you have access to', padID);
+			} else {
+				console.log(userID+', you don\'t have access to', padID);
+				res.send('no access for you, '+userID, 403);
+				return;
+			}
+
+			next();
+		});
+	});	
+};
