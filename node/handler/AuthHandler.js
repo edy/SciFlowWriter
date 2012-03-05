@@ -235,7 +235,7 @@ padManager.addUserToPad = function (userID, padID, callback) {
 padManager.removeUserFromPad = function (userID, padID, callback) {
 	padManager.doesPadExists(padID, function(err, padExists) {
 		if (!padExists) {
-			console.log('pad', padID, 'does not exists')
+			console.log('pad', padID, 'does not exists');
 			callback && callback(null);
 			return;
 		}
