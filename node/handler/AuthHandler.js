@@ -97,16 +97,7 @@ everyauth.twitter
 
 		return promise;
 	})
-	.sendResponse(function(res, data) {
-		// create group pad and redirect user to his new pad
-		groupManager.createGroupPad(data.user.groupID, 'welcome', 'Welcome, ' + data.user.name, function(err, result) {
-			var p = '/p/' + result.padID;
-			res.cookie('sessionID', sessionID, {
-				path: p
-			});
-			res.redirect(p);
-		});
-	});
+	.redirectPath('/');
 
 // checks if the user is logged in
 everyauth.isLoggedIn = function (req) {

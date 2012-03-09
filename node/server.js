@@ -408,7 +408,7 @@ async.waterfall([
     //serve index.html under /
     app.get('/', function(req, res)
     {
-      var filePath = path.normalize(__dirname + "/../static/index.html");
+      var filePath = path.normalize(__dirname + "/../static/profile.html");
       res.sendfile(filePath, { maxAge: exports.maxAge });
     });
     
