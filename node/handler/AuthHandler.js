@@ -90,24 +90,6 @@ everyauth.twitter
 				}
 
 				callback(null, author);
-			},
-			// create a group
-			function(author, callback) {
-				if (!author.groupID) {
-					groupManager.createGroup(function(err, group){
-						author.groupID = group.groupID;
-						authorManager.setAuthor(author.id, author, callback);
-					});
-				} else {
-					callback(null, author);
-				}
-			},
-			// create a user session for the group
-			function(author, callback) {
-				sessionManager.createSession(author.groupID, author.id, (new Date()).getTime() + 3600000, function (err, result) {
-					sessionID = result.sessionID;
-					callback(null, author);
-				});
 			}
 		], function(err, result) {
 			promise.fulfill(result);
