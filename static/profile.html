@@ -1,0 +1,57 @@
+
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="/static/js/jquery.js"></script>
+		<script type="text/javascript">
+		$(function(){
+			$.getJSON('/profile', function(data) {
+				
+				$('#image').append('<img src="'+data.image+'" />');
+				$('#name').append(data.name);
+
+				$.each(data.pads.my, function(i, v) {
+					$('#mypads').append('<li><a href="/p/'+v+'">'+v+'</a></li>');
+				});
+
+				$.each(data.pads.other, function(i, v) {
+					$('#otherpads').append('<li><a href="/p/'+v+'">'+v+'</a></li>');
+				});
+
+				$.each(data.pads.review, function(i, v) {
+					$('#reviewpads').append('<li><a href="/p/'+v+'">'+v+'</a></li>');
+				});
+
+			});
+
+			$('#newpad').on('click', function(e){
+				var name = s=prompt('Please name your pad:', 'my cool pad');
+				$.getJSON('/profile/newpad?name='+name, function(data){
+					$('#mypads').append('<li><a href="'+data.uri+'">'+data.padID+'</a></li>');
+				});
+
+				return false;
+			});
+		});
+		</script>
+	</head>
+	<body>
+		<p><span id="image"></span> <h1 id="name"></h1></p>
+
+		<p>
+			<h2>My Pads</h2>
+			<a id="newpad" href="#">new pad</a>
+			<ul id="mypads"></ul>
+		</p>
+		<p>
+			<h2>Other pads</h2>
+			<ul id="otherpads"></ul>
+		</p>
+		<p>
+			<h2>Review pads</h2>
+			<ul id="reviewpads"></ul>
+		</p>
+
+	</body>
+</html>
