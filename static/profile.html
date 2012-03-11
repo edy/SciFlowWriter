@@ -26,10 +26,13 @@
 			});
 
 			$('#newpad').on('click', function(e){
-				var name = s=prompt('Please name your pad:', 'my cool pad');
-				$.getJSON('/profile/newpad?name='+name, function(data){
-					$('#mypads').append('<li><a href="'+data.uri+'">'+data.padID+'</a></li>');
-				});
+				var name = prompt('Please name your pad:', 'my cool pad');
+				
+				if (name !== null) {
+					$.getJSON('/profile/newpad?name='+name, function(data){
+						$('#mypads').append('<li><a href="'+data.uri+'">'+data.padID+'</a></li>');
+					});
+				}
 
 				return false;
 			});
