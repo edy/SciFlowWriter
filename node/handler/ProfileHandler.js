@@ -84,6 +84,12 @@ var ProfileHandler = {
 			return;
 		}
 
+		// we need an email!
+		if (!query || !query.email) {
+			res.send({'error': 'need an email'}, 500)
+			return;
+		}
+
 		padManager.doesPadExists(query.name, function(err, value) {
 			
 			if (!value) {
@@ -91,7 +97,8 @@ var ProfileHandler = {
 				return;
 			}
 
-			inviteID = randomString(16);
+			var inviteID = randomString(16);
+			var url = 'http://'+req.headers.host+'/invite/'+inviteID;
 
 			var inviteObject = {
 				pad: query.name,
@@ -101,8 +108,10 @@ var ProfileHandler = {
 			};
 
 			db.set("padinvite:" + inviteID, inviteObject);
-			console.error('host:', req.headers);
-			res.send('http://'+req.headers.host+'/invite/'+inviteID);
+
+			require('child_process').exec('echo "'+url+'" | mail -s "SciFlowWriter invitation" '+query.email, function (error, stdout, stderr) {});
+			
+			res.send({'url':url});
 		});
 
 

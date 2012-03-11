@@ -12,7 +12,7 @@
 				$('#name').append(data.name);
 
 				$.each(data.pads.my, function(i, v) {
-					$('#mypads').append('<li><a href="/p/'+v+'">'+v+'</a> (<a href="/profile/invite?name='+v+'">create invite link</a>)</li>');
+					$('#mypads').append('<li><a href="/p/'+v+'">'+v+'</a> (<a class="invitelink" href="/profile/invite?name='+v+'">create invite link</a>)</li>');
 				});
 
 				$.each(data.pads.other, function(i, v) {
@@ -30,7 +30,19 @@
 				
 				if (name !== null) {
 					$.getJSON('/profile/newpad?name='+name, function(data){
-						$('#mypads').append('<li><a href="'+data.uri+'">'+data.padID+'</a> (<a href="/profile/invite?name='+data.padID+'">create invite link</a>)</li>');
+						$('#mypads').append('<li><a href="'+data.uri+'">'+data.padID+'</a> (<a class="invitelink" href="/profile/invite?name='+data.padID+'">create invite link</a>)</li>');
+					});
+				}
+
+				return false;
+			});
+
+			$('.invitelink').live('click', function(e) {
+				var email = prompt('Send inlite mail to:', '');
+				console.log(this);
+				if (email !== null) {
+					$.getJSON(this.href, {'email':email}, function(data){
+						alert('Sent email with link: '+data.url)
 					});
 				}
 
