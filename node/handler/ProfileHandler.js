@@ -1,6 +1,8 @@
 var db = require('../db/DB').db;
 var padManager = require('../db/PadManager');
 var authorManager = require('../db/AuthorManager');
+var CommonCode = require('../utils/common_code');
+var randomString = CommonCode.require('/pad_utils').randomString;
 
 exports.handler = function(req, res) {
 	var action = req.params.action;
@@ -70,6 +72,40 @@ var ProfileHandler = {
 				});
 			});
 		});
+	},
+
+	invite: function(req, res) {
+		var user = req.user;
+		var query = req.query;
+
+		// we need a pad name!
+		if (!query || !query.name) {
+			res.send({'error': 'need a pad name'}, 500)
+			return;
+		}
+
+		padManager.doesPadExists(query.name, function(err, value) {
+			
+			if (!value) {
+				res.send({'error': 'pad doesn\'t exist'}, 500);
+				return;
+			}
+
+			inviteID = randomString(16);
+
+			var inviteObject = {
+				pad: query.name,
+				type: 'other',
+				user: user.id,
+				timestamp: Date.now()
+			};
+
+			db.set("padinvite:" + inviteID, inviteObject);
+			console.error('host:', req.headers);
+			res.send('http://'+req.headers.host+'/invite/'+inviteID);
+		});
+
+
 	},
 
 	deletepad: function(req, res) {
