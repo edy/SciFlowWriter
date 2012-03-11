@@ -97,7 +97,15 @@ everyauth.twitter
 
 		return promise;
 	})
-	.redirectPath('/');
+	.sendResponse(function(res, data) {
+		if (data.session && data.session.redirectAfterLogin) {
+			var redirectAfterLogin = data.session.redirectAfterLogin;
+			delete data.session.redirectAfterLogin
+			res.redirect(redirectAfterLogin, 302);
+		} else {
+			res.redirect('/', 302);
+		}
+	});
 
 // checks if the user is logged in
 everyauth.isLoggedIn = function (req) {
