@@ -37,6 +37,7 @@ var formidable = require('formidable');
 var DirtyStore = require('./db/DirtyStore');
 var authHandler;
 var profileHandler;
+var inviteHandler;
 var apiHandler;
 var exportHandler;
 var importHandler;
@@ -118,6 +119,7 @@ async.waterfall([
     //load modules that needs a initalized db
     authHandler = require('./handler/AuthHandler');
     profileHandler = require('./handler/ProfileHandler');
+    inviteHandler = require('./handler/InviteHandler');
     readOnlyManager = require("./db/ReadOnlyManager");
     exporthtml = require("./utils/ExportHtml");
     exportHandler = require('./handler/ExportHandler');
@@ -228,6 +230,7 @@ async.waterfall([
     });
 
     app.get('/profile/:action?', profileHandler.handler);
+    app.get('/invite/:id', inviteHandler.handler);
     
     //serve read only pad
     app.get('/ro/:id', function(req, res)

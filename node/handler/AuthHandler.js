@@ -121,7 +121,8 @@ everyauth.isAllowedPath = function (url) {
 		'\/favicon.ico',
 		'\/login',
 		'\/static\/.*',
-		'\/minified\/.*'
+		'\/minified\/.*',
+		'\/invite\/.*'
 	];
 
 	allowedPaths.every(function(path){
