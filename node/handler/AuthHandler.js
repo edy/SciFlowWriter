@@ -40,23 +40,27 @@ everyauth.twitter
 	.findOrCreateUser( function (sess, accessToken, accessSecret, twitUser, reqres) {
 		console.log('findOrCreateUser');
 		
-		var token;
-
-		if (reqres.req.cookies && reqres.req.cookies.token) {
-			token = reqres.req.cookies.token;
-		}
-
-		// create new token if it not exists
-		if (!token) {
-			token = 't.' + randomString();
-			reqres.res.cookie('token', token, {path: '/'});
-		}
-
 		// load author
 		var promise = this.Promise();
 		async.waterfall([
-			// first get author from token
+			// first get token from twitter id
 			function(callback) {
+				db.get('twitter2token:'+twitUser.id, function(err, token){
+					
+					if (!token) {
+						token = 't.' + randomString();
+						db.set('twitter2token:'+twitUser.id, token);
+					}
+
+					// replace token cookie
+					reqres.res.cookie('token', token, {path: '/'});
+
+					callback(null, token);
+					
+				});
+			},
+			// get author from token
+			function(token, callback) {
 				authorManager.getAuthor4Token(token, function(err, authorID){
 					callback(null, authorID);
 				});
