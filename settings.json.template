@@ -54,11 +54,15 @@
   "loglevel": "INFO",
 
   "auth" : {
-    "debug": false,
-    "timeout": 60,
+    "debug": true,
+    "timeout": -1,
     "twitter": {
       "consumerKey": "0",
       "consumerSecret": "0"
+    },
+    "facebook": {
+      "appId": "0",
+      "appSecret": "0"
     }
   }
 }

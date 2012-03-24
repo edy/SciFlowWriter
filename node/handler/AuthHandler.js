@@ -78,11 +78,99 @@ everyauth.twitter
 					author.name = twitUser.name;
 					author.auth = {
 						'user_id' : twitUser.id,
+						'type' : 'twitter',
 						'screen_name': twitUser.screen_name,
 						'image' : twitUser.profile_image_url,
 						'url' : twitUser.url,
 						'accessToken' : accessToken,
 						'accessSecret' : accessSecret
+					};
+					author.pads = {
+						'my' : [],
+						'other' : [],
+						'review' : []
+					};
+
+					authorManager.setAuthor(authorID, author, callback);
+				}
+
+				callback(null, author);
+			}
+		], function(err, result) {
+			promise.fulfill(result);
+		});
+
+		return promise;
+	})
+	.sendResponse(function(res, data) {
+		if (data.session && data.session.redirectAfterLogin) {
+			var redirectAfterLogin = data.session.redirectAfterLogin;
+			delete data.session.redirectAfterLogin
+			res.redirect(redirectAfterLogin, 302);
+		} else {
+			res.redirect('/', 302);
+		}
+	});
+
+// facebook OAuth
+everyauth.facebook
+	.appId(settings.auth.facebook.appId)
+	.appSecret(settings.auth.appSecret)
+	.scope('email')
+	// TODO wait for everyauth 0.2.33
+	//.fields('id,name,email,picture')
+	.handleAuthCallbackError( function (req, res) {
+		//console.log('handleAuthCallbackError', req.params['error_description']);
+		res.send('access denied');
+	})
+	.findOrCreateUser( function (session, accessToken, accessTokExtra, fbUserMetadata, reqres) {
+		console.log('findOrCreateUser');
+		
+		// load author
+		var promise = this.Promise();
+		async.waterfall([
+			// first get token from twitter id
+			function(callback) {
+				db.get('facebook2token:'+fbUserMetadata.id, function(err, token){
+					
+					if (!token) {
+						token = 't.' + randomString();
+						db.set('facebook2token:'+fbUserMetadata.id, token);
+					}
+
+					// replace token cookie
+					reqres.res.cookie('token', token, {path: '/'});
+
+					callback(null, token);
+					
+				});
+			},
+			// get author from token
+			function(token, callback) {
+				authorManager.getAuthor4Token(token, function(err, authorID){
+					callback(null, authorID);
+				});
+			},
+			// load author object
+			function(authorID, callback) {
+				authorManager.getAuthor(authorID, function(err, author){
+					callback(null, authorID, author);
+				});
+			},
+			// generate auth object if necessary
+			function(authorID, author, callback) {
+				if (!author.id) {
+					author.id = authorID;
+					author.name = fbUserMetadata.name;
+					author.email = fbUserMetadata.email;
+					author.auth = {
+						'type' : 'facebook',
+						'user_id' : fbUserMetadata.id,
+						'screen_name': fbUserMetadata.username,
+						'image' : null,
+						'url' : fbUserMetadata.link,
+						'accessToken' : accessToken,
+						'accessTokExtra' : accessTokExtra
 					};
 					author.pads = {
 						'my' : [],
