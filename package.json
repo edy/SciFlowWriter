@@ -23,7 +23,7 @@
                       "log4js"              : "0.4.1",
                       "jsdom-nocontextifiy" : "0.2.10",
                       "async-stacktrace"    : "0.0.2",
-                      "everyauth"           : "0.2.30"
+                      "everyauth"           : "0.2.32"
                      },
   "devDependencies": {
                       "jshint"  : "*"
