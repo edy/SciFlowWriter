@@ -27,6 +27,7 @@ var ProfileHandler = {
 		var profile = {
 			id: user.id,
 			name: user.name,
+			email: user.email,
 			image: user.auth.image,
 			url: user.auth.url,
 			pads: user.pads
