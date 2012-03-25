@@ -199,6 +199,90 @@ everyauth.facebook
 		}
 	});
 
+// mendeley OAuth
+everyauth.mendeley
+	.consumerKey(settings.auth.mendeley.consumerKey)
+	.consumerSecret(settings.auth.mendeley.consumerSecret)
+	.handleAuthCallbackError( function (req, res) {
+		console.log('handleAuthCallbackError');
+		res.send('access denied');
+	})
+	.findOrCreateUser( function (sess, accessToken, accessSecret, mendeleyUser, reqres) {
+		console.log('findOrCreateUser');
+		console.error('mendeley: ', mendeleyUser);
+		
+		// load author
+		var promise = this.Promise();
+		async.waterfall([
+			// first get token from twitter id
+			function(callback) {
+				db.get('mendeley2token:'+mendeleyUser.main.profile_id, function(err, token){
+					
+					if (!token) {
+						token = 't.' + randomString();
+						db.set('mendeley2token:'+mendeleyUser.main.profile_id, token);
+					}
+
+					// replace token cookie
+					reqres.res.cookie('token', token, {path: '/'});
+
+					callback(null, token);
+					
+				});
+			},
+			// get author from token
+			function(token, callback) {
+				authorManager.getAuthor4Token(token, function(err, authorID){
+					callback(null, authorID);
+				});
+			},
+			// load author object
+			function(authorID, callback) {
+				authorManager.getAuthor(authorID, function(err, author){
+					callback(null, authorID, author);
+				});
+			},
+			// generate auth object if necessary
+			function(authorID, author, callback) {
+				if (!author.id) {
+					author.id = authorID;
+					author.name = mendeleyUser.main.name;
+					author.auth = {
+						'user_id' : mendeleyUser.main.profile_id,
+						'type' : 'mendeley',
+						'screen_name': mendeleyUser.main.name,
+						'image' : mendeleyUser.main.photo,
+						'url' : mendeleyUser.main.url,
+						'accessToken' : accessToken,
+						'accessSecret' : accessSecret
+					};
+					author.pads = {
+						'my' : [],
+						'other' : [],
+						'review' : []
+					};
+
+					authorManager.setAuthor(authorID, author, callback);
+				}
+
+				callback(null, author);
+			}
+		], function(err, result) {
+			promise.fulfill(result);
+		});
+
+		return promise;
+	})
+	.sendResponse(function(res, data) {
+		if (data.session && data.session.redirectAfterLogin) {
+			var redirectAfterLogin = data.session.redirectAfterLogin;
+			delete data.session.redirectAfterLogin
+			res.redirect(redirectAfterLogin, 302);
+		} else {
+			res.redirect('/', 302);
+		}
+	});
+
 // checks if the user is logged in
 everyauth.isLoggedIn = function (req) {
 	return Boolean(req.user);

@@ -63,6 +63,10 @@
     "facebook": {
       "appId": "0",
       "appSecret": "0"
+    },
+    "mendeley": {
+      "consumerKey": "0",
+      "consumerSecret": "0"
     }
   }
 }
