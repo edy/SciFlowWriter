@@ -437,9 +437,6 @@ async.waterfall([
       });
     });
 
-    // add everyauth express helper
-    authHandler.helpExpress(app);
-    
     //let the server listen
     app.listen(settings.port, settings.ip);
     console.log("Server is listening at " + settings.ip + ":" + settings.port);
