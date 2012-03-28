@@ -225,7 +225,7 @@ async.waterfall([
         res.send('you are logged in');
       } else {
         var filePath = path.normalize(__dirname + "/../static/login.html");
-        res.sendfile(filePath, { maxAge: exports.maxAge });
+        res.sendfile(filePath, { maxAge: 0 });
       }
     });
 
@@ -412,7 +412,7 @@ async.waterfall([
     app.get('/', function(req, res)
     {
       var filePath = path.normalize(__dirname + "/../static/profile.html");
-      res.sendfile(filePath, { maxAge: exports.maxAge });
+      res.sendfile(filePath, { maxAge: 0 });
     });
     
     //serve robots.txt
