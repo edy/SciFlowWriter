@@ -9,7 +9,7 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 			return;
 		}
 
-		exportLatex.getPadLatexDocument(req.params.pad, null, function(err, result) {
+		exportLatex.getPadLatexDocument(req.params.pad, req.params.rev ? req.params.rev : null, function(err, result) {
 			res.send(result);
 		});
 	});
