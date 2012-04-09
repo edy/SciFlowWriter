@@ -90,6 +90,11 @@ exports.httpAuth = null;
  */
 exports.adminHttpAuth = null;
 
+/**
+ * OAuth settings
+ */
+exports.auth = null;
+
 //checks if abiword is avaiable
 exports.abiwordAvailable = function()
 {

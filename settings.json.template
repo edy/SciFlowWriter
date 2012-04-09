@@ -56,6 +56,25 @@
   /* The log level we are using, can be: DEBUG, INFO, WARN, ERROR */
   "loglevel": "INFO",
 
+<<<<<<< HEAD
   /* cache 6 hours = 1000*60*60*6 */
   "maxAge": 21600000
+=======
+  "auth" : {
+    "debug": true,
+    "timeout": -1,
+    "twitter": {
+      "consumerKey": "0",
+      "consumerSecret": "0"
+    },
+    "facebook": {
+      "appId": "0",
+      "appSecret": "0"
+    },
+    "mendeley": {
+      "consumerKey": "0",
+      "consumerSecret": "0"
+    }
+  }
+>>>>>>> master
 }
