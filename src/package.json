@@ -28,8 +28,7 @@
                       "graceful-fs"         : "1.1.5",
                       "slide"               : "1.1.3",
                       "semver"              : "1.0.13",
-                      "underscore"          : "1.3.1",
-                      "everyauth"           : "git://github.com/edy-b/everyauth.git"
+                      "underscore"          : "1.3.1"
                      },
   "devDependencies": {
                       "jshint"  : "*"
