@@ -56,10 +56,9 @@
   /* The log level we are using, can be: DEBUG, INFO, WARN, ERROR */
   "loglevel": "INFO",
 
-<<<<<<< HEAD
   /* cache 6 hours = 1000*60*60*6 */
   "maxAge": 21600000
-=======
+
   "auth" : {
     "debug": true,
     "timeout": -1,
@@ -76,5 +75,5 @@
       "consumerSecret": "0"
     }
   }
->>>>>>> master
+
 }
