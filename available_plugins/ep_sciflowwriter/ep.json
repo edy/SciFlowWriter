@@ -1,0 +1,24 @@
+{
+  "parts": [
+    {
+      "name": "auth",
+      "hooks": {
+        "expressCreateServer": "ep_sciflowwriter/hooks/auth:expressCreateServer"
+      }
+    },
+    {
+      "name": "profile",
+      "pre": ["ep_sciflowwriter/auth"],
+      "hooks": {
+        "expressCreateServer": "ep_sciflowwriter/hooks/profile:expressCreateServer"
+      }
+    },
+    {
+      "name": "invite",
+      "pre": ["ep_sciflowwriter/auth"],
+      "hooks": {
+        "expressCreateServer": "ep_sciflowwriter/hooks/invite:expressCreateServer"
+      }
+    }
+  ]
+}

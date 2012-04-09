@@ -1,13 +1,12 @@
-var db = require('../db/DB').db;
+var db = require('ep_etherpad-lite/node/db/DB').db;
 var everyauth = module.exports = require('everyauth');
-var CommonCode = require('../utils/common_code');
-var settings = require('../utils/Settings');
-var randomString = CommonCode.require('/pad_utils').randomString;
-var async = require('async');
-var authorManager = require('../db/AuthorManager');
-var groupManager = require('../db/GroupManager');
-var sessionManager = require('../db/SessionManager');
-var padManager = require('../db/PadManager');
+var settings = require('ep_etherpad-lite/node/utils/Settings');
+var randomString = require('ep_etherpad-lite/static/js/pad_utils').randomString
+var async = require('ep_etherpad-lite/node_modules/async');
+var authorManager = require('ep_etherpad-lite/node/db/AuthorManager');
+var groupManager = require('ep_etherpad-lite/node/db/GroupManager');
+var sessionManager = require('ep_etherpad-lite/node/db/SessionManager');
+var padManager = require('ep_etherpad-lite/node/db/PadManager');
 var sessionID;
 
 // TODO diese methode gehört hier nicht hin

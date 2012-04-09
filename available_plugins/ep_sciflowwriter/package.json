@@ -1,0 +1,14 @@
+{
+  "name"           : "ep_sciflowwriter",
+  "description"    : "Collaborative LaTeX Editor",
+  "homepage"       : "https://github.com/edy-b/SciFlowWriter",
+  "keywords"       : ["etherpad", "realtime", "sciflowwriter", "collaborative", "latex", "editor"],
+  "author"         : "Eduard Baun <eduard@baun.de>",
+  "dependencies"   : {
+                      "everyauth"           : "git://github.com/edy-b/everyauth.git"
+                     },
+  "engines"        : { "node" : ">=0.6.0",
+                       "npm"  : ">=1.0"
+                     }, 
+  "version"        : "1.0.0"
+}

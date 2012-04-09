@@ -1,8 +1,7 @@
-var db = require('../db/DB').db;
-var padManager = require('../db/PadManager');
-var authorManager = require('../db/AuthorManager');
-var CommonCode = require('../utils/common_code');
-var randomString = CommonCode.require('/pad_utils').randomString;
+var db = require('ep_etherpad-lite/node/db/DB').db;
+var padManager = require('ep_etherpad-lite/node/db/PadManager');
+var authorManager = require('ep_etherpad-lite/node/db/AuthorManager');
+var randomString = require('ep_etherpad-lite/static/js/pad_utils').randomString
 
 exports.handler = function(req, res) {
 	var action = req.params.action;
@@ -23,6 +22,7 @@ exports.handler = function(req, res) {
 
 var ProfileHandler = {
 	index: function(req, res) {
+		
 		var user = req.user;
 		var profile = {
 			id: user.id,
