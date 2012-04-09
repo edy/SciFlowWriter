@@ -19,6 +19,13 @@
       "hooks": {
         "expressCreateServer": "ep_sciflowwriter/hooks/invite:expressCreateServer"
       }
+    },
+    {
+      "name": "latexexport",
+      "pre": ["ep_sciflowwriter/auth"],
+      "hooks": {
+        "expressCreateServer": "ep_sciflowwriter/hooks/latex:expressCreateServer"
+      }
     }
   ]
 }
