@@ -9,13 +9,8 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 			return;
 		}
 
-		console.error("latex ftw");
-
 		exportLatex.getPadLatexDocument(req.params.pad, null, function(err, result) {
-			console.error('ERROR latexdocument?', err);
-
 			res.send(result);
-
 		});
 	});
 };
