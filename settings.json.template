@@ -57,22 +57,22 @@
   "loglevel": "INFO",
 
   /* cache 6 hours = 1000*60*60*6 */
-  "maxAge": 21600000
+  "maxAge": 21600000,
 
   "auth" : {
     "debug": true,
     "timeout": -1,
     "twitter": {
-      "consumerKey": "0",
-      "consumerSecret": "0"
+      "consumerKey": "vV3HvdAyLiCAmv8G0KJcyw",
+      "consumerSecret": "36DYLyrI4uistzRLUd54ok69OXIljvYxjBfGNjQ06Q"
     },
     "facebook": {
-      "appId": "0",
-      "appSecret": "0"
+      "appId": "168957136502818",
+      "appSecret": "74751e1a84ab3b5bfed3f6eea37cae1e"
     },
     "mendeley": {
-      "consumerKey": "0",
-      "consumerSecret": "0"
+      "consumerKey": "f3e24f2536316ba599c5e99687746d1a04f6e46bd",
+      "consumerSecret": "9be95abe764bf2c4963c9ffa36b490ff"
     }
   }
 
