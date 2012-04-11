@@ -26,6 +26,12 @@
       "hooks": {
         "expressCreateServer": "ep_sciflowwriter/hooks/latex:expressCreateServer"
       }
+    },
+    {
+      "name": "widget1",
+      "client_hooks": {
+        "postAceInit": "ep_sciflowwriter/static/js/widget1:postAceInit"
+      }
     }
   ]
 }
