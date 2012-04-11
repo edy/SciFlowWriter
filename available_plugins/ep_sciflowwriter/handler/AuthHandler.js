@@ -294,8 +294,11 @@ everyauth.isAllowedPath = function (url) {
 	// regex paths
 	var allowedPaths = [
 		'\/favicon.ico',
+		'\/robots.txt',
 		'\/login',
 		'\/static\/.*',
+		'\/javascripts\/.*',
+		'\/pluginfw\/.*',
 		'\/minified\/.*',
 		'\/invite\/.*'
 	];
