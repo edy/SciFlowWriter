@@ -28,9 +28,9 @@
       }
     },
     {
-      "name": "widget1",
+      "name": "widgetcontainer",
       "client_hooks": {
-        "postAceInit": "ep_sciflowwriter/static/js/widget1:postAceInit"
+        "postAceInit": "ep_sciflowwriter/static/js/widgetcontainer:postAceInit"
       }
     }
   ]
