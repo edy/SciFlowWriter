@@ -1,0 +1,11 @@
+{
+  "parts": [
+    {
+      "name": "authors",
+      "pre": ["ep_sciflowwriter/widgetcontainer"],
+      "client_hooks": {
+        "loadWidgets": "ep_widget_authors/static/js/widget:loadWidgets"
+      }
+    }
+  ]
+}

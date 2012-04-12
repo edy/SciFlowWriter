@@ -1,0 +1,10 @@
+.widget.authors img {
+	height: 27px;
+	vertical-align: top;
+	float:left;
+	margin-right: 5px;
+}
+
+.widget.authors li {
+	margin-bottom: 5px;
+}
