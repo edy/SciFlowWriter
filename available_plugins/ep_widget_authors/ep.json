@@ -3,6 +3,10 @@
     {
       "name": "authors",
       "pre": ["ep_sciflowwriter/widgetcontainer"],
+      "hooks": {
+        "eejsBlock_widgetColumn": "ep_widget_authors/static/widget:eejsBlock_widgetColumn",
+        "eejsBlock_styles": "ep_widget_authors/static/widget:eejsBlock_styles"
+      },
       "client_hooks": {
         "loadWidgets": "ep_widget_authors/static/js/widget:loadWidgets"
       }

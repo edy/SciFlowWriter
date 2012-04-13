@@ -5,6 +5,10 @@
 	margin-right: 5px;
 }
 
+.widget.authors ul {
+	list-style: none;
+}
+
 .widget.authors li {
 	margin-bottom: 5px;
 }

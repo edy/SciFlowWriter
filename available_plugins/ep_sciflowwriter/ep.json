@@ -29,6 +29,11 @@
     },
     {
       "name": "widgetcontainer",
+      "pre": ["ep_sciflowwriter/auth"],
+      "hooks": {
+        "eejsBlock_styles": "ep_sciflowwriter/static/widgetcontainer:eejsBlock_styles",
+        "eejsBlock_body": "ep_sciflowwriter/static/widgetcontainer:eejsBlock_body"
+      },
       "client_hooks": {
         "postAceInit": "ep_sciflowwriter/static/js/widgetcontainer:postAceInit"
       }
