@@ -34,10 +34,11 @@ header h1 {
 
 header .headermenu {
   position: absolute;
-  font-size: 80%;
+  font-size: 13px;
   height: 35px;
-  right: 0px;
-  top: 0;
+  right: 3px;
+  top: 8px;
+
 }
 
 header .headermenu img {
@@ -65,6 +66,10 @@ header a:hover {
 #editorcontainer {
   width: auto;
   right: 300px;
+}
+
+#settingsmenu, #importexport, #embed {
+  top: 85px;
 }
 
 #widgetcontainerbox {
