@@ -1,4 +1,4 @@
- <!doctype html>
+<!doctype html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>	  <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
 <!--[if IE 8]>	  <html class="no-js lt-ie9" lang="en"> <![endif]-->
@@ -17,14 +17,14 @@
 			<div class="container">
 				<h1>SciFlowWriter</h1>
 				<div class="headermenu">
-					<a href="/"></a>
+					<a href="/"><%= user.name %> <img src="<%= user.image %>"></a>
 				</div>
 			</div>
 		</header>
 		<div class="container">
 			<div class="contentContainer">
 				<aside>
-					<div id="avatar"></div>
+					<div id="avatar"><img src="<%= user.image %>"></div>
 					<div class="padmenu">
 						<ul>
 							<!--li>
@@ -41,8 +41,8 @@
 				</aside>
 				<div id="right">
 					<div id="personalInformation">
-						<h2 id="name"></h2>
-						<p id="email"></p>
+						<h2 id="name"><%= user.name %></h2>
+						<p id="email"><%= user.email %></p>
 						<div id="editProfile">
 							<button class="button green">Edit</button>
 						</div>
@@ -66,7 +66,21 @@
 										</td>
 									</tr>
 								</thead>
-								<tbody></tbody>
+								<tbody>
+									<% for(var i=0; i<user.pads.my.length; i++) { %>
+									<tr>
+										<td>
+											<a href="/p/<%= user.pads.my[i] %>"><%= user.pads.my[i] %></a>
+										</td>
+										<td>
+											&nbsp;
+										</td>
+										<td>
+											&nbsp;
+										</td>
+									</tr>
+									<% } %>
+								</tbody>
 							</table>
 						</div>
 						<div id="otherpads" style="display:none">
@@ -86,7 +100,21 @@
 										</td>
 									</tr>
 								</thead>
-								<tbody></tbody>
+								<tbody>
+									<% for(var i=0; i<user.pads.other.length; i++) { %>
+									<tr>
+										<td>
+											<a href="/p/<%= user.pads.other[i] %>"><%= user.pads.other[i] %></a>
+										</td>
+										<td>
+											&nbsp;
+										</td>
+										<td>
+											&nbsp;
+										</td>
+									</tr>
+									<% } %>
+								</tbody>
 							</table>
 						</div>
 					</div>
@@ -99,26 +127,6 @@
 		<script src="/static/js/jquery.js"></script>
 		<script type="text/javascript">
 		$(function(){
-			$.getJSON('/profile', function(data) {
-				
-				$('#avatar').append('<img src="'+data.image+'" />');
-				$('#name').append(data.name);
-				$('#email').append(data.email);
-				$('.headermenu a').append(data.name+' <img src="'+data.image+'" />')
-
-				$.each(data.pads.my, function(i, v) {
-					Profile.addPad('my', v);
-				});
-
-				$.each(data.pads.other, function(i, v) {
-					Profile.addPad('other', v);
-				});
-
-				$.each(data.pads.review, function(i, v) {
-					Profile.addPad('review', v);
-				});
-
-			});
 
 			$('.padmenu li a').on('click', function(e) {
 				var show = $(this).attr('href');
@@ -134,7 +142,7 @@
 				
 				if (name !== null) {
 					$.getJSON('/profile/newpad?name='+name, function(data){
-						Profile.addPad('my', data.padID, data.uri);
+						$('#mypads table tbody').append('<tr><td><a href="'+data.uri+'">'+data.padID+'</a></td><td>&nbsp;</td><td><a class="invitelink" href="/profile/invite?name='+data.padID+'">invite</a></td></tr>');
 					});
 				}
 
@@ -153,14 +161,6 @@
 				return false;
 			});
 		});
-
- 		var Profile = {
- 			addPad : function(type, name, uri) {
- 				uri = uri || '/p/'+name;
- 				
- 				$('#'+type+'pads table tbody').append('<tr><td><a href="'+uri+'">'+name+'</a></td><td>&nbsp;</td><td><a class="invitelink" href="/profile/invite?name='+name+'">invite</a></td></tr>');
- 			}
- 		}
 		</script>
 	</body>
 </html>
