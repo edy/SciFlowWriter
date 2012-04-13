@@ -4,11 +4,11 @@
       "name": "authors",
       "pre": ["ep_sciflowwriter/widgetcontainer"],
       "hooks": {
-        "eejsBlock_widgetColumn": "ep_widget_authors/static/widget:eejsBlock_widgetColumn",
-        "eejsBlock_styles": "ep_widget_authors/static/widget:eejsBlock_styles"
+        "eejsBlock_widgetColumn": "ep_widget_authors/widget",
+        "eejsBlock_styles": "ep_widget_authors/widget"
       },
       "client_hooks": {
-        "loadWidgets": "ep_widget_authors/static/js/widget:loadWidgets"
+        "loadWidgets": "ep_widget_authors/static/js/widget"
       }
     }
   ]
