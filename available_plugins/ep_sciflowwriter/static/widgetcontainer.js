@@ -2,7 +2,10 @@ var eejs = require('ep_etherpad-lite/node/eejs');
 
 // insert the widget container
 exports.eejsBlock_body = function(hook_name, args, cb) {
-	args.content = eejs.require("ep_sciflowwriter/templates/widgetcontainer.html") + args.content;
+	args.content = 
+		eejs.require("ep_sciflowwriter/templates/header.html") + 
+		eejs.require("ep_sciflowwriter/templates/widgetcontainer.html") + 
+		args.content;
 	return cb();
 };
 
