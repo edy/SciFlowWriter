@@ -14,3 +14,8 @@ exports.eejsBlock_styles = function(hook_name, args, cb) {
 	args.content = args.content + '<link rel="stylesheet" type="text/css" href="/static/plugins/ep_sciflowwriter/static/css/widgets.css">';
 	return cb();
 };
+
+exports.eejsBlock_exportColumn = function(hook_name, args, cb) {
+	args.content = args.content + '<a id="exportlatexa" target="_blank" class="exportlink"><div class="exporttype" id="exportlatex">LaTeX file</div></a>';
+	return cb();
+};
