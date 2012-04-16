@@ -11,8 +11,7 @@ var sessionID;
 
 // TODO diese methode gehört hier nicht hin
 authorManager.setAuthor = function(authorID, author, callback) {
-	db.set("globalAuthor:" + authorID, author);
-	callback(null, author);
+	db.set("globalAuthor:" + authorID, author, callback);
 };
 
 everyauth.debug = settings.auth.debug;
