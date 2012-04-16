@@ -45,8 +45,8 @@
 				</aside>
 				<div id="right">
 					<div id="personalInformation">
-						<h2 id="name"><%= user.name %></h2>
-						<p id="email"><%= user.email %></p>
+						<h2 id="name" class="editable"><%= user.name %></h2>
+						<p id="email" class="editable"><%= user.email %></p>
 						<div id="editProfile">
 							<button class="button green">Edit</button>
 						</div>
@@ -134,8 +134,30 @@
 
 			var socket = io.connect().of("/profile");
 
+			var editmode = false;
+			
 			$('#editProfile button').on('click', function(){
-				
+				if(editmode) {
+					editmode = false;
+					$('#editProfile button').text('Edit');
+					$('.editprofile').each(function() {
+						$('#' + $(this).attr('id').substr(4)).text($(this).val());
+						$(this).remove();
+					});
+					$('.hidden').removeClass('hidden').show();
+					socket.emit('update', {
+						id: authorID,
+						name: $('#name').text(),
+						email: $('#email').text()
+					});
+				} else {
+					editmode = true;
+					$('.editable').each(function(e) {
+						$(this).addClass('hidden').hide().after('<input class="editprofile" id="edit' + $(this).attr('id') + '" type="text" value="' + $(this).text() + '" />');
+					})
+					$('.editprofile').css({display:'block'});
+					$('#editProfile button').text('Save');
+				}
 			});
 
 			$('.padmenu li a').on('click', function(e) {

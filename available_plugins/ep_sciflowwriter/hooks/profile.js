@@ -31,7 +31,7 @@ exports.socketio = function (hook_name, args, cb) {
 			authorManager.getAuthor(profile.id, function(err, author) {
 				author.name = profile.name;
 				author.email = profile.email;
-				author.auth.image = profile.image;
+				author.auth.image = profile.image || author.auth.image;
 
 				authorManager.setAuthor(profile.id, author);
 			});
