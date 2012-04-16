@@ -1,3 +1,6 @@
+<%
+var user = {name:'test'};
+%>
 <div class="widget authors">
     <div class="widget-header">
         <div class="widget-title">Authors</div>
@@ -7,7 +10,7 @@
         <ul>
         <li class="clear">
         <img src="http://a0.twimg.com/profile_images/1622489700/i8zcrobqezboicqzorzbwkruqwbekcuq_normal.png" alt="avatar">
-        <strong>Author 1</strong><br>
+        <strong><%= user.name %></strong><br>
         test@test.test
         </li>
         <li class="clear">
