@@ -1,14 +1,16 @@
 var Store = require('ep_etherpad-lite/node_modules/express/node_modules/connect/lib/middleware/session/store'),
   utils = require('ep_etherpad-lite/node_modules/express/node_modules/connect/lib/utils'),
   Session = require('ep_etherpad-lite/node_modules/express/node_modules/connect/lib/middleware/session/session'),
-  db = require('ep_etherpad-lite/node/db/DB').db;
+  db = require('ep_etherpad-lite/node/db/DB').db,
+  log4js = require('ep_etherpad-lite/node_modules/log4js'),
+  messageLogger = log4js.getLogger("DirtyStore");
 
 var DirtyStore = module.exports = function DirtyStore() {};
 
 DirtyStore.prototype.__proto__ = Store.prototype;
 
 DirtyStore.prototype.get = function(sid, fn){
-  console.log('DirtyStore get: ', sid);
+  messageLogger.debug('GET ' + sid);
   db.get("sessionstorage:" + sid, function (err, sess)
   {
     if (sess) {
@@ -25,7 +27,7 @@ DirtyStore.prototype.get = function(sid, fn){
 };
 
 DirtyStore.prototype.set = function(sid, sess, fn){
-  console.log('DirtyStore set: ', sid);
+  messageLogger.debug('SET ' + sid);
   db.set("sessionstorage:" + sid, sess);
   process.nextTick(function(){
     if(fn) fn();
@@ -33,7 +35,7 @@ DirtyStore.prototype.set = function(sid, sess, fn){
 };
 
 DirtyStore.prototype.destroy = function(sid, fn){
-  console.log('DirtyStore destroy: ', sid);
+  messageLogger.debug('DESTROY ' + sid);
   db.remove("sessionstorage:" + sid);
   process.nextTick(function(){
     if(fn) fn();
@@ -41,7 +43,7 @@ DirtyStore.prototype.destroy = function(sid, fn){
 };
 
 DirtyStore.prototype.all = function(fn){
-  console.log('DirtyStore all');
+  messageLogger.debug('ALL');
   var sessions = [];
   db.forEach(function(key, value){
     if (key.substr(0,15) === "sessionstorage:") {
@@ -52,7 +54,7 @@ DirtyStore.prototype.all = function(fn){
 };
 
 DirtyStore.prototype.clear = function(fn){
-  console.log('DirtyStore clear');
+  messageLogger.debug('CLEAR');
   db.forEach(function(key, value){
     if (key.substr(0,15) === "sessionstorage:") {
       db.db.remove("session:" + key);
@@ -62,7 +64,7 @@ DirtyStore.prototype.clear = function(fn){
 };
 
 DirtyStore.prototype.length = function(fn){
-  console.log('DirtyStore length');
+  messageLogger.debug('LENGTH');
   var i = 0;
   db.forEach(function(key, value){
     if (key.substr(0,15) === "sessionstorage:") {
