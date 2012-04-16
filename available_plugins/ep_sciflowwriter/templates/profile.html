@@ -170,7 +170,7 @@
 			});
 
 			$('#newpad').on('click', function(e){
-				var name = prompt('Please name your pad:', 'my cool pad');
+				var name = prompt('Please name your pad:');
 				
 				if (name !== null) {
 					$.getJSON('/profile/newpad?name='+name, function(data){
@@ -181,17 +181,7 @@
 				return false;
 			});
 
-			$('.invitelink').live('click', function(e) {
-				var email = prompt('Send invite mail to:', '');
-				//console.log(this);
-				if (email !== null) {
-					$.getJSON(this.href, {'email':email}, function(data){
-						alert('Sent email with link: '+data.url)
-					});
-				}
-
-				return false;
-			});
+			
 		});
 		</script>
 	</body>

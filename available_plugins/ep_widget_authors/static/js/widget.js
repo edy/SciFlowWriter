@@ -19,9 +19,21 @@ exports.loadWidgets = function (hook_name, args, cb) {
 			$('<li class="clear">
 	        <img src="'+ result[user].auth.image +'" alt="avatar">
 	        <strong>'+ result[user].name +'</strong><br>
-	        test@test.test
+	        '+ result[user].email +'
 	        </li>').appendTo('.widget.authors .widget-content ul');
 		}
 		
     });
+
+    $('#invitelink').on('click', function(e) {
+    	var email = prompt('Send invite mail to:', '');
+
+		if (email !== null) {
+			$.getJSON('/profile/invite', {'email': email, 'name': padID}, function(data){
+				alert('Sent invitation: '+data.url)
+			});
+		}
+
+		return false;
+	});
 };
