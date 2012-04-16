@@ -1,6 +1,7 @@
 var path = require('path');
 var eejs = require('ep_etherpad-lite/node/eejs');
 var profileHandler = require('../handler/ProfileHandler');
+var authorManager = require('ep_etherpad-lite/node/db/AuthorManager');
 
 exports.expressCreateServer = function (hook_name, args, cb) {
 
@@ -21,4 +22,19 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 	});
 
 	args.app.get('/profile/:action?', profileHandler.handler);
+};
+
+exports.socketio = function (hook_name, args, cb) {
+	var io = args.io.of("/profile");
+	io.on('connection', function (socket) {
+		socket.on("update", function (profile) {
+			authorManager.getAuthor(profile.id, function(err, author) {
+				author.name = profile.name;
+				author.email = profile.email;
+				author.auth.image = profile.image;
+
+				authorManager.setAuthor(profile.id, author);
+			});
+		});
+	});
 };

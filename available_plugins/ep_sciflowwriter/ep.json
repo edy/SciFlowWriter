@@ -10,7 +10,8 @@
       "name": "profile",
       "pre": ["ep_sciflowwriter/auth"],
       "hooks": {
-        "expressCreateServer": "ep_sciflowwriter/hooks/profile:expressCreateServer"
+        "expressCreateServer": "ep_sciflowwriter/hooks/profile:expressCreateServer",
+        "socketio": "ep_sciflowwriter/hooks/profile:socketio"
       }
     },
     {

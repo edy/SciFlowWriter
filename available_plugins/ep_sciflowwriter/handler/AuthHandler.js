@@ -75,6 +75,7 @@ everyauth.twitter
 				if (!author.id) {
 					author.id = authorID;
 					author.name = twitUser.name;
+					author.email = '';
 					author.auth = {
 						'user_id' : twitUser.id,
 						'type' : 'twitter',
@@ -246,6 +247,7 @@ everyauth.mendeley
 				if (!author.id) {
 					author.id = authorID;
 					author.name = mendeleyUser.main.name;
+					author.email = '';
 					author.auth = {
 						'user_id' : mendeleyUser.main.profile_id,
 						'type' : 'mendeley',
