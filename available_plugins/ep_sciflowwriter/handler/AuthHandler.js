@@ -416,3 +416,20 @@ padManager.removeUserFromPad = function (userID, padID, callback) {
 		});
 	});
 };
+
+// get pad authors
+padManager.getPadUsers = function(padID, callback) {
+	padManager.doesPadExists(padID, function(err, padExists) {
+		if (!padExists) {
+			console.log('pad', padID, 'does not exists');
+			callback && callback(null);
+			return;
+		}
+
+		db.get('padaccess:'+padID, function(err, padAccess) {
+			if (padAccess) {
+				callback && callback(padAccess);
+			}
+		});
+	});
+};

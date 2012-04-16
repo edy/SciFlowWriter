@@ -15,6 +15,13 @@ exports.loadWidgets = function (hook_name, args, cb) {
 	socket.emit('widget-message', query);
 
 	socket.on("widget-message", function (result) {
-		console.log('received widget-message from server:', result);
+		for (user in result) {
+			$('<li class="clear">
+	        <img src="'+ result[user].auth.image +'" alt="avatar">
+	        <strong>'+ result[user].name +'</strong><br>
+	        test@test.test
+	        </li>').appendTo('.widget.authors .widget-content ul');
+		}
+		
     });
 };
