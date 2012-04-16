@@ -174,7 +174,7 @@
 				
 				if (name !== null) {
 					$.getJSON('/profile/newpad?name='+name, function(data){
-						$('#mypads table tbody').append('<tr><td><a href="'+data.uri+'">'+data.padID+'</a></td><td>&nbsp;</td><td><a class="invitelink" href="/profile/invite?name='+data.padID+'">invite</a></td></tr>');
+						$('#mypads table tbody').append('<tr><td><a href="'+data.uri+'">'+data.padID+'</a></td><td>&nbsp;</td><td>&nbsp;</td></tr>');
 					});
 				}
 
