@@ -279,6 +279,9 @@ everyauth.mendeley
 		} else {
 			res.redirect('/', 302);
 		}
+	})
+	.moduleErrback(function(err, seq) {
+		seq.res.send('access denied');
 	});
 
 // checks if the user is logged in
