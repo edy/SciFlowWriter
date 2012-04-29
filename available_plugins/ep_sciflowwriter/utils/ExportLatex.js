@@ -17,7 +17,7 @@
 var async = require("ep_etherpad-lite/node_modules/async");
 var db = require('ep_etherpad-lite/node/db/DB').db;
 var Changeset = require("ep_etherpad-lite/static/js/Changeset");
-var padManager = require("ep_etherpad-lite/node/db/PadManager");
+var padManager = require("../db/PadManager");
 
 function getPadPlainText(pad, revNum)
 {

@@ -1,6 +1,6 @@
 var db = require('ep_etherpad-lite/node/db/DB').db;
-var padManager = require('ep_etherpad-lite/node/db/PadManager');
-var authorManager = require('ep_etherpad-lite/node/db/AuthorManager');
+var padManager = require('../db/PadManager');
+var authorManager = require('../db/AuthorManager');
 var authHandler = require('../handler/AuthHandler');
 
 exports.handler = function (req, res, next) {

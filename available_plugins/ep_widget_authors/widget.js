@@ -1,6 +1,6 @@
 var eejs = require('ep_etherpad-lite/node/eejs');
-var padManager = require('ep_etherpad-lite/node/db/PadManager');
-var authorManager = require('ep_etherpad-lite/node/db/AuthorManager');
+var padManager = require('ep_sciflowwriter/db/PadManager');
+var authorManager = require('ep_sciflowwriter/db/AuthorManager');
 var async = require('ep_etherpad-lite/node_modules/async');
 
 // load widget

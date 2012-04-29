@@ -1,6 +1,6 @@
 var db = require('ep_etherpad-lite/node/db/DB').db;
-var padManager = require('ep_etherpad-lite/node/db/PadManager');
-var authorManager = require('ep_etherpad-lite/node/db/AuthorManager');
+var padManager = require('../db/PadManager');
+var authorManager = require('../db/AuthorManager');
 var randomString = require('ep_etherpad-lite/static/js/pad_utils').randomString
 
 exports.handler = function(req, res) {
@@ -121,33 +121,4 @@ var ProfileHandler = {
 	deletepad: function(req, res) {
 		res.send('ok')
 	}
-};
-
-// adds pad to users pad list
-authorManager.addPad = function(authorID, type, padID, callback) {
-	// get user
-	authorManager.getAuthor(authorID, function(err, author){
-		// check if pad is on the list
-		if (author.pads[type].indexOf(padID) === -1) {
-			// and add the pad to his list
-			author.pads[type].push(padID);
-			db.set("globalAuthor:" + authorID, author);
-		}
-
-		callback && callback(null);
-	});
-};
-
-// removes pad from users pad list
-authorManager.removePad = function(authorID, type, padID, callback) {
-	// get user
-	authorManager.getAuthor(authorID, function(err, author){
-		// TODO check if pad is on the list
-		if (author.pads[type].indexOf(padID) !== -1) {
-			// and remove the pad from the ist
-			author.pads[type].splice(author.pads[type].indexOf(padID), 1);
-			db.set("globalAuthor:" + authorID, author);
-		}
-		callback && callback(null);
-	});
 };

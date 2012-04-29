@@ -3,15 +3,10 @@ var everyauth = module.exports = require('everyauth');
 var settings = require('ep_etherpad-lite/node/utils/Settings');
 var randomString = require('ep_etherpad-lite/static/js/pad_utils').randomString
 var async = require('ep_etherpad-lite/node_modules/async');
-var authorManager = require('ep_etherpad-lite/node/db/AuthorManager');
+var authorManager = require('../db/AuthorManager');
 var groupManager = require('ep_etherpad-lite/node/db/GroupManager');
 var sessionManager = require('ep_etherpad-lite/node/db/SessionManager');
-var padManager = require('ep_etherpad-lite/node/db/PadManager');
-
-// TODO diese methode gehört hier nicht hin
-authorManager.setAuthor = function(authorID, author, callback) {
-	db.set("globalAuthor:" + authorID, author, callback);
-};
+var padManager = require('../db/PadManager');
 
 everyauth.debug = settings.auth.debug;
 everyauth.everymodule.moduleTimeout(settings.auth.timeout);
@@ -276,12 +271,12 @@ function sendResponse(res, data) {
 }
 
 // checks if the user is logged in
-module.exports.isLoggedIn = function (req) {
+everyauth.isLoggedIn = function (req) {
 	return Boolean(req.user);
 };
 
 // checks if requested url is in allowed paths
-module.exports.isAllowedPath = function (url) {
+everyauth.isAllowedPath = function (url) {
 	var isAllowedPath = false;
 
 	// regex paths
@@ -309,7 +304,7 @@ module.exports.isAllowedPath = function (url) {
 };
 
 // express middleware to redirect not logged in users
-module.exports.loginRedirect = function (req, res, next) {
+everyauth.loginRedirect = function (req, res, next) {
 	console.log('URL:', req.url);
 	if (everyauth.isLoggedIn(req)) {
 		console.log('logged in');
@@ -328,7 +323,7 @@ module.exports.loginRedirect = function (req, res, next) {
 };
 
 // checks if the iser has assess to requested pad id
-module.exports.hasPadAccess = function (req, res, next) {
+everyauth.hasPadAccess = function (req, res, next) {
 	var padID = req.params.pad;
 	var userID = req.user.id;
 	
@@ -354,75 +349,4 @@ module.exports.hasPadAccess = function (req, res, next) {
 			next();
 		});
 	});	
-};
-
-// adds an user to the pads access list
-padManager.addUserToPad = function (userID, padID, callback) {
-	padManager.doesPadExists(padID, function(err, padExists) {
-		if (!padExists) {
-			callback && callback(null);
-			return;
-		}
-
-		db.get('padaccess:'+padID, function(err, padAccess) {
-			// create a new access object
-			if (!padAccess) {
-				padAccess = {
-					owner: userID,
-					user: [userID],
-					reviewer: []
-				};
-
-			// alter available pad access object
-			} else if (padAccess.user.indexOf(userID) === -1) {
-				padAccess.user.push(userID);
-
-			// user has access
-			} else {
-				console.log('user has already access to pad ', padID);
-			}
-
-			db.set('padaccess:'+padID, padAccess);
-
-			callback && callback(null);
-		});
-	});
-};
-
-// removes an user from the pads access list
-padManager.removeUserFromPad = function (userID, padID, callback) {
-	padManager.doesPadExists(padID, function(err, padExists) {
-		if (!padExists) {
-			console.log('pad', padID, 'does not exists');
-			callback && callback(null);
-			return;
-		}
-		db.get('padaccess:'+padID, function(err, padAccess) {
-			// delete user if he is not the owner
-			if (padAccess &&  padAccess.owner !== userID && padAccess.user.indexOf(userID) !== -1) {
-				console.log('user', userID, 'removed from pad', padID);
-				padAccess.user.splice(padAccess.user.indexOf(userID), 1);
-				db.set('padaccess:'+padID, padAccess);
-			}
-
-			callback && callback(null);
-		});
-	});
-};
-
-// get pad authors
-padManager.getPadUsers = function(padID, callback) {
-	padManager.doesPadExists(padID, function(err, padExists) {
-		if (!padExists) {
-			console.log('pad', padID, 'does not exists');
-			callback && callback(null);
-			return;
-		}
-
-		db.get('padaccess:'+padID, function(err, padAccess) {
-			if (padAccess) {
-				callback && callback(padAccess);
-			}
-		});
-	});
 };
