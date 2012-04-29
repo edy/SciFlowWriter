@@ -1,3 +1,7 @@
+.widget.authors {
+	display: none;
+}
+
 .widget.authors img {
 	height: 27px;
 	vertical-align: top;

@@ -5,6 +5,9 @@ var padID = new RegExp(/.*\/p\/([^\/]+)/).exec(document.location.pathname)[1];
 // do something here
 exports.loadWidgets = function (hook_name, args, cb) {
 
+	// show authors widget
+	$('.widget.authors').show();
+	
 	var query = {
 		'padID': padID,
 		'widget_name': 'ep_widget_authors',
