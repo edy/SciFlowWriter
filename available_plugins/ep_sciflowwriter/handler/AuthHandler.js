@@ -7,7 +7,6 @@ var authorManager = require('ep_etherpad-lite/node/db/AuthorManager');
 var groupManager = require('ep_etherpad-lite/node/db/GroupManager');
 var sessionManager = require('ep_etherpad-lite/node/db/SessionManager');
 var padManager = require('ep_etherpad-lite/node/db/PadManager');
-var sessionID;
 
 // TODO diese methode gehört hier nicht hin
 authorManager.setAuthor = function(authorID, author, callback) {
@@ -102,9 +101,9 @@ everyauth.twitter
 		return promise;
 	})
 	.sendResponse(function(res, data) {
-		if (data.session && data.session.redirectAfterLogin) {
-			var redirectAfterLogin = data.session.redirectAfterLogin;
-			delete data.session.redirectAfterLogin
+		if (data.req.cookies && data.req.cookies.redirectAfterLogin) {
+			var redirectAfterLogin = data.req.cookies.redirectAfterLogin;
+			delete data.req.cookies.redirectAfterLogin;
 			res.redirect(redirectAfterLogin, 302);
 		} else {
 			res.redirect('/', 302);
@@ -189,9 +188,9 @@ everyauth.facebook
 		return promise;
 	})
 	.sendResponse(function(res, data) {
-		if (data.session && data.session.redirectAfterLogin) {
-			var redirectAfterLogin = data.session.redirectAfterLogin;
-			delete data.session.redirectAfterLogin
+		if (data.req.cookies && data.req.cookies.redirectAfterLogin) {
+			var redirectAfterLogin = data.req.cookies.redirectAfterLogin;
+			delete data.req.cookies.redirectAfterLogin;
 			res.redirect(redirectAfterLogin, 302);
 		} else {
 			res.redirect('/', 302);
@@ -274,9 +273,9 @@ everyauth.mendeley
 		return promise;
 	})
 	.sendResponse(function(res, data) {
-		if (data.session && data.session.redirectAfterLogin) {
-			var redirectAfterLogin = data.session.redirectAfterLogin;
-			delete data.session.redirectAfterLogin
+		if (data.req.cookies && data.req.cookies.redirectAfterLogin) {
+			var redirectAfterLogin = data.req.cookies.redirectAfterLogin;
+			delete data.req.cookies.redirectAfterLogin;
 			res.redirect(redirectAfterLogin, 302);
 		} else {
 			res.redirect('/', 302);

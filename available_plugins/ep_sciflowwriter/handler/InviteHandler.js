@@ -20,5 +20,8 @@ exports.handler = function (req, res, next) {
 				});
 			});
 		});
-	});
+	} else {
+		res.cookie('redirectAfterLogin', '/invite/'+req.params.id, {'path': '/'});
+		res.redirect('/login', 302);
+	}
 };
