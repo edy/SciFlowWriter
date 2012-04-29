@@ -127,11 +127,13 @@ var ProfileHandler = {
 authorManager.addPad = function(authorID, type, padID, callback) {
 	// get user
 	authorManager.getAuthor(authorID, function(err, author){
-		// TODO check if pad is on the list
+		// check if pad is on the list
+		if (author.pads[type].indexOf(padID) === -1) {
+			// and add the pad to his list
+			author.pads[type].push(padID);
+			db.set("globalAuthor:" + authorID, author);
+		}
 
-		// and add the pad to his list
-		author.pads[type].push(padID);
-		db.set("globalAuthor:" + authorID, author);
 		callback && callback(null);
 	});
 };
@@ -141,10 +143,11 @@ authorManager.removePad = function(authorID, type, padID, callback) {
 	// get user
 	authorManager.getAuthor(authorID, function(err, author){
 		// TODO check if pad is on the list
-
-		// and remove the pad from the ist
-		author.pads[type].splice(author.pads[type].indexOf(padID), 1);
-		db.set("globalAuthor:" + authorID, author);
+		if (author.pads[type].indexOf(padID) !== -1) {
+			// and remove the pad from the ist
+			author.pads[type].splice(author.pads[type].indexOf(padID), 1);
+			db.set("globalAuthor:" + authorID, author);
+		}
 		callback && callback(null);
 	});
 };
