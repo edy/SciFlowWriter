@@ -17,16 +17,21 @@ exports.eejsBlock_styles = function(hook_name, args, cb) {
 
 exports.onWidgetMessage = function (hook_name, args, cb) {
 	padManager.getPadUsers(args.query.padID, function(padAccess) {
-		var users = [];
+		var result = {
+			'padID': args.query.padID,
+			'widget_name': args.query.widget_name,
+			'name': 'padAuthors',
+			'result': []
+		};
 		
 		async.forEach(padAccess.user, function(authorID, callback){
 			authorManager.getAuthor(authorID, function(err, author) {
-				users.push(author);	
+				result.result.push(author);	
 
 				callback();
 			});
 		}, function(err){
-			args.socket.emit('widget-message', users);
+			args.socket.emit('widget-message', result);
 		});
 	});
 };

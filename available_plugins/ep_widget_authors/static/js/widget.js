@@ -17,15 +17,15 @@ exports.loadWidgets = function (hook_name, args, cb) {
 
 	socket.emit('widget-message', query);
 
-	socket.on("widget-message", function (result) {
-		for (user in result) {
-			$('<li class="clear">
-	        <img src="'+ result[user].auth.image +'" alt="avatar">
-	        <strong>'+ result[user].name +'</strong><br>
-	        '+ result[user].email +'
-	        </li>').appendTo('.widget.authors .widget-content ul');
+	socket.on("widget-message", function (message) {
+		if (message.name === 'padAuthors') {
+			for (user in message.result) {
+				$('<li class="clear">
+		        <img src="'+ message.result[user].auth.image +'" alt="avatar">
+		        <strong>'+ message.result[user].name +'</strong><br>'+ message.result[user].email +'
+		        </li>').appendTo('.widget.authors .widget-content ul');
+			}
 		}
-		
     });
 
     $('#invitelink').on('click', function(e) {
