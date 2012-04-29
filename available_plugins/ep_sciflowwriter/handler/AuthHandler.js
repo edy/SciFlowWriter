@@ -113,10 +113,9 @@ everyauth.twitter
 // facebook OAuth
 everyauth.facebook
 	.appId(settings.auth.facebook.appId)
-	.appSecret(settings.auth.appSecret)
+	.appSecret(settings.auth.facebook.appSecret)
 	.scope('email')
-	// TODO wait for everyauth 0.2.33
-	//.fields('id,name,email,picture')
+	.fields('id,name,email,picture,link')
 	.handleAuthCallbackError( function (req, res) {
 		//console.log('handleAuthCallbackError', req.params['error_description']);
 		res.send('access denied');
@@ -165,7 +164,7 @@ everyauth.facebook
 						'type' : 'facebook',
 						'user_id' : fbUserMetadata.id,
 						'screen_name': fbUserMetadata.username,
-						'image' : null,
+						'image' : fbUserMetadata.picture,
 						'url' : fbUserMetadata.link,
 						'accessToken' : accessToken,
 						'accessTokExtra' : accessTokExtra
