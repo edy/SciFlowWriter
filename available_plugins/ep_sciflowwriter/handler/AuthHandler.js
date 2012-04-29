@@ -101,13 +101,7 @@ everyauth.twitter
 		return promise;
 	})
 	.sendResponse(function(res, data) {
-		if (data.req.cookies && data.req.cookies.redirectAfterLogin) {
-			var redirectAfterLogin = data.req.cookies.redirectAfterLogin;
-			delete data.req.cookies.redirectAfterLogin;
-			res.redirect(redirectAfterLogin, 302);
-		} else {
-			res.redirect('/', 302);
-		}
+		sendResponse(res, data);
 	});
 
 // facebook OAuth
@@ -187,13 +181,7 @@ everyauth.facebook
 		return promise;
 	})
 	.sendResponse(function(res, data) {
-		if (data.req.cookies && data.req.cookies.redirectAfterLogin) {
-			var redirectAfterLogin = data.req.cookies.redirectAfterLogin;
-			delete data.req.cookies.redirectAfterLogin;
-			res.redirect(redirectAfterLogin, 302);
-		} else {
-			res.redirect('/', 302);
-		}
+		sendResponse(res, data);
 	});
 
 // mendeley OAuth
@@ -206,8 +194,7 @@ everyauth.mendeley
 	})
 	.findOrCreateUser( function (sess, accessToken, accessSecret, mendeleyUser, reqres) {
 		console.log('findOrCreateUser');
-		console.error('mendeley: ', mendeleyUser);
-		
+
 		// load author
 		var promise = this.Promise();
 		async.waterfall([
@@ -272,25 +259,29 @@ everyauth.mendeley
 		return promise;
 	})
 	.sendResponse(function(res, data) {
-		if (data.req.cookies && data.req.cookies.redirectAfterLogin) {
-			var redirectAfterLogin = data.req.cookies.redirectAfterLogin;
-			delete data.req.cookies.redirectAfterLogin;
-			res.redirect(redirectAfterLogin, 302);
-		} else {
-			res.redirect('/', 302);
-		}
+		sendResponse(res, data);
 	})
 	.moduleErrback(function(err, seq) {
 		seq.res.send('access denied');
 	});
 
+function sendResponse(res, data) {
+	if (data.req.cookies && data.req.cookies.redirectafterlogin) {
+		var redirectafterlogin = data.req.cookies.redirectafterlogin;
+		res.clearCookie('redirectafterlogin', {'path': '/'});
+		res.redirect(redirectafterlogin, 302);
+	} else {
+		res.redirect('/', 302);
+	}
+}
+
 // checks if the user is logged in
-everyauth.isLoggedIn = function (req) {
+module.exports.isLoggedIn = function (req) {
 	return Boolean(req.user);
 };
 
 // checks if requested url is in allowed paths
-everyauth.isAllowedPath = function (url) {
+module.exports.isAllowedPath = function (url) {
 	var isAllowedPath = false;
 
 	// regex paths
@@ -318,7 +309,7 @@ everyauth.isAllowedPath = function (url) {
 };
 
 // express middleware to redirect not logged in users
-everyauth.loginRedirect = function (req, res, next) {
+module.exports.loginRedirect = function (req, res, next) {
 	console.log('URL:', req.url);
 	if (everyauth.isLoggedIn(req)) {
 		console.log('logged in');
@@ -337,7 +328,7 @@ everyauth.loginRedirect = function (req, res, next) {
 };
 
 // checks if the iser has assess to requested pad id
-everyauth.hasPadAccess = function (req, res, next) {
+module.exports.hasPadAccess = function (req, res, next) {
 	var padID = req.params.pad;
 	var userID = req.user.id;
 	
