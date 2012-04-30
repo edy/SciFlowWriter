@@ -2,13 +2,15 @@
   "parts": [
     {
       "name": "auth",
+      "pre": ["ep_etherpad-lite/webaccess"],
       "hooks": {
-        "expressCreateServer": "ep_sciflowwriter/hooks/auth:expressCreateServer"
+        "expressConfigure": "ep_sciflowwriter/hooks/auth:expressConfigure"
       }
     },
     {
       "name": "profile",
       "pre": ["ep_sciflowwriter/auth"],
+      "post": ["ep_etherpad-lite/specialpages"],
       "hooks": {
         "expressCreateServer": "ep_sciflowwriter/hooks/profile:expressCreateServer",
         "socketio": "ep_sciflowwriter/hooks/profile:socketio"

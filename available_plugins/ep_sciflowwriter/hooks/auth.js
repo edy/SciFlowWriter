@@ -4,7 +4,7 @@ var authHandler = require('../handler/AuthHandler');
 var DirtyStore = require('../db/DirtyStore');
 var express = require('ep_etherpad-lite/node_modules/express');
 
-exports.expressCreateServer = function (hook_name, args, cb) {
+exports.expressConfigure = function (hook_name, args, cb) {
 
 	/*args.app.use(express.cookieParser());
 	args.app.use(express.session({
