@@ -19,21 +19,18 @@ exports.loadWidgets = function (hook_name, args, cb) {
 
 	socket.on("widget-message", function (message) {
 		if (message.name === 'padAuthors') {
-			for (user in message.result) {
-				$('<li class="clear">
-		        <img src="'+ message.result[user].auth.image +'" alt="avatar">
-		        <strong>'+ message.result[user].name +'</strong><br>'+ message.result[user].email +'
-		        </li>').appendTo('.widget.authors .widget-content ul');
-			}
+			$.each(message.result, function(i, user) {
+				$('<li class="clear"><img src="'+ user.auth.image +'" alt="avatar"><strong>'+ user.name +'</strong><br>'+ user.email +'</li>').appendTo('.widget.authors .widget-content ul');
+			});
 		}
-    });
+	});
 
-    $('#invitelink').on('click', function(e) {
-    	var email = prompt('Send invite mail to:', '');
+	$('#invitelink').on('click', function(e) {
+		var email = prompt('Send invite mail to:', '');
 
 		if (email !== null) {
 			$.getJSON('/profile/invite', {'email': email, 'name': padID}, function(data){
-				alert('Sent invitation: '+data.url)
+				alert('Sent invitation: '+data.url);
 			});
 		}
 

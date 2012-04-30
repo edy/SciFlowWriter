@@ -1,7 +1,7 @@
 var db = require('ep_etherpad-lite/node/db/DB').db;
 var everyauth = module.exports = require('everyauth');
 var settings = require('ep_etherpad-lite/node/utils/Settings');
-var randomString = require('ep_etherpad-lite/static/js/pad_utils').randomString
+var randomString = require('ep_etherpad-lite/static/js/pad_utils').randomString;
 var async = require('ep_etherpad-lite/node_modules/async');
 var authorManager = require('../db/AuthorManager');
 var groupManager = require('ep_etherpad-lite/node/db/GroupManager');

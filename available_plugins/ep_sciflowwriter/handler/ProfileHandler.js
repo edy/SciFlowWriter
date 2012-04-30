@@ -1,14 +1,14 @@
 var db = require('ep_etherpad-lite/node/db/DB').db;
 var padManager = require('../db/PadManager');
 var authorManager = require('../db/AuthorManager');
-var randomString = require('ep_etherpad-lite/static/js/pad_utils').randomString
+var randomString = require('ep_etherpad-lite/static/js/pad_utils').randomString;
 
 exports.handler = function(req, res) {
 	var action = req.params.action;
 	
 	// set default action
 	if (!action) {
-		action = 'index'
+		action = 'index';
 	}
 
 	// check if given method exists
@@ -18,7 +18,7 @@ exports.handler = function(req, res) {
 	}
 
 	ProfileHandler[action](req, res);
-}
+};
 
 var ProfileHandler = {
 	index: function(req, res) {
@@ -42,13 +42,13 @@ var ProfileHandler = {
 
 		// we need a pad name!
 		if (!query || !query.name) {
-			res.send({'error': 'no name'}, 500)
+			res.send({'error': 'no name'}, 500);
 			return;
 		}
 
 		// check for invalid pad names
 		if (!padManager.isValidPadId(query.name)) {
-			res.send({'error': 'invalid pad name'}, 500)
+			res.send({'error': 'invalid pad name'}, 500);
 			return;
 		}
 
@@ -81,13 +81,13 @@ var ProfileHandler = {
 
 		// we need a pad name!
 		if (!query || !query.name) {
-			res.send({'error': 'need a pad name'}, 500)
+			res.send({'error': 'need a pad name'}, 500);
 			return;
 		}
 
 		// we need an email!
 		if (!query || !query.email) {
-			res.send({'error': 'need an email'}, 500)
+			res.send({'error': 'need an email'}, 500);
 			return;
 		}
 
@@ -119,6 +119,6 @@ var ProfileHandler = {
 	},
 
 	deletepad: function(req, res) {
-		res.send('ok')
+		res.send('ok');
 	}
 };
