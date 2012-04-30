@@ -6,11 +6,11 @@ var express = require('ep_etherpad-lite/node_modules/express');
 
 exports.expressCreateServer = function (hook_name, args, cb) {
 
-	args.app.use(express.cookieParser());
+	/*args.app.use(express.cookieParser());
 	args.app.use(express.session({
 		secret: 'sciflowwriter super secret string',
 		store: new DirtyStore()
-	}));
+	}));*/
 
 	args.app.use(authHandler.middleware());
 

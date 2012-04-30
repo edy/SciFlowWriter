@@ -75,49 +75,6 @@ var ProfileHandler = {
 		});
 	},
 
-	invite: function(req, res) {
-		var user = req.user;
-		var query = req.query;
-
-		// we need a pad name!
-		if (!query || !query.name) {
-			res.send({'error': 'need a pad name'}, 500);
-			return;
-		}
-
-		// we need an email!
-		if (!query || !query.email) {
-			res.send({'error': 'need an email'}, 500);
-			return;
-		}
-
-		padManager.doesPadExists(query.name, function(err, value) {
-			
-			if (!value) {
-				res.send({'error': 'pad doesn\'t exist'}, 500);
-				return;
-			}
-
-			var inviteID = randomString(16);
-			var url = 'http://'+req.headers.host+'/invite/'+inviteID;
-
-			var inviteObject = {
-				pad: query.name,
-				type: 'other',
-				user: user.id,
-				timestamp: Date.now()
-			};
-
-			db.set("padinvite:" + inviteID, inviteObject);
-
-			require('child_process').exec('echo "'+url+'" | mail -s "SciFlowWriter invitation" '+query.email, function (error, stdout, stderr) {});
-			
-			res.send({'url':url});
-		});
-
-
-	},
-
 	deletepad: function(req, res) {
 		res.send('ok');
 	}
