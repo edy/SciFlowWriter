@@ -1,6 +1,5 @@
 var $ = require('ep_etherpad-lite/static/js/rjquery').$; // use jQuery
 var socket = io.connect().of("/widgets");
-var padID = new RegExp(/.*\/p\/([^\/]+)/).exec(document.location.pathname)[1];
 
 // do something here
 exports.loadWidgets = function (hook_name, args, cb) {
@@ -10,12 +9,12 @@ exports.loadWidgets = function (hook_name, args, cb) {
 	
 	// ask server for pad authors
 	socket.emit('widget-message', {
-		'padID': padID,
+		'padID': pad.getPadId(),
 		'widget_name': 'ep_widget_authors',
 		'action': 'getPadAuthors'
 	});
 
-	// listen for pad authors message and display these authors
+	// listen for pad authors message and display them
 	socket.on("widget-message", function (message) {
 		if (message.widget_name !== 'ep_widget_authors') return;
 
@@ -32,11 +31,8 @@ exports.loadWidgets = function (hook_name, args, cb) {
 		var email = prompt('Send invite mail to:', '');
 
 		if (email !== null) {
-			/*$.getJSON('/profile/invite', {'email': email, 'name': padID}, function(data){
-				alert('Sent invitation: '+data.url);
-			});*/
 			socket.emit('widget-message', {
-				'padID': padID,
+				'padID': pad.getPadId(),
 				'widget_name': 'ep_widget_authors',
 				'action': 'inviteUser',
 				'value': {'email': email}
