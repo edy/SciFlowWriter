@@ -35,6 +35,7 @@
       "pre": ["ep_sciflowwriter/auth"],
       "hooks": {
         "eejsBlock_styles": "ep_sciflowwriter/static/widgetcontainer",
+        "eejsBlock_scripts": "ep_sciflowwriter/static/widgetcontainer",
         "eejsBlock_body": "ep_sciflowwriter/static/widgetcontainer",
         "eejsBlock_exportColumn": "ep_sciflowwriter/static/widgetcontainer",
         "socketio": "ep_sciflowwriter/static/widgetcontainer"

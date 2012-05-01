@@ -1,0 +1,17 @@
+{
+  "parts": [
+    {
+      "name": "metadata",
+      "pre": ["ep_sciflowwriter/widgetcontainer"],
+      "hooks": {
+        "eejsBlock_body": "ep_widget_metadata/widget",
+        "eejsBlock_widgetColumn": "ep_widget_metadata/widget",
+        "eejsBlock_styles": "ep_widget_metadata/widget",
+        "onWidgetMessage": "ep_widget_metadata/widget"
+      },
+      "client_hooks": {
+        "loadWidgets": "ep_widget_metadata/static/js/widget:loadWidgets"
+      }
+    }
+  ]
+}

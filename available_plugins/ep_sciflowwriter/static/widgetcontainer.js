@@ -16,6 +16,11 @@ exports.eejsBlock_styles = function(hook_name, args, cb) {
 	return cb();
 };
 
+exports.eejsBlock_scripts = function(hook_name, args, cb) {
+	args.content = args.content + '<script src="/static/plugins/ep_sciflowwriter/static/js/bootstrap-modal.js"></script>';
+	return cb();
+};
+
 exports.eejsBlock_exportColumn = function(hook_name, args, cb) {
 	args.content = args.content + '<a id="exportlatexa" target="_blank" class="exportlink"><div class="exporttype" id="exportlatex">LaTeX file</div></a>';
 	return cb();
