@@ -1,9 +1,10 @@
 var $ = require('ep_etherpad-lite/static/js/rjquery').$; // use jQuery
-var socket = io.connect().of("/widgets");
+var socket;
 
 // do something here
 exports.loadWidgets = function (hook_name, args, cb) {
-
+	socket = args.socket;
+	
 	// show authors widget
 	$('.widget.authors').show();
 	
@@ -41,4 +42,6 @@ exports.loadWidgets = function (hook_name, args, cb) {
 
 		return false;
 	});
+
+	return cb();
 };

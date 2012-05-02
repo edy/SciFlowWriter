@@ -1,8 +1,8 @@
-var socket = io.connect().of("/widgets");
-var padID = pad.getPadId();
-
+var socket = null;
 
 exports.loadWidgets = function (hook_name, args, cb) {
+	socket = args.socket;
+	
 	$('.widget.metadata').show();
 
 	// get pad metadata
@@ -53,4 +53,6 @@ exports.loadWidgets = function (hook_name, args, cb) {
 			$('#metadataAbstract').text(message.result.abstract);
 		}
 	});
+
+	return cb();
 };
