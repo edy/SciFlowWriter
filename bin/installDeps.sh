@@ -60,6 +60,7 @@ echo "Ensure that all dependencies are up to date..."
   cd node_modules
   [ -e ep_etherpad-lite ] || ln -s ../src ep_etherpad-lite
   [ -e ep_sciflowwriter ] || ln -s ../available_plugins/ep_sciflowwriter ep_sciflowwriter
+  [ -e ep_headings ] || ln -s ../available_plugins/ep_headings ep_headings
   [ -e ep_widget_authors ] || ln -s ../available_plugins/ep_widget_authors ep_widget_authors
   [ -e ep_widget_metadata ] || ln -s ../available_plugins/ep_widget_metadata ep_widget_metadata
   cd ep_etherpad-lite
