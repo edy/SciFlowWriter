@@ -151,6 +151,28 @@ function getLatexFromAtext(pad, atext)
       }
     }
 
+    // start heading check
+    var heading = false;
+    var deletedAsterisk = false; // we need to delete * from the beginning of the heading line
+    var iter2 = Changeset.opIterator(Changeset.subattribution(attribs, 0, 1));
+    if (iter2.hasNext()) {
+      var o2 = iter2.next();
+      
+      // iterate through attributes
+      Changeset.eachAttribNumber(o2.attribs, function (a) {
+        
+        if (a in headinganumMap)
+        {
+          var i = headinganumMap[a]; // i = 0 => bold, etc.
+          heading = headingtags[i];
+        }
+      });
+    }
+
+    if (heading) {
+      assem.append('\\'+heading+'{');
+    }
+
     var urls = _findURLs(text);
 
     var idx = 0;
@@ -263,6 +285,12 @@ function getLatexFromAtext(pad, atext)
         //removes the characters with the code 12. Don't know where they come 
         //from but they break the abiword parser and are completly useless
         s = s.replace(String.fromCharCode(12), "");
+
+        // delete * if this line is a heading
+        if (heading && !deletedAsterisk) {
+          s = s.substring(1);
+          deletedAsterisk = true;
+        }
         
         //assem.append(_encodeWhitespace(Security.escapeHTML(s)));
         assem.append(s);
@@ -280,6 +308,7 @@ function getLatexFromAtext(pad, atext)
       
       orderdCloseTags(tags2close);
     } // end processNextChars
+
     if (urls)
     {
       urls.forEach(function (urlData)
@@ -294,31 +323,10 @@ function getLatexFromAtext(pad, atext)
       });
     }
 
-    // start heading
-    var heading = false;
-    var iter2 = Changeset.opIterator(Changeset.subattribution(attribs, 0, 1));
-    if (iter2.hasNext()) {
-      var o2 = iter2.next();
-      
-      // iterate through attributes
-      Changeset.eachAttribNumber(o2.attribs, function (a) {
-        
-        if (a in headinganumMap)
-        {
-          var i = headinganumMap[a]; // i = 0 => bold, etc.
-          heading = headingtags[i];
-        }
-      });
-    }
-
-    if (heading) {
-      assem.append('\\'+heading+'{');
-    }
-
     processNextChars(text.length - idx);
 
     if (heading) {
-      assem.append('}');//+heading+'>');
+      assem.append('}');
     }
 
     return _processSpaces(assem.toString());
