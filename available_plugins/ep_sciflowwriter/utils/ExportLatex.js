@@ -21,32 +21,6 @@ var padManager = require("../db/PadManager");
 var ERR = require("ep_etherpad-lite/node_modules/async-stacktrace");
 var Security = require('ep_etherpad-lite/static/js/security');
 
-function getPadPlainText(pad, revNum)
-{
-  var atext = ((revNum !== undefined) ? pad.getInternalRevisionAText(revNum) : pad.atext());
-  var textLines = atext.text.slice(0, -1).split('\n');
-  var attribLines = Changeset.splitAttributionLines(atext.attribs, atext.text);
-  var apool = pad.pool();
-
-  var pieces = [];
-  for (var i = 0; i < textLines.length; i++)
-  {
-    var line = _analyzeLine(textLines[i], attribLines[i], apool);
-    if (line.listLevel)
-    {
-      var numSpaces = line.listLevel * 2 - 1;
-      var bullet = '*';
-      pieces.push(new Array(numSpaces + 1).join(' '), bullet, ' ', line.text, '\n');
-    }
-    else
-    {
-      pieces.push(line.text, '\n');
-    }
-  }
-
-  return pieces.join('');
-}
-
 function getPadLatex(pad, revNum, callback)
 {
   var atext = pad.atext;
