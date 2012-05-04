@@ -24,7 +24,9 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 				res.send(result);
 			});
 		} else if (req.params.type === 'pdflatex') {
-			res.send(eejs.require("ep_sciflowwriter/templates/view_pdf.html"), { maxAge: 0 });
+			res.send(eejs.require("ep_sciflowwriter/templates/view_pdf.html", {
+				'pdfUrl': '/p/' + padID + ((revision !== null) ? '/'+revision:'') + '/export/pdflatexrendered'
+			}), { maxAge: 0 });
 		} else if (req.params.type === 'pdflatexrendered') {
 			console.log('request: pdflatexrendered');
 			generatePdfLatex(padID, revision, function(err, pdfPath) {
