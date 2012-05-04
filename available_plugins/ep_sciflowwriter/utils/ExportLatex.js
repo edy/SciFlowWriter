@@ -81,7 +81,7 @@ function getLatexFromAtext(pad, atext)
     }
   });
 
-  var headingtags = ['section', 'subsection', 'subsubsection', 'paragraph', 'subparagraph', 'subsubparagraph'];
+  var headingtags = ['section', 'subsection', 'subsubsection', 'paragraph', 'subparagraph', 'subparagraph'];
   var headingprops = [['heading', 'h1'], ['heading', 'h2'], ['heading', 'h3'], ['heading', 'h4'], ['heading', 'h5'], ['heading', 'h6']];
   var headinganumMap = {};
 
