@@ -190,7 +190,6 @@ function getLatexFromAtext(pad, atext)
       while (iter.hasNext())
       {
         var o = iter.next();
-        console.log('o:', o);
         var propChanged = false;
         Changeset.eachAttribNumber(o.attribs, function (a)
         {
@@ -292,8 +291,8 @@ function getLatexFromAtext(pad, atext)
           deletedAsterisk = true;
         }
         
-        //assem.append(_encodeWhitespace(Security.escapeHTML(s)));
-        assem.append(s);
+        assem.append(_encodeWhitespace(Security.escapeHTML(s)));
+        //assem.append(s);
       } // end iteration over spans in line
       
       var tags2close = [];
@@ -368,12 +367,12 @@ function getLatexFromAtext(pad, atext)
         if(line.listTypeName == "number")
         {
           //pieces.push('<ol class="'+line.listTypeName+'"><li>', lineContent || '<br>');
-          pieces.push("\n \\begin{enumerate} \n \\item ", lineContent || "\n");
+          pieces.push("\n"+(new Array((line.listLevel-1)*4)).join(' ')+"\\begin{enumerate} \n"+(new Array(line.listLevel*4)).join(' ')+"\\item ", lineContent || "\n");
         }
         else
         {
           //pieces.push('<ul class="'+line.listTypeName+'"><li>', lineContent || '<br>');
-          pieces.push("\n \\begin{itemize} \n \\item ", lineContent || "\n");
+          pieces.push("\n"+(new Array((line.listLevel-1)*4)).join(' ')+"\\begin{itemize} \n"+(new Array(line.listLevel*4)).join(' ')+"\\item ", lineContent || "\n");
         }
       }
       //the following code *seems* dead after my patch.
@@ -408,17 +407,17 @@ function getLatexFromAtext(pad, atext)
           if(lists[lists.length - 1][1] == "number")
           {
             //pieces.push('</li></ol>');
-            pieces.push("\n \\end{enumerate}");
+            pieces.push("\n"+(new Array((line.listLevel-1)*4)).join(' ')+"\\end{enumerate}");
           }
           else
           {
             //pieces.push('</li></ul>');
-            pieces.push("\n \\end{itemize}");
+            pieces.push("\n"+(new Array((line.listLevel-1)*4)).join(' ')+"\\end{itemize}");
           }
           lists.length--;
         }
         //pieces.push('</li><li>', lineContent || '<br>');
-        pieces.push("\n \\item ", lineContent || "\n");
+        pieces.push("\n"+(new Array(line.listLevel*4)).join(' ')+"\\item ", lineContent || "\n");
       }
     }
     else//outside any list
@@ -428,12 +427,13 @@ function getLatexFromAtext(pad, atext)
         if(lists[lists.length - 1][1] == "number")
         {
           //pieces.push('</li></ol>');
-          pieces.push("\n \\end{enumerate}");
+          pieces.push("\n"+(new Array((lists.length-1)*4)).join(' ')+"\\end{enumerate}");
+
         }
         else
         {
           //pieces.push('</li></ul>');
-          pieces.push("\n \\end{itemize}");
+          pieces.push("\n"+(new Array((lists.length-1)*4)).join(' ')+"\\end{itemize}");
         }
         lists.length--;
       }      
@@ -447,12 +447,12 @@ function getLatexFromAtext(pad, atext)
     if(lists[k][1] == "number")
     {
       //pieces.push('</li></ol>');
-      pieces.push("\n \\end{enumerate}");
+      pieces.push("\n\\end{enumerate}");
     }
     else
     {
       //pieces.push('</li></ul>');
-      pieces.push("\n \\end{itemize}");
+      pieces.push("\n\\end{itemize}");
     }
   }
 
