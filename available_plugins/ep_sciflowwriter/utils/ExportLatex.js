@@ -130,8 +130,6 @@ function getLatexFromAtext(pad, atext)
     function emitCloseTag(i)
     {
       openTags.shift();
-      //assem.append('</');
-      //assem.append(tags[i]);
       assem.append('}');
     }
     
@@ -292,7 +290,6 @@ function getLatexFromAtext(pad, atext)
         }
         
         assem.append(_encodeWhitespace(Security.escapeHTML(s)));
-        //assem.append(s);
       } // end iteration over spans in line
       
       var tags2close = [];
@@ -366,12 +363,10 @@ function getLatexFromAtext(pad, atext)
         lists.push([line.listLevel, line.listTypeName]);
         if(line.listTypeName == "number")
         {
-          //pieces.push('<ol class="'+line.listTypeName+'"><li>', lineContent || '<br>');
           pieces.push("\n"+(new Array((line.listLevel-1)*4)).join(' ')+"\\begin{enumerate} \n"+(new Array(line.listLevel*4)).join(' ')+"\\item ", lineContent || "\n");
         }
         else
         {
-          //pieces.push('<ul class="'+line.listTypeName+'"><li>', lineContent || '<br>');
           pieces.push("\n"+(new Array((line.listLevel-1)*4)).join(' ')+"\\begin{itemize} \n"+(new Array(line.listLevel*4)).join(' ')+"\\item ", lineContent || "\n");
         }
       }
@@ -406,17 +401,14 @@ function getLatexFromAtext(pad, atext)
         {
           if(lists[lists.length - 1][1] == "number")
           {
-            //pieces.push('</li></ol>');
             pieces.push("\n"+(new Array((line.listLevel-1)*4)).join(' ')+"\\end{enumerate}");
           }
           else
           {
-            //pieces.push('</li></ul>');
             pieces.push("\n"+(new Array((line.listLevel-1)*4)).join(' ')+"\\end{itemize}");
           }
           lists.length--;
         }
-        //pieces.push('</li><li>', lineContent || '<br>');
         pieces.push("\n"+(new Array(line.listLevel*4)).join(' ')+"\\item ", lineContent || "\n");
       }
     }
@@ -426,18 +418,14 @@ function getLatexFromAtext(pad, atext)
       {
         if(lists[lists.length - 1][1] == "number")
         {
-          //pieces.push('</li></ol>');
           pieces.push("\n"+(new Array((lists.length-1)*4)).join(' ')+"\\end{enumerate}");
-
         }
         else
         {
-          //pieces.push('</li></ul>');
           pieces.push("\n"+(new Array((lists.length-1)*4)).join(' ')+"\\end{itemize}");
         }
         lists.length--;
       }      
-      //pieces.push(lineContent, '<br>');
       pieces.push(lineContent, "\n");
     }
   }
@@ -446,12 +434,10 @@ function getLatexFromAtext(pad, atext)
   {
     if(lists[k][1] == "number")
     {
-      //pieces.push('</li></ol>');
       pieces.push("\n\\end{enumerate}");
     }
     else
     {
-      //pieces.push('</li></ul>');
       pieces.push("\n\\end{itemize}");
     }
   }
