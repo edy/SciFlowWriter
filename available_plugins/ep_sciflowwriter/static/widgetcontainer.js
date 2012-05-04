@@ -22,7 +22,9 @@ exports.eejsBlock_scripts = function(hook_name, args, cb) {
 };
 
 exports.eejsBlock_exportColumn = function(hook_name, args, cb) {
-	args.content = args.content + '<a id="exportlatexa" target="_blank" class="exportlink"><div class="exporttype" id="exportlatex">LaTeX file</div></a>';
+	args.content = args.content +
+	'<a id="exportlatexa" target="_blank" class="exportlink"><div class="exporttype" id="exportlatex">LaTeX file</div></a>' +
+	'<a id="exportpdflatexa" target="_blank" class="exportlink"><div class="exporttype" id="exportpdflatex">PDFLaTeX file</div></a>';
 	return cb();
 };
 
