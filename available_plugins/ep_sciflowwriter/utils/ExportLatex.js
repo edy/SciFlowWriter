@@ -289,7 +289,7 @@ function getLatexFromAtext(pad, atext)
           deletedAsterisk = true;
         }
         
-        assem.append(_encodeWhitespace(Security.escapeHTML(s)));
+        assem.append(s);
       } // end iteration over spans in line
       
       var tags2close = [];
@@ -325,7 +325,7 @@ function getLatexFromAtext(pad, atext)
       assem.append('}');
     }
 
-    return _processSpaces(assem.toString());
+    return assem.toString();
   } // end getLineLatex
   var pieces = [];
 
@@ -497,80 +497,6 @@ exports.getPadLatexDocument = function (padId, revNum, callback)
     });
   });
 }
-
-function _encodeWhitespace(s) {
-  return s.replace(/[^\x21-\x7E\s\t\n\r]/g, function(c)
-  {
-    return "&#" +c.charCodeAt(0) + ";"
-  });
-}
-
-// copied from ACE
-
-
-function _processSpaces(s)
-{
-  var doesWrap = true;
-  if (s.indexOf("<") < 0 && !doesWrap)
-  {
-    // short-cut
-    return s.replace(/ /g, '&nbsp;');
-  }
-  var parts = [];
-  s.replace(/<[^>]*>?| |[^ <]+/g, function (m)
-  {
-    parts.push(m);
-  });
-  if (doesWrap)
-  {
-    var endOfLine = true;
-    var beforeSpace = false;
-    // last space in a run is normal, others are nbsp,
-    // end of line is nbsp
-    for (var i = parts.length - 1; i >= 0; i--)
-    {
-      var p = parts[i];
-      if (p == " ")
-      {
-        if (endOfLine || beforeSpace) parts[i] = '&nbsp;';
-        endOfLine = false;
-        beforeSpace = true;
-      }
-      else if (p.charAt(0) != "<")
-      {
-        endOfLine = false;
-        beforeSpace = false;
-      }
-    }
-    // beginning of line is nbsp
-    for (var i = 0; i < parts.length; i++)
-    {
-      var p = parts[i];
-      if (p == " ")
-      {
-        parts[i] = '&nbsp;';
-        break;
-      }
-      else if (p.charAt(0) != "<")
-      {
-        break;
-      }
-    }
-  }
-  else
-  {
-    for (var i = 0; i < parts.length; i++)
-    {
-      var p = parts[i];
-      if (p == " ")
-      {
-        parts[i] = '&nbsp;';
-      }
-    }
-  }
-  return parts.join('');
-}
-
 
 // copied from ACE
 var _REGEX_WORDCHAR = /[\u0030-\u0039\u0041-\u005A\u0061-\u007A\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u1FFF\u3040-\u9FFF\uF900-\uFDFF\uFE70-\uFEFE\uFF10-\uFF19\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFDC]/;
