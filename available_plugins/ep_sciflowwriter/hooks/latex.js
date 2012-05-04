@@ -1,4 +1,3 @@
-var path = require('path');
 var exportLatex = require("../utils/ExportLatex.js");
 
 exports.expressCreateServer = function (hook_name, args, cb) {
@@ -10,6 +9,7 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 		}
 
 		exportLatex.getPadLatexDocument(req.params.pad, req.params.rev ? req.params.rev : null, function(err, result) {
+			res.contentType('plain/text');
 			res.send(result);
 		});
 	});
