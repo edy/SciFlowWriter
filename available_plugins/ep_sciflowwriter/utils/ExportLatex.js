@@ -418,11 +418,11 @@ function getLatexFromAtext(pad, atext)
       {
         if(lists[lists.length - 1][1] == "number")
         {
-          pieces.push("\n"+(new Array((lists.length-1)*4)).join(' ')+"\\end{enumerate}");
+          pieces.push("\n"+(new Array((lists.length-1)*4)).join(' ')+"\\end{enumerate}\n");
         }
         else
         {
-          pieces.push("\n"+(new Array((lists.length-1)*4)).join(' ')+"\\end{itemize}");
+          pieces.push("\n"+(new Array((lists.length-1)*4)).join(' ')+"\\end{itemize}\n");
         }
         lists.length--;
       }      
@@ -434,11 +434,11 @@ function getLatexFromAtext(pad, atext)
   {
     if(lists[k][1] == "number")
     {
-      pieces.push("\n\\end{enumerate}");
+      pieces.push("\n\\end{enumeratex}\n");
     }
     else
     {
-      pieces.push("\n\\end{itemize}");
+      pieces.push("\n\\end{itemizex}\n");
     }
   }
 
@@ -505,8 +505,6 @@ var _REGEX_URLCHAR = new RegExp('(' + /[-:@a-zA-Z0-9_.,~%+\/\\?=&#;()$]/.source 
 var _REGEX_URL = new RegExp(/(?:(?:https?|s?ftp|ftps|file|smb|afp|nfs|(x-)?man|gopher|txmt):\/\/|mailto:)/.source + _REGEX_URLCHAR.source + '*(?![:.,;])' + _REGEX_URLCHAR.source, 'g');
 
 // returns null if no URLs, or [[startIndex1, url1], [startIndex2, url2], ...]
-
-
 function _findURLs(text)
 {
   _REGEX_URL.lastIndex = 0;
