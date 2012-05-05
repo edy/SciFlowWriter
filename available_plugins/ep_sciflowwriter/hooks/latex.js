@@ -3,7 +3,8 @@ var async = require('ep_etherpad-lite/node_modules/async');
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('ep_sciflowwriter/node_modules/mkdirp');
-var exportLatex = require('../utils/ExportLatex.js');
+var exportLatex = require('../utils/ExportLatex');
+var db = require('ep_etherpad-lite/node/db/DB').db;
 var ERR = require("ep_etherpad-lite/node_modules/async-stacktrace");
 var spawn = require("child_process").spawn;
 
@@ -24,20 +25,41 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 				res.send(result);
 			});
 		} else if (req.params.type === 'pdflatex') {
-			res.send(eejs.require("ep_sciflowwriter/templates/view_pdf.html", {
-				'pdfUrl': '/p/' + padID + ((revision !== null) ? '/'+revision:'') + '/export/pdflatexrendered'
-			}), { maxAge: 0 });
+			var sendViewPdf = function(revision) {
+				res.send(eejs.require("ep_sciflowwriter/templates/view_pdf.html", {
+					'pdfUrl': '/p/' + padID + '/' + revision + '/export/pdflatexrendered',
+					'revision': revision,
+					'padID': padID
+				}), { maxAge: 0 });
+			};
+			// get latest revision number if none given
+			if (revision === null) {
+				db.getSub("pad:" + padID, ["head"], function(err, result) {
+					sendViewPdf(result);
+				});
+			} else {
+				sendViewPdf(revision);
+			}
+
 		} else if (req.params.type === 'pdflatexrendered') {
 			console.log('request: pdflatexrendered');
 			generatePdfLatex(padID, revision, function(err, pdfPath) {
 				res.contentType('application/pdf');
-				res.header('Content-Disposition', 'inline; filename='+padID+'_rev'+((revision !== null) ? 'rev'+revision : 'latest')+'.pdf'); 
+				// must be inline, because of google chrome
+				res.header('Content-Disposition', 'inline; filename='+padID+'_'+((revision !== null) ? 'rev'+revision : 'latest')+'.pdf'); 
 				res.sendfile(pdfPath);
 			});
 		} else {
 			next();
 			return;
 		}
+	});
+
+	// get the latest revision number of the pad
+	args.app.get('/p/:pad/latestrevisionnumber', function(req, res, next) {
+		db.getSub("pad:" + req.params.pad, ["head"], function(err, result) {
+			res.send({'padID': req.params.pad,'revision': result});
+		});
 	});
 };
 
