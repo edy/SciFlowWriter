@@ -42,13 +42,23 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 			}
 
 		} else if (req.params.type === 'pdflatexrendered') {
-			console.log('request: pdflatexrendered');
-			generatePdfLatex(padID, revision, function(err, pdfPath) {
-				res.contentType('application/pdf');
-				// must be inline, because of google chrome
-				res.header('Content-Disposition', 'inline; filename='+padID+'_'+((revision !== null) ? 'rev'+revision : 'latest')+'.pdf'); 
-				res.sendfile(pdfPath);
-			});
+			var generate = function(revision) {
+				generatePdfLatex(padID, revision, function(err, pdfPath) {
+					res.contentType('application/pdf');
+					// must be inline, because of google chrome
+					res.header('Content-Disposition', 'inline; filename=' + padID + '_rev' + revision + '.pdf'); 
+					res.sendfile(pdfPath);
+				});
+			};
+
+			// get latest revision number if none given
+			if (revision === null) {
+				db.getSub("pad:" + padID, ["head"], function(err, result) {
+					generate(result);
+				});
+			} else {
+				generate(revision);
+			}
 		} else {
 			next();
 			return;
@@ -65,8 +75,15 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 
 function generatePdfLatex(padID, revision, cb) {
 	// path => var/pdflatex/padId/rev123
-	var exportPath = 'var/pdflatex/' + padID + '/' + ((revision !== null) ? 'rev'+revision : 'latest');
+	var exportPath = 'var/pdflatex/' + padID + '/rev' + revision;
 	console.log('exportPath:', exportPath);
+
+	// first check if pdf is already there
+	if(path.existsSync(exportPath+'/latex.pdf')) {
+		cb(null, exportPath+'/latex.pdf');
+		return;
+	}
+
 	async.waterfall([
 		// create directories
 		function(callback) {
