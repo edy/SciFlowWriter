@@ -11,11 +11,11 @@
 				padding: 0;
 			}
 			header {
-				background-color: lightgreen;
+				background-color: palegreen;
 				height: 50px;
 			}
 			header.refresh {
-				background-color: red;
+				background-color: lightcoral;
 			}
 			#pdf {
 				position:absolute;
@@ -42,7 +42,6 @@
 
 			var checkRevision = function() {
 				$.getJSON('/p/'+padID+'/latestrevisionnumber', function(data) {
-					console.log(data);
 					// a new revision is available
 					if (revision < data.revision) {
 						$('#refresh').show();
@@ -57,7 +56,9 @@
 
 			window.onload = function (){
 				var success = new PDFObject({ url: "<%= pdfUrl %>" }).embed("pdf");
-				checkRevision();
+				if (success) {
+					checkRevision();
+				}
 			};
 
 			// calculate height of #pdf
