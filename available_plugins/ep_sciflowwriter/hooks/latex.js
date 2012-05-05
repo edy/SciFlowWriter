@@ -4,6 +4,8 @@ var fs = require('fs');
 var path = require('path');
 var mkdirp = require('ep_sciflowwriter/node_modules/mkdirp');
 var exportLatex = require('../utils/ExportLatex');
+var padManager = require('../db/padManager');
+var authorManager = require('../db/authorManager');
 var db = require('ep_etherpad-lite/node/db/DB').db;
 var ERR = require("ep_etherpad-lite/node_modules/async-stacktrace");
 var spawn = require("child_process").spawn;
@@ -100,24 +102,57 @@ function generatePdfLatex(padID, revision, cb) {
 			exportLatex.getPadLatexDocument(padID, revision, callback);
 		},
 
-		// generate latex file
+		// get pad users
 		function(latex, callback) {
-			console.log('generate export file');
 			var templateVariables = {
-				latexFilePath: exportPath + '/latex.tex'
+				'latexExport': latex,
+				'users': [],
+				'metadata': {},
+				'subtitle': '',
+				'abstract': ''
 			};
 
-			var template = eejs.require('ep_sciflowwriter/latex_templates/basic/template.tex', {
-				'latexExport': latex
+			padManager.getPadUsers(padID, function(padAccess) {
+				var users = [];
+				
+				async.forEach(padAccess.user, function(authorID, callback){
+					authorManager.getAuthor(authorID, function(err, author) {
+						templateVariables.users.push({
+							name: author.name,
+							email: author.email || undefined
+						});	
+
+						callback();
+					});
+				}, function(err){
+					callback(err, templateVariables);
+				});
 			});
+		},
+
+		// get pad metadata
+		function(templateVariables, callback) {
+			db.get('padmetadata:'+padID, function(err, metadata) {
+				if (metadata) {
+					templateVariables.metadata = metadata;
+				}
+				
+				callback(err, templateVariables);
+			});
+		},
+		// generate latex file
+		function(templateVariables, callback) {
+			console.log('generate latex file');
+
+			var template = eejs.require('ep_sciflowwriter/latex_templates/basic/template.tex', templateVariables);
 
 			// replace < and >
 			template = template.replace(/&lt;/g, '<');
 			template = template.replace(/&gt;/g, '>');
 
 			// write export to file
-			fs.writeFile(templateVariables.latexFilePath, template, function(err) {
-				console.log('write template to file '+templateVariables.latexFilePath, err);
+			fs.writeFile(exportPath+'/latex.tex', template, function(err) {
+				console.log('write template to file '+exportPath+'/latex.tex', err);
 				callback(err, templateVariables);
 			});
 		},
@@ -149,7 +184,7 @@ function generatePdfLatex(padID, revision, cb) {
 						callback(null);
 					});
 				}], function(err) {
-					callback(null, exportPath+'/latex.pdf');
+					callback(err, exportPath+'/latex.pdf');
 			});
 			
 		}
