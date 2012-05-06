@@ -13,6 +13,7 @@
 
 #references .reference:hover {
 	background-color: #EFEFEF;
+	padding-left: 25px;
 }
 
 #references .reference .title {
@@ -33,6 +34,23 @@
 	opacity: 0.3;
 }
 #references .reference:hover .delete:hover {
+	opacity: 0.7;
+}
+
+#references .reference .addCite {
+	position: absolute;
+	top: 2px;
+	left: 0;
+	font-size: 20px;
+	font-weight: bold;
+	line-height: 13px;
+	padding: 1px 3px 3px;
+	opacity: 0;
+}
+#references .reference:hover .addCite {
+	opacity: 0.3;
+}
+#references .reference:hover .addCite:hover {
 	opacity: 0.7;
 }
 

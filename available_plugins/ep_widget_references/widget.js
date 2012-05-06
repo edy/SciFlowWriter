@@ -103,5 +103,4 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 		});
 	}
 	
-	
 };

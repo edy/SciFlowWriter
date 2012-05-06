@@ -10,7 +10,10 @@
         "onWidgetMessage": "ep_widget_references/widget"
       },
       "client_hooks": {
-        "loadWidgets": "ep_widget_references/static/js/widget:loadWidgets"
+        "loadWidgets": "ep_widget_references/static/js/widget",
+        "aceAttribsToClasses": "ep_widget_references/static/js/widget",
+        "aceCreateDomLine": "ep_widget_references/static/js/widget",
+        "aceInitInnerdocbodyHead": "ep_widget_references/static/js/widget"
       }
     }
   ]

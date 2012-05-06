@@ -53,7 +53,9 @@ exports.loadWidgets = function (hook_name, args, cb) {
 			if (message.result.length) {
 				$('#references').html('');
 				for(var i in message.result) {
-					$('<li class="reference" rel="' + message.result[i].id + '"><span class="title">' + message.result[i].title + '</span><span class="delete">&times;</span></li>').appendTo('#references');
+					$('<li class="reference" rel="' + message.result[i].id + '">' +
+						'<span class="title">' + message.result[i].title + '</span>' +
+						'<span class="addCite">&#x2B05;</span><span class="delete">&times;</span></li>').appendTo('#references');
 				}
 			} else {
 				$('#references').html('No references found');
@@ -75,6 +77,57 @@ exports.loadWidgets = function (hook_name, args, cb) {
 			}
 		});
 	});
+
+	$("#references .addCite").live('click', function () {
+		var id = $(this).parent().attr('rel');
+		var padeditor = require('ep_etherpad-lite/static/js/pad_editor').padeditor;
+
+		return padeditor.ace.callWithAce(function (ace) {
+			rep = ace.ace_getRep();
+			ace.ace_replaceRange(rep.selStart, rep.selEnd, "[cite]");
+			ace.ace_performSelectionChange([rep.selStart[0],rep.selStart[1]-6], rep.selStart, false);
+			ace.ace_performDocumentApplyAttributesToRange(rep.selStart, rep.selEnd, [["sciflow-cite", id]]);
+		}, "sciflow-cite");
+	});
+
+	$('.sciflow-cite').live('click', function(){
+		var id = $(this).attr('rel');
+		console.log('clicked cite: ', id);
+	});
+
+	return cb();
+};
+
+exports.aceInitInnerdocbodyHead = function(hook_name, args, cb) {
+	args.iframeHTML.push('<link rel="stylesheet" type="text/css" href="/static/plugins/ep_widget_references/static/css/ace.css"/>');
+	return cb();
+};
+
+exports.aceAttribsToClasses = function(hook_name, args, cb) {
+	if (args.key == 'sciflow-cite' && args.value != "") {
+		return cb(["sciflow-cite:" + args.value]);
+	}
+};
+
+exports.aceCreateDomLine = function(hook_name, args, cb) {
+	if (args.cls.indexOf('sciflow-cite:') >= 0) {
+		var clss = [];
+		var argClss = args.cls.split(" ");
+		var value;
+
+		// get the value from the classname
+		// borrowed from github.com/redhog/ep_embedmedia
+		for (var i = 0; i < argClss.length; i++) {
+			var cls = argClss[i];
+			if (cls.indexOf("sciflow-cite:") != -1) {
+				value = cls.substr(cls.indexOf(":")+1);
+			} else {
+				clss.push(cls);
+			}
+		}
+
+		return cb([{cls: clss.join(" "), extraOpenTags: '<span class="sciflow-cite" rel="'+value+'">', extraCloseTags: "</span>"}]);
+	}
 
 	return cb();
 };
