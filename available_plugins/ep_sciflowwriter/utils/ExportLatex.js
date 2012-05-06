@@ -313,9 +313,9 @@ function getLatexFromAtext(pad, atext)
         var url = urlData[1];
         var urlLength = url.length;
         processNextChars(startIndex - idx);
-        //assem.append('<a href="' + Security.escapeHTMLAttribute(url) + '">');
+        assem.append('\\url{');
         processNextChars(urlLength);
-        //assem.append('</a>');
+        assem.append('}');
       });
     }
 
