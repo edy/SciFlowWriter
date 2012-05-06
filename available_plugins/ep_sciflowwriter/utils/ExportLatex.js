@@ -325,7 +325,13 @@ function getLatexFromAtext(pad, atext)
       assem.append('}');
     }
 
-    return assem.toString();
+    // replace <, >, _
+    assem = assem.toString();
+    assem = assem.replace(/&lt;/g, '<');
+    assem = assem.replace(/&gt;/g, '>');
+    assem = assem.replace(/\_/g, '\\_'); // this breaks latex math mode: $\sum_i^j$ becomes $\sum\_i^j$
+
+    return assem;
   } // end getLineLatex
   var pieces = [];
 

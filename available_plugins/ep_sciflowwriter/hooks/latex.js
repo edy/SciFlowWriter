@@ -146,10 +146,6 @@ function generatePdfLatex(padID, revision, cb) {
 
 			var template = eejs.require('ep_sciflowwriter/latex_templates/basic/template.tex', templateVariables);
 
-			// replace < and >
-			template = template.replace(/&lt;/g, '<');
-			template = template.replace(/&gt;/g, '>');
-
 			// write export to file
 			fs.writeFile(exportPath+'/latex.tex', template, function(err) {
 				console.log('write template to file '+exportPath+'/latex.tex', err);
