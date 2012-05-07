@@ -103,6 +103,19 @@ function getLatexFromAtext(pad, atext)
     }
   });
 
+  // add sciflow-attributes
+  var sciflowMap = {};
+  var sciflowProps = ['sciflow-cite'];
+  apool.eachAttrib(function(key, value) {
+    if (sciflowProps.indexOf(key) !== -1) {
+      var propTrueNum = apool.putAttrib([key, value], true);
+      if (propTrueNum >= 0)
+      {
+        sciflowMap[propTrueNum] = sciflowProps.indexOf(key);
+      }
+    }
+  });
+
   function getLineLatex(text, attribs)
   {
     var propVals = [false, false, false];
@@ -217,6 +230,7 @@ function getLatexFromAtext(pad, atext)
             propVals[i] = true; // set it back
           }
         }
+        console.log('propVals', propVals);
         // now each member of propVal is in {false,LEAVE,ENTER,true}
         // according to what happens at start of span
         if (propChanged)
