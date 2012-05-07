@@ -104,6 +104,7 @@ function generatePdfLatex(padID, revision, cb) {
 
 		// get pad users
 		function(latex, callback) {
+			console.log('get pad users');
 			var templateVariables = {
 				'latexExport': latex,
 				'users': [],
@@ -133,6 +134,7 @@ function generatePdfLatex(padID, revision, cb) {
 
 		// get pad metadata
 		function(templateVariables, callback) {
+			console.log('get pad metadata');
 			padManager.getPad(padID, function(err, pad) {
 				pad.getData('metadata', function(metadata) {
 					if (metadata) {
@@ -159,6 +161,7 @@ function generatePdfLatex(padID, revision, cb) {
 
 		// serialize references to bibtex
 		function(templateVariables, callback) {
+			console.log('serialize references to bibtex');
 			var bibtex = [];
 			padManager.getPad(padID, function(err, pad) {
 				pad.getData('references', function(references) {
