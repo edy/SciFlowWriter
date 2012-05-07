@@ -20,10 +20,6 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 
 		var padID = req.params.pad;
 		var revision = req.params.rev ? req.params.rev : null;
-		var revisionHead = revision;
-		getLatestRevisionNumber(padID, function(err, revision) {
-			revisionHead = revision;
-		});
 
 		if(req.params.type === 'latex') {
 			exportLatex.getPadLatexDocument(padID, revision, function(err, result) {
@@ -40,7 +36,9 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 			};
 			// get latest revision number if none given
 			if (revision === null) {
-				sendViewPdf(revisionHead);
+				getLatestRevisionNumber(padID, function(err, revision) {
+					sendViewPdf(revision);
+				});
 			} else {
 				sendViewPdf(revision);
 			}
@@ -57,7 +55,9 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 
 			// get latest revision number if none given
 			if (revision === null) {
-				generate(revisionHead);
+				getLatestRevisionNumber(padID, function(err, revision) {
+					generate(revision);
+				});
 			} else {
 				generate(revision);
 			}
@@ -69,16 +69,14 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 
 	// get the latest revision number of the pad
 	args.app.get('/p/:pad/latestrevisionnumber', function(req, res, next) {
-		getLatestRevisionNumber("pad:" + req.params.pad, ["head"], function(err, result) {
+		getLatestRevisionNumber(req.params.pad, function(err, result) {
 			res.send({'padID': req.params.pad,'revision': result});
 		});
 	});
 };
 
 function getLatestRevisionNumber(padID, callback) {
-	db.getSub("pad:" + padID, ["head"], function(err, result) {
-		callback(err, result);
-	});
+	db.getSub("pad:" + padID, ["head"], callback);
 }
 
 function generatePdfLatex(padID, revision, cb) {
