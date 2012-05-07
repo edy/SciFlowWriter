@@ -10,7 +10,9 @@ padManager.addUserToPad = function (userID, padID, callback) {
 			return;
 		}
 
-		db.get('padaccess:'+padID, function(err, padAccess) {
+		padManager.getPad(padID, function(err, pad) {
+			var padAccess = pad.getData('access');
+		
 			// create a new access object
 			if (!padAccess) {
 				padAccess = {
@@ -28,7 +30,7 @@ padManager.addUserToPad = function (userID, padID, callback) {
 				console.log('user has already access to pad ', padID);
 			}
 
-			db.set('padaccess:'+padID, padAccess);
+			pad.setData('access', padAccess);
 
 			callback && callback(null);
 		});
@@ -43,12 +45,13 @@ padManager.removeUserFromPad = function (userID, padID, callback) {
 			callback && callback(null);
 			return;
 		}
-		db.get('padaccess:'+padID, function(err, padAccess) {
+		padManager.getPad(padID, function(err, pad) {
+			var padAccess = pad.getData('access');
 			// delete user if he is not the owner
 			if (padAccess &&  padAccess.owner !== userID && padAccess.user.indexOf(userID) !== -1) {
 				console.log('user', userID, 'removed from pad', padID);
 				padAccess.user.splice(padAccess.user.indexOf(userID), 1);
-				db.set('padaccess:'+padID, padAccess);
+				pad.setData('access', padAccess);
 			}
 
 			callback && callback(null);
@@ -65,7 +68,8 @@ padManager.getPadUsers = function(padID, callback) {
 			return;
 		}
 
-		db.get('padaccess:'+padID, function(err, padAccess) {
+		padManager.getPad(padID, function(err, pad) {
+			var padAccess = pad.getData('access');
 			if (padAccess) {
 				callback && callback(padAccess);
 			}

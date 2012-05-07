@@ -337,7 +337,8 @@ everyauth.hasPadAccess = function (req, res, next) {
 		}
 
 		// TODO check access
-		db.get('padaccess:'+padID, function(err, padAccess) {
+		padManager.getPad(padID, function(err, pad) {
+			var padAccess = pad.getData('access');
 			if (padAccess && padAccess.user.indexOf(userID) !== -1) {
 				console.log(userID+', you have access to', padID);
 			} else {
