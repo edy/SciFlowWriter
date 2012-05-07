@@ -200,6 +200,7 @@ function getLatexFromAtext(pad, atext)
 
       while (iter.hasNext())
       {
+        var isSciflowCite = false;
         var o = iter.next();
         var propChanged = false;
         Changeset.eachAttribNumber(o.attribs, function (a)
@@ -217,6 +218,10 @@ function getLatexFromAtext(pad, atext)
               propVals[i] = STAY;
             }
           }
+
+          if (a in sciflowMap) {
+            isSciflowCite = a;
+          }
         });
         for (var i = 0; i < propVals.length; i++)
         {
@@ -230,7 +235,7 @@ function getLatexFromAtext(pad, atext)
             propVals[i] = true; // set it back
           }
         }
-        console.log('propVals', propVals);
+
         // now each member of propVal is in {false,LEAVE,ENTER,true}
         // according to what happens at start of span
         if (propChanged)
@@ -296,6 +301,12 @@ function getLatexFromAtext(pad, atext)
         //removes the characters with the code 12. Don't know where they come 
         //from but they break the abiword parser and are completly useless
         s = s.replace(String.fromCharCode(12), "");
+
+        // is a cite
+        if (isSciflowCite) {
+          var cite = apool.getAttrib(isSciflowCite);
+          s = '\\cite{' + cite[1] + '}';
+        }
 
         // delete * if this line is a heading
         if (heading && !deletedAsterisk) {
