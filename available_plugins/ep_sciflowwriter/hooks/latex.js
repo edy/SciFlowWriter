@@ -108,6 +108,7 @@ function generatePdfLatex(padID, revision, cb) {
 				'latexExport': latex,
 				'users': [],
 				'metadata': {},
+				'references': '',
 				'subtitle': '',
 				'abstract': ''
 			};
@@ -153,6 +154,29 @@ function generatePdfLatex(padID, revision, cb) {
 			});
 		},
 
+		// serialize references to bibtex
+		function(templateVariables, callback) {
+			var bibtex = [];
+			db.get('padreferences:'+padID, function(err, references) {
+				if (references) {
+					references.forEach(function(ref){
+						bibtex.push('@' + ref.type + '{' + ref.id + ',');
+						bibtex.push(ref.title !== '' ? '    title = {' + ref.title + '},' : '');
+						bibtex.push(ref.authors !== '' ? '    author = {' + ref.authors + '},' : '');
+						// TODO!!! :-)
+						bibtex.push('    year = {2012}');
+						bibtex.push('}');
+					});
+
+					templateVariables.references = bibtex.join("\n");
+				}
+
+				fs.writeFile(exportPath+'/pad.bib', templateVariables.references, encoding='utf8', function(err) {
+					callback(err, templateVariables);
+				});
+			});
+		},
+
 		// generate pdf
 		function(templateVariables, callback) {
 			console.log('generate pdf file');
@@ -163,6 +187,13 @@ function generatePdfLatex(padID, revision, cb) {
 				// first run
 				function(callback) {
 					spawn('pdflatex', ['-draftmode'].concat(pdflatexParameters), { cwd : exportPath }).on('exit', function(returnCode) {
+						callback(null);
+					});
+				},
+
+				// bibtex run
+				function(callback) {
+					spawn('bibtex', ['latex'], { cwd : exportPath }).on('exit', function(returnCode) {
 						callback(null);
 					});
 				},
