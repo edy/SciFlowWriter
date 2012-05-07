@@ -1,4 +1,5 @@
 var padManager = module.exports = require('ep_etherpad-lite/node/db/PadManager');
+var Pad = require('./Pad');
 var db = require('ep_etherpad-lite/node/db/DB').db;
 
 // adds an user to the pads access list
