@@ -77,7 +77,7 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 
 function generatePdfLatex(padID, revision, cb) {
 	// path => var/pdflatex/padId/rev123
-	var exportPath = 'var/pdflatex/' + padID + '/rev' + revision;
+	var exportPath = 'var/pads/' + padID + '/pdflatex/rev' + revision;
 	console.log('exportPath:', exportPath);
 
 	// first check if pdf is already there
