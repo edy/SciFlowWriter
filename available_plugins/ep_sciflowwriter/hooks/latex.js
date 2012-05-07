@@ -133,14 +133,17 @@ function generatePdfLatex(padID, revision, cb) {
 
 		// get pad metadata
 		function(templateVariables, callback) {
-			db.get('padmetadata:'+padID, function(err, metadata) {
-				if (metadata) {
-					templateVariables.metadata = metadata;
-				}
-				
-				callback(err, templateVariables);
+			padManager.getPad(padID, function(err, pad) {
+				pad.getData('metadata', function(metadata) {
+					if (metadata) {
+						templateVariables.metadata = metadata;
+					}
+					
+					callback(err, templateVariables);
+				});
 			});
 		},
+
 		// generate latex file
 		function(templateVariables, callback) {
 			console.log('generate latex file');
@@ -157,22 +160,24 @@ function generatePdfLatex(padID, revision, cb) {
 		// serialize references to bibtex
 		function(templateVariables, callback) {
 			var bibtex = [];
-			db.get('padreferences:'+padID, function(err, references) {
-				if (references) {
-					references.forEach(function(ref){
-						bibtex.push('@' + ref.type + '{' + ref.id + ',');
-						bibtex.push(ref.title !== '' ? '    title = {' + ref.title + '},' : '');
-						bibtex.push(ref.authors !== '' ? '    author = {' + ref.authors + '},' : '');
-						// TODO!!! :-)
-						bibtex.push('    year = {2012}');
-						bibtex.push('}');
+			padManager.getPad(padID, function(err, pad) {
+				pad.getData('references', function(references) {
+					if (references) {
+						references.forEach(function(ref){
+							bibtex.push('@' + ref.type + '{' + ref.id + ',');
+							bibtex.push(ref.title !== '' ? '    title = {' + ref.title + '},' : '');
+							bibtex.push(ref.authors !== '' ? '    author = {' + ref.authors + '},' : '');
+							// TODO!!! :-)
+							bibtex.push('    year = {2012}');
+							bibtex.push('}');
+						});
+
+						templateVariables.references = bibtex.join("\n");
+					}
+
+					fs.writeFile(exportPath+'/pad.bib', templateVariables.references, encoding='utf8', function(err) {
+						callback(err, templateVariables);
 					});
-
-					templateVariables.references = bibtex.join("\n");
-				}
-
-				fs.writeFile(exportPath+'/pad.bib', templateVariables.references, encoding='utf8', function(err) {
-					callback(err, templateVariables);
 				});
 			});
 		},

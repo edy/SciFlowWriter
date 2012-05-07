@@ -38,57 +38,17 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 			authors: args.query.value.authors
 		};
 
-		db.get('padreferences:'+args.query.padID, function(err, references) {
-			if (references) {
-				references.push(reference);
-			} else {
-				references = [reference];
-			}
+		padManager.getPad(args.query.padID, function(err, pad) {
+			pad.getData('references', function(references) {
 
-			db.set('padreferences:'+args.query.padID, references);
+				if (references) {
+					references.push(reference);
+				} else {
+					references = [reference];
+				}
 
-			var result = {
-				'padID': args.query.padID,
-				'widget_name': 'ep_widget_references',
-				'action': 'setReferences',
-				'result': references
-			};
-			args.socket.emit('widget-message', result);
-			args.socket.broadcast.emit('widget-message', result);
-			return cb();
-		});
+				pad.setData('references', references);
 
-	} else if (args.query.action === 'getReferences') {
-		console.log('getReferences');
-		db.get('padreferences:'+args.query.padID, function(err, references) {
-			if (references) {
-				var result = {
-					'padID': args.query.padID,
-					'widget_name': 'ep_widget_references',
-					'action': 'setReferences',
-					'result': references
-				};
-				args.socket.emit('widget-message', result);
-			}
-			
-			return cb();
-		});
-	} else if (args.query.action === 'deleteReference') {
-		console.log('deleteReference');
-		db.get('padreferences:'+args.query.padID, function(err, references) {
-			if (references) {
-				var id = args.query.value.id
-				references.every(function(reference, i){
-					if (reference.id === id) {
-						references.splice(i, 1);
-						return false;
-					}
-
-					return true;
-				});
-				
-				db.set('padreferences:'+args.query.padID, references);
-				
 				var result = {
 					'padID': args.query.padID,
 					'widget_name': 'ep_widget_references',
@@ -97,9 +57,56 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 				};
 				args.socket.emit('widget-message', result);
 				args.socket.broadcast.emit('widget-message', result);
-			}
-			
-			return cb();
+				return cb();
+			});
+		});
+
+	} else if (args.query.action === 'getReferences') {
+		console.log('getReferences');
+		padManager.getPad(args.query.padID, function(err, pad) {
+			pad.getData('references', function(references) {
+				if (references) {
+					var result = {
+						'padID': args.query.padID,
+						'widget_name': 'ep_widget_references',
+						'action': 'setReferences',
+						'result': references
+					};
+					args.socket.emit('widget-message', result);
+				}
+				
+				return cb();
+			});
+		});
+	} else if (args.query.action === 'deleteReference') {
+		console.log('deleteReference');
+		padManager.getPad(args.query.padID, function(err, pad) {
+			pad.getData('references', function(references) {
+				if (references) {
+					var id = args.query.value.id
+					references.every(function(reference, i){
+						if (reference.id === id) {
+							references.splice(i, 1);
+							return false;
+						}
+
+						return true;
+					});
+					
+					pad.setData('references', references);
+					
+					var result = {
+						'padID': args.query.padID,
+						'widget_name': 'ep_widget_references',
+						'action': 'setReferences',
+						'result': references
+					};
+					args.socket.emit('widget-message', result);
+					args.socket.broadcast.emit('widget-message', result);
+				}
+				
+				return cb();
+			});
 		});
 	}
 	

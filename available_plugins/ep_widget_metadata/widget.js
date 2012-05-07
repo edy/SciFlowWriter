@@ -36,7 +36,9 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 			abstract: args.query.value.abstract,
 		};
 
-		db.set('padmetadata:'+args.query.padID, metadata);
+		padManager.getPad(args.query.padID, function(err, pad) {
+			pad.setData('metadata', metadata);
+		});
 
 		var result = {
 			'padID': args.query.padID,
@@ -50,20 +52,20 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 		return cb();
 	} else if (args.query.action === 'getMetadata') {
 		console.log('getMetadata');
-		db.get('padmetadata:'+args.query.padID, function(err, metadata) {
-			if (metadata) {
-				var result = {
-					'padID': args.query.padID,
-					'widget_name': 'ep_widget_metadata',
-					'action': 'setMetadata',
-					'result': metadata
-				};
-				args.socket.emit('widget-message', result);
-			}
-			
-			return cb();
+		padManager.getPad(args.query.padID, function(err, pad) {
+			pad.getData('metadata', function(metadata) {
+				if (metadata) {
+					var result = {
+						'padID': args.query.padID,
+						'widget_name': 'ep_widget_metadata',
+						'action': 'setMetadata',
+						'result': metadata
+					};
+					args.socket.emit('widget-message', result);
+				}
+			});
 		});
-	}
 
-	
+		return cb();
+	}
 };
