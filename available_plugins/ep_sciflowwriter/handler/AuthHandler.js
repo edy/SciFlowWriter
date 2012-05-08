@@ -323,31 +323,26 @@ everyauth.loginRedirect = function (req, res, next) {
 };
 
 // checks if the iser has assess to requested pad id
-everyauth.hasPadAccess = function (req, res, next) {
-	var padID = req.params.pad;
-	var userID = req.user.id;
+everyauth.hasPadAccess = function (padID, userID, callback) {
 	
 	// does the pad exist?
 	padManager.doesPadExists(padID, function(err, padExists) {
 		if (! padExists) {
-			console.log('pad not found: ', padID);
-			res.send('pad not found', 404);
-			//res.end();
-			return;
+			console.log('hasPadAccess: ', padID, 'does not exists');
+			return callback(null, false);
 		}
 
 		// TODO check access
 		padManager.getPad(padID, function(err, pad) {
 			var padAccess = pad.getData('access');
 			if (padAccess && padAccess.user.indexOf(userID) !== -1) {
-				console.log(userID+', you have access to', padID);
+				console.log('hasPadAccess: ', userID, ', you have access to', padID);
 			} else {
-				console.log(userID+', you don\'t have access to', padID);
-				res.send('no access for you, '+userID, 403);
-				return;
+				console.log('hasPadAccess: ', userID, ', you don\'t have access to', padID);
+				return callback(null, false);
 			}
 
-			next();
+			callback(null, true);
 		});
 	});	
 };

@@ -48,7 +48,7 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 		};
 
 		args.socket.emit('widget-message', result);
-		args.socket.broadcast.emit('widget-message', result);
+		args.socket.broadcast.to(args.query.padID).emit('widget-message', result);
 		return cb();
 	} else if (args.query.action === 'getMetadata') {
 		console.log('getMetadata');

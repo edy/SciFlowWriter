@@ -1,5 +1,6 @@
 var eejs = require('ep_etherpad-lite/node/eejs');
 var hooks = require('ep_etherpad-lite/static/js/pluginfw/hooks');
+var authHandler = require('ep_sciflowwriter/handler/AuthHandler')
 
 // insert the widget container
 exports.eejsBlock_body = function(hook_name, args, cb) {
@@ -29,8 +30,25 @@ exports.eejsBlock_exportColumn = function(hook_name, args, cb) {
 };
 
 exports.socketio = function (hook_name, args, cb) {
-	var io = args.io.of("/widgets");
-	io.on('connection', function (socket) {
+	var io = args.io;
+	
+	// does the user has access to pad widgets?
+	io.of("/widgets").authorization(function (handshake, callback) {
+		// the browser must send a referer
+		if (!handshake.headers.referer || handshake.headers.referer === null || handshake.headers.referer === '') {
+			callback('Your browser seems to block referers. Sorry, no access for you!', false);
+			return;
+		}
+
+		// check if user has access to pad
+		// if not, bye bye
+		var userID = handshake.session.auth.userId;
+		authHandler.hasPadAccess(padID, userID, function(err, hasAccess) {
+			handshake.padID = padID; // save the padID for later use
+			callback(null, hasAccess);
+		});
+	}).on('connection', function (socket) {
+		socket.join(socket.handshake.padID);
 		socket.on("widget-message", function (query) {
 			console.log('query:', query);
 			// 

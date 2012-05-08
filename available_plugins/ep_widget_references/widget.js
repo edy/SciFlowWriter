@@ -56,7 +56,7 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 					'result': references
 				};
 				args.socket.emit('widget-message', result);
-				args.socket.broadcast.emit('widget-message', result);
+				args.socket.broadcast.to(args.query.padID).emit('widget-message', result);
 				return cb();
 			});
 		});
@@ -102,7 +102,7 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 						'result': references
 					};
 					args.socket.emit('widget-message', result);
-					args.socket.broadcast.emit('widget-message', result);
+					args.socket.broadcast.to(args.query.padID).emit('widget-message', result);
 				}
 				
 				return cb();
