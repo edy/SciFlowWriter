@@ -34,15 +34,25 @@ exports.socketio = function (hook_name, args, cb) {
 	
 	// does the user has access to pad widgets?
 	io.of("/widgets").authorization(function (handshake, callback) {
+		var padID;
+		var userID;
+
 		// the browser must send a referer
 		if (!handshake.headers.referer || handshake.headers.referer === null || handshake.headers.referer === '') {
-			callback('Your browser seems to block referers. Sorry, no access for you!', false);
-			return;
+			return callback('Your browser seems to block referers. Sorry, no access for you!', false);
+		}
+		
+		// user must be logged in
+		if (!handshake.session || !handshake.session.auth || !handshake.session.auth.userId) {
+			console.warn('user is not logged in');
+			return callback('User is not logged in', false);
 		}
 
+		userID = handshake.session.auth.userId;
+		padID = new RegExp(/.*\/p\/([^\/]+)/).exec(handshake.headers.referer)[1];
+		
 		// check if user has access to pad
 		// if not, bye bye
-		var userID = handshake.session.auth.userId;
 		authHandler.hasPadAccess(padID, userID, function(err, hasAccess) {
 			handshake.padID = padID; // save the padID for later use
 			callback(null, hasAccess);
