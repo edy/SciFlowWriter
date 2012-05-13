@@ -31,21 +31,28 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 	
 	// listen for 'setMetadata'
 	if (args.query.action === 'setReference') {
+		var id = (typeof args.query.value.id === 'string' && args.query.value.id !== '') ? args.query.value.id : randomString(16);
+		
 		var reference = {
-			id: randomString(16),
+			id: id,
 			type: args.query.value.type,
 			title: args.query.value.title,
-			authors: args.query.value.authors
+			authors: args.query.value.authors,
+			url: args.query.value.url,
+			year: args.query.value.year,
+			month: args.query.value.month,
+			publisher: args.query.value.publisher,
+			journal: args.query.value.journal
 		};
 
 		padManager.getPad(args.query.padID, function(err, pad) {
 			pad.getData('references', function(references) {
 
-				if (references) {
-					references.push(reference);
-				} else {
-					references = [reference];
+				if (!references) {
+					references = {};
 				}
+
+				references[id] = reference;
 
 				pad.setData('references', references);
 
@@ -83,17 +90,10 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 		padManager.getPad(args.query.padID, function(err, pad) {
 			pad.getData('references', function(references) {
 				if (references) {
-					var id = args.query.value.id
-					references.every(function(reference, i){
-						if (reference.id === id) {
-							references.splice(i, 1);
-							return false;
-						}
-
-						return true;
-					});
-					
-					pad.setData('references', references);
+					if (references[args.query.value.id]) {
+						delete references[args.query.value.id];
+						pad.setData('references', references);
+					}
 					
 					var result = {
 						'padID': args.query.padID,

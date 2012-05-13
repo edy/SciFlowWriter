@@ -1,5 +1,9 @@
 var socket = null;
 
+// set global variable for references
+// we need them for editing without reloading from server
+var sfw = parent.sfw = {'references': {}};
+
 exports.loadWidgets = function (hook_name, args, cb) {
 	socket = args.socket;
 	
@@ -28,21 +32,27 @@ exports.loadWidgets = function (hook_name, args, cb) {
 	$('#saveReference').on('click', function () {
   		$('#referencesPopup').modal('hide');
 
+  		var ucfirst = function(text) {
+			return text.charAt(0).toUpperCase() + text.substr(1);
+		}
+
+  		var values = {};
+  		$.each(['id', 'type', 'title', 'authors', 'url', 'year', 'month', 'publisher', 'journal'], function(i, value) {
+  			values[value] = $('#reference' + ucfirst(value) + 'Input').val()
+  		});
+
   		// save on the server
   		socket.emit('widget-message', {
 			'padID': pad.getPadId(),
 			'widget_name': 'ep_widget_references',
 			'action': 'setReference',
-			'value': {
-				type: $('#referenceTypeInput').val(),
-				title: $('#referenceTitleInput').val(),
-				authors: $('#referenceAuthorsInput').val()
-			}
+			'value': values
 		});
 
-		$('#referenceTypeInput').val('');
-		$('#referenceTitleInput').val('');
-		$('#referenceAuthorsInput').val('');
+		// reset input form
+		$.each(['id', 'type', 'title', 'authors', 'url', 'year', 'month', 'publisher', 'journal'], function(i, value) {
+  			$('#reference' + ucfirst(value) + 'Input').val('');
+  		});
 	});
 
 	// receive new references
@@ -50,17 +60,35 @@ exports.loadWidgets = function (hook_name, args, cb) {
 		if (message.widget_name !== 'ep_widget_references') return;
 		
 		if (message.action === 'setReferences') {
-			if (message.result.length) {
-				$('#references').html('');
-				for(var i in message.result) {
-					$('<li class="reference" rel="' + message.result[i].id + '">' +
-						'<span class="title">' + message.result[i].title + '</span>' +
-						'<span class="addCite">&#x2B05;</span><span class="delete">&times;</span></li>').appendTo('#references');
-				}
-			} else {
-				$('#references').html('No references found');
+			$('#references').html('');
+
+			for(var i in message.result) {
+				// update global data
+				sfw.references[message.result[i].id] = message.result[i];
+
+				// update list
+				$('<li class="reference" rel="' + message.result[i].id + '">' +
+					'<span class="title">' + message.result[i].title + '</span>' +
+					'<span class="addCite">&#x2B05;</span><span class="delete">&times;</span></li>').appendTo('#references');
 			}
 		}
+	});
+
+	// edit reference
+	$('#references .title').live('click', function(){
+		var id = $(this).parent().attr('rel');
+		
+		var ucfirst = function(text) {
+			return text.charAt(0).toUpperCase() + text.substr(1);
+		}
+
+		$.each(['type', 'title', 'authors', 'url', 'year', 'month', 'publisher', 'journal'], function(i, value) {
+  			$('#reference' + ucfirst(value) + 'Input').val(sfw.references[id][value]);
+  		});
+
+  		$('#referenceIdInput').val(id);
+
+		$('#referencesPopup').modal('show');
 	});
 
 	// delete reference
@@ -78,6 +106,7 @@ exports.loadWidgets = function (hook_name, args, cb) {
 		});
 	});
 
+	// add cite to pad
 	$("#references .addCite").live('click', function () {
 		var id = $(this).parent().attr('rel');
 		var padeditor = require('ep_etherpad-lite/static/js/pad_editor').padeditor;
@@ -90,15 +119,11 @@ exports.loadWidgets = function (hook_name, args, cb) {
 		}, "sciflow-cite");
 	});
 
-	$('.sciflow-cite').live('click', function(){
-		var id = $(this).attr('rel');
-		console.log('clicked cite: ', id);
-	});
-
 	return cb();
 };
 
 exports.aceInitInnerdocbodyHead = function(hook_name, args, cb) {
+	args.iframeHTML.push('<script src="/static/plugins/ep_widget_references/static/js/ace.js"></script>');
 	args.iframeHTML.push('<link rel="stylesheet" type="text/css" href="/static/plugins/ep_widget_references/static/css/ace.css"/>');
 	return cb();
 };
