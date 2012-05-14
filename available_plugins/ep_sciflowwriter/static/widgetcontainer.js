@@ -1,6 +1,6 @@
 var eejs = require('ep_etherpad-lite/node/eejs');
 var hooks = require('ep_etherpad-lite/static/js/pluginfw/hooks');
-var authHandler = require('ep_sciflowwriter/handler/AuthHandler')
+var authHandler = require('ep_sciflowwriter/handler/AuthHandler');
 
 // insert the widget container
 exports.eejsBlock_body = function(hook_name, args, cb) {
