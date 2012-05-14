@@ -170,14 +170,17 @@ function generatePdfLatex(padID, revision, cb) {
 			padManager.getPad(padID, function(err, pad) {
 				pad.getData('references', function(references) {
 					if (references) {
-						references.forEach(function(ref){
-							bibtex.push('@' + ref.type + '{' + ref.id + ',');
-							bibtex.push(ref.title !== '' ? '    title = {' + ref.title + '},' : '');
-							bibtex.push(ref.authors !== '' ? '    author = {' + ref.authors + '},' : '');
-							// TODO!!! :-)
-							bibtex.push('    year = {2012}');
+						for(var ref in references) {
+							bibtex.push('@' + references[ref].type + '{' + references[ref].id + ',');
+							bibtex.push(references[ref].title !== '' ? '    title = {' + references[ref].title + '},' : '');
+							bibtex.push(references[ref].authors !== '' ? '    author = {' + references[ref].authors + '},' : '');
+							bibtex.push(references[ref].url !== '' ? '    url = {' + references[ref].url + '},' : '');
+							bibtex.push(references[ref].year !== '' ? '    year = {' + references[ref].year + '},' : '');
+							bibtex.push(references[ref].month !== '' ? '    month = {' + references[ref].month + '},' : '');
+							bibtex.push(references[ref].publisher !== '' ? '    publisher = {' + references[ref].publisher + '},' : '');
+							bibtex.push(references[ref].journal !== '' ? '    journal = {' + references[ref].journal + '},' : '');
 							bibtex.push('}');
-						});
+						};
 
 						templateVariables.references = bibtex.join("\n");
 					}
