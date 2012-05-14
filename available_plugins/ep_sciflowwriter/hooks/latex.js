@@ -153,13 +153,31 @@ function generatePdfLatex(padID, revision, cb) {
 		// generate latex file
 		function(templateVariables, callback) {
 			console.log('generate latex file');
-
-			var template = eejs.require('ep_sciflowwriter/latex_templates/basic/template.tex', templateVariables);
+			var templateName = templateVariables.metadata.template || 'ieee';
+			var template = eejs.require('ep_sciflowwriter/latex_templates/' + templateName + '/template.tex', templateVariables);
 
 			// write export to file
 			fs.writeFile(exportPath+'/latex.tex', template, function(err) {
 				console.log('write template to file '+exportPath+'/latex.tex', err);
-				callback(err, templateVariables);
+				
+			});
+
+			// create symlinks
+			fs.readdir('node_modules/ep_sciflowwriter/latex_templates/' + templateName, function(err, files) {
+				async.forEach(files, function(file, callback) {
+					// don't symlink hidden files
+					if (file.substring(0,1) === '.') {
+						return callback(null);
+					}
+
+					var target = exportPath + '/' + file;
+					var path = 'node_modules/ep_sciflowwriter/latex_templates/' + templateName + '/' + file;
+					fs.symlink(path, target, function(err) {
+						callback(null);
+					});
+				}, function (err) {
+					callback(err, templateVariables);
+				});
 			});
 		},
 
