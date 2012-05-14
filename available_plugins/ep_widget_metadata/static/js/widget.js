@@ -22,7 +22,7 @@ exports.loadWidgets = function (hook_name, args, cb) {
 		$('#metadataKeywordsInput').val($('#metadataKeywords').text());
 		$('#metadataCategoriesInput').val($('#metadataCategories').text());
 		$('#metadataGeneraltermsInput').val($('#metadataGeneralterms').text());
-		$('#metadataTemplateInput').val($('#metadataTemplate').val());
+		$('#metadataTemplateInput').val($('#metadataTemplate').text());
 	});
 	
 	// close metadata popup
