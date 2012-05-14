@@ -7,12 +7,16 @@ $(function(){
 			return text.charAt(0).toUpperCase() + text.substr(1);
 		}
 
-		$$.each(['type', 'title', 'authors', 'url', 'year', 'month', 'publisher', 'journal'], function(i, value) {
-  			$$('#reference' + ucfirst(value) + 'Input').val(parent.parent.sfw.references[id][value]);
-  		});
+		if (parent.parent.sfw.references[id]) {
+			$$.each(['type', 'title', 'authors', 'url', 'year', 'month', 'publisher', 'journal'], function(i, value) {
+	  			$$('#reference' + ucfirst(value) + 'Input').val(parent.parent.sfw.references[id][value]);
+	  		});
 
-  		$$('#referenceIdInput').val(id);
+	  		$$('#referenceIdInput').val(id);
 
-		$$('#referencesPopup').modal('show');
+			$$('#referencesPopup').modal('show');
+		} else {
+			alert('Reference not found');
+		}
 	});
 });
