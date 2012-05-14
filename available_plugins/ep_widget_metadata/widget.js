@@ -36,7 +36,8 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 			abstract: args.query.value.abstract,
 			keywords: args.query.value.keywords,
 			categories: args.query.value.categories,
-			generalterms: args.query.value.generalterms
+			generalterms: args.query.value.generalterms,
+			template: args.query.value.template
 		};
 
 		padManager.getPad(args.query.padID, function(err, pad) {

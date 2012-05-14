@@ -22,7 +22,7 @@ exports.loadWidgets = function (hook_name, args, cb) {
 		$('#metadataKeywordsInput').val($('#metadataKeywords').text());
 		$('#metadataCategoriesInput').val($('#metadataCategories').text());
 		$('#metadataGeneraltermsInput').val($('#metadataGeneralterms').text());
-
+		$('#metadataTemplateInput').val($('#metadataTemplate').val());
 	});
 	
 	// close metadata popup
@@ -45,7 +45,8 @@ exports.loadWidgets = function (hook_name, args, cb) {
 				abstract: $('#metadataAbstractInput').val(),
 				keywords: $('#metadataKeywordsInput').val(),
 				categories: $('#metadataCategoriesInput').val(),
-				generalterms: $('#metadataGeneraltermsInput').val()
+				generalterms: $('#metadataGeneraltermsInput').val(),
+				template: $('#metadataTemplateInput').val()
 			}
 		});
 	});
@@ -61,6 +62,7 @@ exports.loadWidgets = function (hook_name, args, cb) {
 			$('#metadataKeywords').text(message.result.keywords);
 			$('#metadataCategories').text(message.result.categories);
 			$('#metadataGeneralterms').text(message.result.generalterms);
+			$('#metadataTemplate').text(message.result.template);
 		}
 	});
 
