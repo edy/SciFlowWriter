@@ -1,6 +1,10 @@
 var hooks = require('ep_etherpad-lite/static/js/pluginfw/hooks');
 var socket;
 
+// set global variable for widget data
+// we need this for editing widget data without reloading from server
+window._sfw = {};
+
 // Add widget container to pad after ace inits
 exports.postAceInit = function (hook_name, args, cb) {
 	socket = io.connect().of("/widgets");

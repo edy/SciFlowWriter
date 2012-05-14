@@ -1,8 +1,6 @@
 var socket = null;
 
-// set global variable for references
-// we need them for editing without reloading from server
-var sfw = parent.sfw = {'references': {}};
+window._sfw.references = {};
 
 exports.loadWidgets = function (hook_name, args, cb) {
 	socket = args.socket;
@@ -64,7 +62,7 @@ exports.loadWidgets = function (hook_name, args, cb) {
 
 			for(var i in message.result) {
 				// update global data
-				sfw.references[message.result[i].id] = message.result[i];
+				window._sfw.references[message.result[i].id] = message.result[i];
 
 				// update list
 				$('<li class="reference" rel="' + message.result[i].id + '">' +
@@ -83,7 +81,7 @@ exports.loadWidgets = function (hook_name, args, cb) {
 		}
 
 		$.each(['type', 'title', 'authors', 'url', 'year', 'month', 'publisher', 'journal'], function(i, value) {
-  			$('#reference' + ucfirst(value) + 'Input').val(sfw.references[id][value]);
+  			$('#reference' + ucfirst(value) + 'Input').val(window._sfw.references[id][value]);
   		});
 
   		$('#referenceIdInput').val(id);
