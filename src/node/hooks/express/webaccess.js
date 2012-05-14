@@ -100,10 +100,13 @@ exports.expressConfigure = function (hook_name, args, cb) {
    * name) to a javascript identifier compatible string. Makes code
    * handling it cleaner :) */
 
-  args.app.sessionStore = new express.session.MemoryStore();
+  //args.app.sessionStore = new express.session.MemoryStore();
+  var DS = require('ep_sciflowwriter/db/DirtyStore');
+  args.app.sessionStore = new DS();
   args.app.use(express.session({store: args.app.sessionStore,
                                 key: 'express_sid',
-                                secret: apikey = randomString(32)}));
+                                //secret: apikey = randomString(32)}));
+                                secret: "some really random string!!"}));
 
   args.app.use(exports.basicAuth);
 }

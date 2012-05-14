@@ -11,6 +11,7 @@ DirtyStore.prototype.__proto__ = Store.prototype;
 
 DirtyStore.prototype.get = function(sid, fn){
   messageLogger.debug('GET ' + sid);
+  var self = this;
   db.get("sessionstorage:" + sid, function (err, sess)
   {
     if (sess) {
