@@ -170,9 +170,9 @@ function generatePdfLatex(padID, revision, cb) {
 						return callback(null);
 					}
 
-					var target = exportPath + '/' + file;
-					var path = 'node_modules/ep_sciflowwriter/latex_templates/' + templateName + '/' + file;
-					fs.symlink(path, target, function(err) {
+					var path = exportPath + '/' + file;
+					var target = fs.realpathSync('node_modules/ep_sciflowwriter/latex_templates/' + templateName + '/' + file);
+					fs.symlink(target, path, function(err) {
 						callback(null);
 					});
 				}, function (err) {
