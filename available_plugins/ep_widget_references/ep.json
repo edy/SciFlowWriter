@@ -2,7 +2,7 @@
   "parts": [
     {
       "name": "references",
-      "pre": ["ep_widget_references/widgetcontainer"],
+      "pre": ["ep_sciflowwriter/widgetcontainer"],
       "hooks": {
         "eejsBlock_body": "ep_widget_references/widget",
         "eejsBlock_widgetColumn": "ep_widget_references/widget",
