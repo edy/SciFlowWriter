@@ -63,12 +63,17 @@ header a:hover {
   top: 43px;
 }
 
+/* hide chat*/
+#chaticon {
+  display: none;
+}
+
 #editorcontainer {
   width: auto;
   right: 300px;
 }
 
-#settingsmenu, #importexport, #embed {
+#settings, #importexport, #embed, #users {
   top: 85px;
 }
 
