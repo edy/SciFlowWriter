@@ -1,4 +1,9 @@
 var socket = null;
+window._sfw.metadata = {};
+
+var ucfirst = function(text) {
+	return text.charAt(0).toUpperCase() + text.substr(1);
+}
 
 exports.loadWidgets = function (hook_name, args, cb) {
 	socket = args.socket;
@@ -16,13 +21,9 @@ exports.loadWidgets = function (hook_name, args, cb) {
 
 	// load metadata
 	$('#metadataPopup').on('show', function() {
-		$('#metadataTitleInput').val($('#metadataTitle').text());
-		$('#metadataSubtitleInput').val($('#metadataSubtitle').text());
-		$('#metadataAbstractInput').val($('#metadataAbstract').text());
-		$('#metadataKeywordsInput').val($('#metadataKeywords').text());
-		$('#metadataCategoriesInput').val($('#metadataCategories').text());
-		$('#metadataGeneraltermsInput').val($('#metadataGeneralterms').text());
-		$('#metadataTemplateInput').val($('#metadataTemplate').text());
+		for(var key in window._sfw.metadata) {
+			$('#metadata'+ucfirst(key)+'Input').val(window._sfw.metadata[key]);
+		}
 	});
 	
 	// close metadata popup
@@ -56,13 +57,10 @@ exports.loadWidgets = function (hook_name, args, cb) {
 		if (message.widget_name !== 'ep_widget_metadata') return;
 
 		if (message.action === 'setMetadata') {
-			$('#metadataTitle').text(message.result.title);
-			$('#metadataSubtitle').text(message.result.subtitle);
-			$('#metadataAbstract').text(message.result.abstract);
-			$('#metadataKeywords').text(message.result.keywords);
-			$('#metadataCategories').text(message.result.categories);
-			$('#metadataGeneralterms').text(message.result.generalterms);
-			$('#metadataTemplate').text(message.result.template);
+			window._sfw.metadata = message.result;
+			for(var key in window._sfw.metadata) {
+				$('#metadata'+ucfirst(key)).text(window._sfw.metadata[key]);
+			}
 		}
 	});
 
