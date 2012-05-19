@@ -105,7 +105,7 @@ exports.loadWidgets = function (hook_name, args, cb) {
 				// update list
 				$('<li class="reference" rel="' + message.result[i].id + '">' +
 					'<span class="title">' + message.result[i].title + '</span>' +
-					'<span class="addCite">&#x2B05;</span><span class="delete">&times;</span></li>').appendTo('#references');
+					'<span class="addCite" title="add reference">&#x2B05;</span><span class="delete" title="delete reference">&times;</span></li>').appendTo('#references');
 			}
 		}
 	});
