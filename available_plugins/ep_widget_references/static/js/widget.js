@@ -152,8 +152,6 @@ exports.collectContentPre = function(hook_name, args, cb) {
 
 // borrowed from github.com/redhog/ep_embedmedia
 exports.aceCreateDomLine = function(hook_name, args, cb) {
-	paste = false;
-	console.warn('aceCreateDomLine');
 	if (args.cls.indexOf('sciflow-cite:') >= 0) {
 		var clss = [];
 		var argClss = args.cls.split(" ");
