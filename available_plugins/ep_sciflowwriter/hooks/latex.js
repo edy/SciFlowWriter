@@ -190,13 +190,11 @@ function generatePdfLatex(padID, revision, cb) {
 					if (references) {
 						for(var ref in references) {
 							bibtex.push('@' + references[ref].type + '{' + references[ref].id + ',');
-							bibtex.push(references[ref].title !== '' ? '    title = {' + references[ref].title + '},' : '');
-							bibtex.push(references[ref].authors !== '' ? '    author = {' + references[ref].authors + '},' : '');
-							bibtex.push(references[ref].url !== '' ? '    url = {' + references[ref].url + '},' : '');
-							bibtex.push(references[ref].year !== '' ? '    year = {' + references[ref].year + '},' : '');
-							bibtex.push(references[ref].month !== '' ? '    month = {' + references[ref].month + '},' : '');
-							bibtex.push(references[ref].publisher !== '' ? '    publisher = {' + references[ref].publisher + '},' : '');
-							bibtex.push(references[ref].journal !== '' ? '    journal = {' + references[ref].journal + '},' : '');
+							for(var i in references[ref]) {
+								if (i === 'id' || i === 'type') continue;
+								bibtex.push(references[ref][i] !== '' ? i+' = {' + references[ref][i] + '},' : '');
+							};
+
 							bibtex.push('}');
 						};
 
