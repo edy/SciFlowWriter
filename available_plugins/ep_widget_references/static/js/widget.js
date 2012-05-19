@@ -127,41 +127,55 @@ exports.aceInitInnerdocbodyHead = function(hook_name, args, cb) {
 };
 
 exports.aceAttribsToClasses = function(hook_name, args, cb) {
-	console.log('aceAttribsToClasses', args);
 	if (args.key == 'sciflow-cite' && args.value != "") {
-		console.log('is a cite!');
 		return cb(["sciflow-cite:" + args.value]);
 	} else if (args.key.indexOf('sciflow-cite:') >= 0) {
-		console.log('contains sciflow-cite...');
+		// we need this line only for pasted cites
+		// but this is also why the typed in text also becomes a cite :-(
+		// see also exports.aceCreateDomLine()
 		return [args.key];
-	} else {
-
 	}
-
-	//console.log('aceAttribsToClasses', args.key, args.value)
-	//if (args.key.indexOf('sciflow-cite:') >= 0) return [args.key];
 };
 
+// content collector is used when pasting text too
 exports.collectContentPre = function(hook_name, args, cb) {
-	if (args.cls == 'ace-line') return;
-
+	
 	if (args.cls.indexOf('sciflow-cite:') >= 0) {
 		var regExpMatch;
 
-		if (regExpMatch = args.cls.match(/sciflow-(?:heading\d|graphic:\S+|cite:\S+)(?:$| )/)) {
-			console.log('matched: ', regExpMatch);
+		// if you find a cite-class in the pasted text, keep it
+		if (regExpMatch = args.cls.match(/sciflow-cite:\S+(?:$| )/)) {
 			args.cc.doAttrib(args.state, regExpMatch[0]);
 		}
 	}
 };
 
+// borrowed from github.com/redhog/ep_embedmedia
 exports.aceCreateDomLine = function(hook_name, args, cb) {
-	console.log('aceCreateDomLine', args);
+	paste = false;
+	console.warn('aceCreateDomLine');
 	if (args.cls.indexOf('sciflow-cite:') >= 0) {
-		
-		var id = args.cls.match(/sciflow-cite:(\S+)(?:$| )/)[1];
+		var clss = [];
+		var argClss = args.cls.split(" ");
+		var value;
 
-		return cb([{cls: args.cls, extraOpenTags: '<span class="sciflow-cite" rel="'+id+'">', extraCloseTags: "</span>"}]);
+		// get the value from the classname
+		for (var i = 0; i < argClss.length; i++) {
+			var cls = argClss[i];
+			if (cls.indexOf("sciflow-cite:") != -1) {
+				value = cls.substr(cls.indexOf(":")+1);
+				
+				// if you delete the following line, you won't be able to copy/paste references
+				// but if you leave the line, the text you type after a [cite] gets the cite-attribute too!
+				// see also exports.aceAttribsToClasses()
+				// how do i fix this?
+				clss.push(cls);
+			} else {
+				clss.push(cls);
+			}
+		}
+
+		return cb([{cls: clss.join(" "), extraOpenTags: '<span class="sciflow-cite" rel="'+value+'">', extraCloseTags: "</span>"}]);
 	}
 
 	return cb();
