@@ -45,8 +45,6 @@ exports.loadWidgets = function (hook_name, args, cb) {
 				subtitle: $('#metadataSubtitleInput').val(),
 				abstract: $('#metadataAbstractInput').val(),
 				keywords: $('#metadataKeywordsInput').val(),
-				categories: $('#metadataCategoriesInput').val(),
-				generalterms: $('#metadataGeneraltermsInput').val(),
 				template: $('#metadataTemplateInput').val()
 			}
 		});

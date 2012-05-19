@@ -35,8 +35,6 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 			subtitle: args.query.value.subtitle,
 			abstract: args.query.value.abstract,
 			keywords: args.query.value.keywords,
-			categories: args.query.value.categories,
-			generalterms: args.query.value.generalterms,
 			template: args.query.value.template
 		};
 
