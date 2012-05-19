@@ -31,19 +31,8 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 	
 	// listen for 'setMetadata'
 	if (args.query.action === 'setReference') {
-		var id = (typeof args.query.value.id === 'string' && args.query.value.id !== '') ? args.query.value.id : randomString(16);
-		
-		var reference = {
-			id: id,
-			type: args.query.value.type,
-			title: args.query.value.title,
-			authors: args.query.value.authors,
-			url: args.query.value.url,
-			year: args.query.value.year,
-			month: args.query.value.month,
-			publisher: args.query.value.publisher,
-			journal: args.query.value.journal
-		};
+		var reference = args.query.value;
+		reference.id = (typeof args.query.value.id === 'string' && args.query.value.id !== '') ? args.query.value.id : randomString(16);
 
 		padManager.getPad(args.query.padID, function(err, pad) {
 			pad.getData('references', function(references) {
@@ -52,7 +41,7 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 					references = {};
 				}
 
-				references[id] = reference;
+				references[reference.id] = reference;
 
 				pad.setData('references', references);
 

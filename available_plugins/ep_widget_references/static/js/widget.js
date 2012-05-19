@@ -23,6 +23,10 @@ var referenceTypes = {
 	webpage: ['url', 'lastchecked', 'year', 'month', 'keywords']
 };
 
+var ucfirst = function(text) {
+	return text.charAt(0).toUpperCase() + text.substr(1);
+}
+
 window._sfw.references = {};
 
 exports.loadWidgets = function (hook_name, args, cb) {
@@ -40,27 +44,39 @@ exports.loadWidgets = function (hook_name, args, cb) {
 	$('#referencesPopup').modal({show: false});
 
 	// load reference
-	$('#referencesPopup').on('show', function() {
-		
+	$('#referencesNew').on('click', function() {
+		$('#referenceTypeInput').val('');
+		$('#referenceIdInput').val('');
+		$('#referenceInputFields').text('');
+
+		$('#referencesPopup').modal('show');
 	});
 	
 	// close references popup
 	$('#cancelReference').on('click', function () {
   		$('#referencesPopup').modal('hide');
+  		$('#referenceTypeInput').val('');
+		$('#referenceIdInput').val('');
+		$('#referenceInputFields').text('');
 	});
 
 	// save references
 	$('#saveReference').on('click', function () {
   		$('#referencesPopup').modal('hide');
 
-  		var ucfirst = function(text) {
-			return text.charAt(0).toUpperCase() + text.substr(1);
-		}
+  		var type = $('#referenceTypeInput').val();
+  		if (type === '') return;
 
-  		var values = {};
-  		$.each(['id', 'type', 'title', 'authors', 'url', 'year', 'month', 'publisher', 'journal'], function(i, value) {
-  			values[value] = $('#reference' + ucfirst(value) + 'Input').val()
-  		});
+  		var values = {type: type};
+
+  		var id = $('#referenceIdInput').val();
+  		if (id !== '') {
+  			values.id = id;
+  		}
+
+  		$.each(referenceTypes[type], function(t, v) {
+  			values[v] = $('#reference' + ucfirst(v) + 'Input').val()
+		});
 
   		// save on the server
   		socket.emit('widget-message', {
@@ -70,10 +86,9 @@ exports.loadWidgets = function (hook_name, args, cb) {
 			'value': values
 		});
 
-		// reset input form
-		$.each(['id', 'type', 'title', 'authors', 'url', 'year', 'month', 'publisher', 'journal'], function(i, value) {
-  			$('#reference' + ucfirst(value) + 'Input').val('');
-  		});
+		$('#referenceTypeInput').val('');
+		$('#referenceIdInput').val('');
+		$('#referenceInputFields').text('');
 	});
 
 	// receive new references
@@ -98,18 +113,30 @@ exports.loadWidgets = function (hook_name, args, cb) {
 	// edit reference
 	$('#references .title').live('click', function(){
 		var id = $(this).parent().attr('rel');
-		
-		var ucfirst = function(text) {
-			return text.charAt(0).toUpperCase() + text.substr(1);
-		}
-
-		$.each(['type', 'title', 'authors', 'url', 'year', 'month', 'publisher', 'journal'], function(i, value) {
-  			$('#reference' + ucfirst(value) + 'Input').val(window._sfw.references[id][value]);
-  		});
-
-  		$('#referenceIdInput').val(id);
+		var type = window._sfw.references[id].type;
+		$('#referenceIdInput').val(id);
+		$('#referenceTypeInput').val(type);
+		$('#referenceTypeInput').trigger('change');
 
 		$('#referencesPopup').modal('show');
+	});
+
+	// on type change
+	$('#referenceTypeInput').on('change', function(){
+		var type = $(this).val();
+		if (type === 'none') return;
+
+		var id = $('#referenceIdInput').val();
+
+		$('#referenceInputFields').text('');
+		$.each(referenceTypes[type], function(t, v) {
+			var value = '';
+			if (id !== '' && window._sfw.references[id][v]) {
+				value = window._sfw.references[id][v];
+			}
+			$('<p>'+ucfirst(v)+':<br><input type="text" name="'+v+'" value="'+value+'" id="reference'+ucfirst(v)+'Input" /></p>').appendTo('#referenceInputFields');
+		});
+
 	});
 
 	// delete reference
