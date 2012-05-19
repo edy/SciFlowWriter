@@ -1,4 +1,27 @@
 var socket = null;
+var referenceTypes = {
+	article: ['author', 'title', 'yournal', 'year', 'volume', 'number', 'pages', 'month', 'keywords'],
+	book: ['title', 'publisher', 'year', 'author', 'editor', 'volume', 'number', 'series', 'address', 'edition', 'month', 'keywords'],
+	booklet: ['title', 'author', 'howpublished', 'address', 'month', 'year', 'keywords'],
+	commented: ['author', 'title', 'publisher', 'year', 'volumetitle', 'editor', 'keywords'],
+	conference: ['author', 'title', 'booktitle', 'year', 'editor', 'volume', 'pages', 'number', 'organization', 'series', 'publisher', 'address', 'month', 'keywords'],
+	glossdef: ['word', 'definition', 'sort-word', 'short', 'group', 'keywords'],
+	inbook: ['title', 'publisher', 'year', 'editor', 'author', 'chapter', 'number', 'volume', 'type', 'series', 'month', 'address', 'edition', 'pages', 'keywords'],
+	incollection: ['author', 'title', 'booktitle', 'year', 'editor', 'volume', 'number', 'series', 'type', 'chapter', 'pages', 'address', 'edition', 'month', 'keywords'],
+	inproceedings: ['author', 'title', 'booktitle', 'year', 'editor', 'volume', 'pages', 'number', 'organization', 'series', 'publisher', 'address', 'month', 'month', 'keywords'],
+	jurthesis: ['author', 'title', 'school', 'year', 'address', 'month', 'type', 'keywords'],
+	manual: ['title', 'author', 'organization', 'address', 'edition', 'month', 'year', 'keywords'],
+	masterthesis: ['author', 'title', 'school', 'year', 'address', 'month', 'type', 'keywords'],
+	misc: ['title', 'howpublished', 'author', 'month', 'year', 'keywords'],
+	periodical: ['author', 'title', 'journal', 'year', 'volume', 'pages', 'keywords'],
+	phdthesis: ['author', 'title', 'school', 'year', 'address', 'month', 'type', 'keywords'],
+	proceedings: ['title', 'year', 'editor', 'number', 'publisher', 'organization', 'address', 'month', 'volume', 'keywords'],
+	techreport: ['author', 'title', 'institution', 'year', 'type', 'number', 'address', 'month', 'keywords'],
+	unpublished: ['author', 'note', 'title', 'month', 'year', 'keywords'],
+	url: ['urldate', 'author', 'title', 'lastchecked', 'keywords'],
+	electronic: ['urldate', 'author', 'title', 'keywords'],
+	webpage: ['url', 'lastchecked', 'year', 'month', 'keywords']
+};
 
 window._sfw.references = {};
 
