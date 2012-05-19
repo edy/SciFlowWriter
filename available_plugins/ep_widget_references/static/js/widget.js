@@ -127,29 +127,41 @@ exports.aceInitInnerdocbodyHead = function(hook_name, args, cb) {
 };
 
 exports.aceAttribsToClasses = function(hook_name, args, cb) {
+	console.log('aceAttribsToClasses', args);
 	if (args.key == 'sciflow-cite' && args.value != "") {
+		console.log('is a cite!');
 		return cb(["sciflow-cite:" + args.value]);
+	} else if (args.key.indexOf('sciflow-cite:') >= 0) {
+		console.log('contains sciflow-cite...');
+		return [args.key];
+	} else {
+
+	}
+
+	//console.log('aceAttribsToClasses', args.key, args.value)
+	//if (args.key.indexOf('sciflow-cite:') >= 0) return [args.key];
+};
+
+exports.collectContentPre = function(hook_name, args, cb) {
+	if (args.cls == 'ace-line') return;
+
+	if (args.cls.indexOf('sciflow-cite:') >= 0) {
+		var regExpMatch;
+
+		if (regExpMatch = args.cls.match(/sciflow-(?:heading\d|graphic:\S+|cite:\S+)(?:$| )/)) {
+			console.log('matched: ', regExpMatch);
+			args.cc.doAttrib(args.state, regExpMatch[0]);
+		}
 	}
 };
 
 exports.aceCreateDomLine = function(hook_name, args, cb) {
+	console.log('aceCreateDomLine', args);
 	if (args.cls.indexOf('sciflow-cite:') >= 0) {
-		var clss = [];
-		var argClss = args.cls.split(" ");
-		var value;
+		
+		var id = args.cls.match(/sciflow-cite:(\S+)(?:$| )/)[1];
 
-		// get the value from the classname
-		// borrowed from github.com/redhog/ep_embedmedia
-		for (var i = 0; i < argClss.length; i++) {
-			var cls = argClss[i];
-			if (cls.indexOf("sciflow-cite:") != -1) {
-				value = cls.substr(cls.indexOf(":")+1);
-			} else {
-				clss.push(cls);
-			}
-		}
-
-		return cb([{cls: clss.join(" "), extraOpenTags: '<span class="sciflow-cite" rel="'+value+'">', extraCloseTags: "</span>"}]);
+		return cb([{cls: args.cls, extraOpenTags: '<span class="sciflow-cite" rel="'+id+'">', extraCloseTags: "</span>"}]);
 	}
 
 	return cb();
