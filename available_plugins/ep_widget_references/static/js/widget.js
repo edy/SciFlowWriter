@@ -130,6 +130,8 @@ exports.loadWidgets = function (hook_name, args, cb) {
 
 		$('#referenceInputFields').text('');
 		$.each(referenceTypes[type], function(t, v) {
+			if (v === 'type' || v === 'id') return;
+
 			var value = '';
 			if (id !== '' && window._sfw.references[id][v]) {
 				value = window._sfw.references[id][v];
