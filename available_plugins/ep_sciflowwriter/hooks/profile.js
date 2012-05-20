@@ -59,12 +59,14 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 					if (metadata) {
 						title = metadata.title || padID;
 					}
-					
-					var access = pad.getData('access');
 
-					getAuthorData(access.user, function(err, authors) {
-						p.push({padID: padID, title: title, headRevision: pad.head, authors: authors.join(', ')});
-						callback(null);
+					pad.getRevisionDate(pad.head, function(err, timestamp) {
+						var access = pad.getData('access');
+
+						getAuthorData(access.user, function(err, authors) {
+							p.push({padID: padID, title: title, timestamp: timestamp, authors: authors.join(', ')});
+							callback(null);
+						});
 					});
 				});
 				

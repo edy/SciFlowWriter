@@ -1,3 +1,17 @@
+<%
+
+function formatTimestamp(timestamp) {
+	function pad(n) { return n < 10 ? '0' + n.toString(10) : n.toString(10); }
+	
+	timestamp = parseInt(timestamp, 10);
+	var date = new Date(timestamp);
+	
+	return [
+		[date.getFullYear(), pad(date.getMonth()+1), date.getDate()].join('-'),
+		[pad(date.getHours()), pad(date.getMinutes()), pad(date.getSeconds())].join(':')
+	].join(' ');
+};
+%>
 <!doctype html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>	  <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
@@ -65,6 +79,7 @@
 								<li>
 									<div class="padName"><a href="/p/<%= user.pads.my[i].padID %>"><%= user.pads.my[i].title %></a></div>
 									<div class="authors"><%= user.pads.my[i].authors %></div>
+									<div class="date">Last changed on <%= formatTimestamp(user.pads.my[i].timestamp) %></div>
 								</li>
 								<% } %>
 							</ul>
@@ -76,6 +91,7 @@
 								<li>
 									<div class="padName"><a href="/p/<%= user.pads.other[i].padID %>"><%= user.pads.other[i].title %></a></div>
 									<div class="authors"><%= user.pads.other[i].authors %></div>
+									<div class="date">Last changed on <%= formatTimestamp(user.pads.other[i].timestamp) %></div>
 								</li>
 								<% } %>
 							</ul>
@@ -137,7 +153,7 @@
 		var ucfirst = function(text) {
 			return text.charAt(0).toUpperCase() + text.substr(1);
 		}
-		
+
 		$(function(){
 
 			var socket = io.connect().of("/profile");
