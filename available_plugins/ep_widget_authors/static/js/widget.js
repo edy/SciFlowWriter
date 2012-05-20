@@ -22,7 +22,7 @@ exports.loadWidgets = function (hook_name, args, cb) {
 
 		if (message.action === 'getPadAuthors') {
 			$.each(message.result, function(i, user) {
-				$('<li class="clear"><img src="'+ user.auth.image +'" alt="avatar"><strong>'+ user.name +'</strong><br>'+ user.email +'</li>').appendTo('.widget.authors .widget-content ul');
+				$('<li class="clear"><img src="'+ user.auth.image +'" alt="avatar"><strong>'+ user.name +'</strong><br>'+ user.email +'&nbsp;</li>').appendTo('.widget.authors .widget-content ul');
 			});
 		} else if (message.action === 'inviteUser') {
 			console.log('Sent invitation link: ' + message.result);
