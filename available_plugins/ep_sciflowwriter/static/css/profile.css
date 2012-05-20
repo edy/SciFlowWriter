@@ -22,7 +22,7 @@ aside .padmenu ul li.active a:after{float:right;content:"‣";}
 #right #personalInformation #editProfile button.green:active{background-color:#86a628;background-repeat:repeat-x;background-image:-moz-linear-gradient(#86a628, #b8d85c);background-image:-ms-linear-gradient(#86a628, #b8d85c);background-image:-webkit-linear-gradient(#86a628, #b8d85c);background-image:-o-linear-gradient(#86a628, #b8d85c);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr= #86a628 ,endColorstr= #b8d85c ,GradientType=0);-ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr= #86a628 ,endColorstr= #b8d85c ,GradientType=0);background-image:linear-gradient(#86a628, #b8d85c);}
 #right #personalInformation #editProfile button .icon{vertical-align:text-top;}
 #right #personalInformation #editProfile #editProfileForm{display:none;}
-#right ul{margin-top:10px;list-style:none;}#right ul li{margin-bottom:10px;}
+#right ul{margin-top:10px;list-style:none;}#right ul li{min-height:56px;padding-left:56px;margin-bottom:10px;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAA4CAYAAACGwxqMAAABIElEQVR42u3aMQcCcRjH8WiKaGo6Wo+jN9ELaGq6dxCtEdEU0RRNTa1x3Gs4mnofEREREVHPb0ucnpue56/f8B3uOcdn+N/jhqsVRYEiaScdpZezYIItghXYWLrgpvNgTADOMAikHOBrQOAbwK+QIphggp2BB1LNqK50rwruG4ITgHmGCeaW4JbgliCYYG4JbgmCCdaDU+Mt8agKHhmCe9KTZ5jg/wHbv3Qd6VwVPJHqht8SV55hggkmOBxwLsWK9daShh7AbYAUNaTCHqzH7j+e2dqD9dgN5g7AeqwtWI9dY24OVmJXmLsAK7BLzH2By7ELzL2Cm1/YOeZlmf3gUYKdYf4LnBuBU+nwcT0FSANOHPykNAZGC0aRlEknz1j0BplJZgLpx6O7AAAAAElFTkSuQmCC");background-repeat:no-repeat;}
 #right ul li .authors{font-size:80%;}
 #content{margin-top:10px;}#content table{margin-top:10px;width:100%;font-size:0.8em;}#content table thead{font-weight:bold;}
 #content table tbody tr:hover{background-color:#e3e3e3;}
