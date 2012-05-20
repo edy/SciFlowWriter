@@ -31,9 +31,6 @@
 					<div id="avatar"><img src="<%= user.image %>"></div>
 					<div class="padmenu">
 						<ul>
-							<!--li>
-								<a href="#allpads">All Pads</a>
-							</li-->
 							<li class="active">
 								<a href="#mypads">My Pads</a>
 							</li>
@@ -56,70 +53,26 @@
 							<h3>My Pads</h3>
 							<!--input type="search" name="s" results="5"-->
 							<p><a id="newpad" href="#">new pad</a></p>
-							<table>
-								<thead>
-									<tr>
-										<td>
-											Title
-										</td>
-										<td>
-											Last Changed On
-										</td>
-										<td>
-											&nbsp;
-										</td>
-									</tr>
-								</thead>
-								<tbody>
-									<% for(var i=0; i<user.pads.my.length; i++) { %>
-									<tr>
-										<td>
-											<a href="/p/<%= user.pads.my[i] %>"><%= user.pads.my[i] %></a>
-										</td>
-										<td>
-											&nbsp;
-										</td>
-										<td>
-											&nbsp;
-										</td>
-									</tr>
-									<% } %>
-								</tbody>
-							</table>
+							<ul>
+								<% for(var i=0; i<user.pads.my.length; i++) { %>
+								<li>
+									<div class="padName"><a href="/p/<%= user.pads.my[i].padID %>"><%= user.pads.my[i].title %></a></div>
+									<div class="authors"><%= user.pads.my[i].authors %></div>
+								</li>
+								<% } %>
+							</ul>
+							...
 						</div>
 						<div id="otherpads" style="display:none">
 							<h3>Other Pads</h3>
-							<!--input type="search" name="s" results="5"-->
-							<table>
-								<thead>
-									<tr>
-										<td>
-											Title
-										</td>
-										<td>
-											Last Changed On
-										</td>
-										<td>
-											&nbsp;
-										</td>
-									</tr>
-								</thead>
-								<tbody>
-									<% for(var i=0; i<user.pads.other.length; i++) { %>
-									<tr>
-										<td>
-											<a href="/p/<%= user.pads.other[i] %>"><%= user.pads.other[i] %></a>
-										</td>
-										<td>
-											&nbsp;
-										</td>
-										<td>
-											&nbsp;
-										</td>
-									</tr>
-									<% } %>
-								</tbody>
-							</table>
+							<ul>
+								<% for(var i=0; i<user.pads.other.length; i++) { %>
+								<li>
+									<div class="padName"><a href="/p/<%= user.pads.other[i].padID %>"><%= user.pads.other[i].title %></a></div>
+									<div class="authors"><%= user.pads.other[i].authors %></div>
+								</li>
+								<% } %>
+							</ul>
 						</div>
 					</div>
 				</div>

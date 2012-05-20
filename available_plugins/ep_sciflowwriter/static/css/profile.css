@@ -274,6 +274,20 @@ aside {
 			}
 		}
 	}
+
+	ul {
+		margin-top: 10px;
+		list-style: none;
+
+		li {
+			margin-bottom: 10px;
+
+			.padName {}
+			.authors {
+				font-size: 80%;
+			}
+		}
+	}
 	
 }
 
