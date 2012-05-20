@@ -143,8 +143,6 @@
 			var socket = io.connect().of("/profile");
 			$('#profilePopup').modal({show: false});
 
-			var editmode = false;
-			
 			$('#editProfile button').on('click', function(){
 				
 				$.each(author, function(name, value) {
