@@ -59,7 +59,6 @@
 								</li>
 								<% } %>
 							</ul>
-							...
 						</div>
 						<div id="otherpads" style="display:none">
 							<h3>Other Pads</h3>
@@ -125,7 +124,7 @@
 				
 				if (name !== null) {
 					$.getJSON('/profile/newpad?name='+name, function(data){
-						$('#mypads table tbody').append('<tr><td><a href="'+data.uri+'">'+data.padID+'</a></td><td>&nbsp;</td><td>&nbsp;</td></tr>');
+						$('#mypads ul').append('<li><div class="padName"><a href="' + data.uri + '">' + data.padID + '</a></div><div class="authors">' + $('#name').text() + '</div></li>');
 					});
 				}
 
