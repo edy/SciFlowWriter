@@ -123,10 +123,7 @@ function generatePdfLatex(padID, revision, cb) {
 				
 				async.forEach(padAccess.user, function(authorID, callback){
 					authorManager.getAuthor(authorID, function(err, author) {
-						templateVariables.users.push({
-							name: author.name,
-							email: author.email || undefined
-						});	
+						templateVariables.users.push(author);	
 
 						callback();
 					});

@@ -44,6 +44,8 @@
 
 % first the title is needed
 \title{<%= metadata.title %>}
+
+\subtitle{<%= metadata.subtitle %>}
 % a short form should be given in case it is too long for the running head
 %\titlerunning{Awareness}
 
@@ -71,8 +73,12 @@ for (author in users) {
 	emails.push(users[author].email);
 }
 %>
-\institute{ % institute placeholder\\
-\email{<%= emails.join(' \\and ') %>}}
+
+% this is a template for lecture notes, so we use only the address from
+% the first user. it's the owner of the pad
+\institute{<%= users[0].institute1 %>, <%= users[0].institute2 %>\\ <%= users[0].institute3 %>\\
+<%= users[0].street %>, <%= users[0].city %>, <%= users[0].country %>\\
+\email{<%= emails.join(', ') %>}}
 
 \maketitle
 

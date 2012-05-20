@@ -378,10 +378,20 @@
 %Telephone: (800) 555--1212\\
 %Fax: (888) 555--1212}}
 
-\author{<% for (author in users) { %>
-  \IEEEauthorblockN{<%= users[author].name %>}
-  \IEEEauthorblockA{Email: <%= users[author].email %>}
-<% } %>}
+<%
+var authors = [];
+for (author in users) {
+  authors.push(
+    '\\IEEEauthorblockN{'+users[author].name+'}'+
+    ' \\IEEEauthorblockA{'+
+    users[author].institute1 +'\\\\'+
+    users[author].institute2 +'\\\\'+
+    users[author].city +', '+ users[author].country +'\\\\'+
+    'Email: '+users[author].email+'}');
+}
+%>
+
+\author{<%= authors.join(' \\and ') %>}
 
 % conference papers do not typically use \thanks and this command
 % is locked out in conference mode. If really needed, such as for
