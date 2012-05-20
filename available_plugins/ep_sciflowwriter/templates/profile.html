@@ -8,9 +8,19 @@
 		<title>SciFlowWriter</title>
 		<link rel="stylesheet" type="text/css" href="/static/plugins/ep_sciflowwriter/static/css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="/static/plugins/ep_sciflowwriter/static/css/profile.css">
-		<script src="/socket.io/socket.io.js"></script>
 		<script type="text/javascript">
 			var authorID = '<%= user.id %>';
+			var author = {
+				name: '<%= user.name %>',
+				email: '<%= user.email %>',
+				image: '<%= user.image %>',
+				institute1: '<%= user.institute1 %>',
+				institute2: '<%= user.institute2 %>',
+				institute3: '<%= user.institute3 %>',
+				street: '<%= user.street %>',
+				city: '<%= user.city %>',
+				country: '<%= user.country %>'
+			};
 		</script>
 	</head>
 	<body>
@@ -49,7 +59,6 @@
 					<div id="content">
 						<div id="mypads">
 							<h3>My Pads</h3>
-							<!--input type="search" name="s" results="5"-->
 							<p><a id="newpad" href="#">new pad</a></p>
 							<ul>
 								<% for(var i=0; i<user.pads.my.length; i++) { %>
@@ -77,37 +86,95 @@
 				<div class="clearfix"></div>
 			</div>
 		</div>
+		<div class="modal" id="profilePopup">
+			<div class="modal-header">
+				<button class="close" data-dismiss="modal">×</button>
+				<h3>Edit Profile</h3>
+			</div>
+			<div class="modal-body">
+				<p>
+					Name:<br>
+					<input name="name" id="profileNameInput">
+				</p>
+				<p>
+					Email:<br>
+					<input name="email" id="profileEmailInput">
+				</p>
+				<p>
+					Image:<br>
+					<input name="image" id="profileImageInput">
+				</p>
+				<p>
+					Institute:<br>
+					<input name="institute1" id="profileInstitute1Input"><br>
+					<input name="institute2" id="profileInstitute2Input"><br>
+					<input name="institute3" id="profileInstitute3Input">
+				</p>
+				<p>
+					Street:<br>
+					<input name="street" id="profileStreetInput">
+				</p>
+				<p>
+					Zip, City:<br>
+					<input name="city" id="profileCityInput">
+				</p>
+				<p>
+					Country:<br>
+					<input name="country" id="profileCountryInput">
+				</p>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" id="cancelProfile">Cancel</a>
+				<a href="#" class="btn btn-primary" id="saveProfile">Save</a>
+			</div>
+		</div>
 
 		<script src="/static/js/jquery.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="/static/plugins/ep_sciflowwriter/static/js/bootstrap-modal.js"></script>
 		<script type="text/javascript">
+		
+		var ucfirst = function(text) {
+			return text.charAt(0).toUpperCase() + text.substr(1);
+		}
+		
 		$(function(){
 
 			var socket = io.connect().of("/profile");
+			$('#profilePopup').modal({show: false});
 
 			var editmode = false;
 			
 			$('#editProfile button').on('click', function(){
-				if(editmode) {
-					editmode = false;
-					$('#editProfile button').text('Edit');
-					$('.editprofile').each(function() {
-						$('#' + $(this).attr('id').substr(4)).text($(this).val());
-						$(this).remove();
-					});
-					$('.hidden').removeClass('hidden').show();
-					socket.emit('update', {
-						id: authorID,
-						name: $('#name').text(),
-						email: $('#email').text()
-					});
-				} else {
-					editmode = true;
-					$('.editable').each(function(e) {
-						$(this).addClass('hidden').hide().after('<input class="editprofile" id="edit' + $(this).attr('id') + '" type="text" value="' + $(this).text() + '" />');
-					})
-					$('.editprofile').css({display:'block'});
-					$('#editProfile button').text('Save');
-				}
+				
+				$.each(author, function(name, value) {
+					$('#profile' + ucfirst(name) + 'Input').val(value);
+				});
+
+				$('#profilePopup').modal('show');
+
+				return false;
+			});
+
+			$('#saveProfile').on('click', function() {
+				$('#profilePopup').modal('hide');
+
+				$.each(author, function(name, value) {
+					author[name] = $('#profile' + ucfirst(name) + 'Input').val();
+				});
+
+				author.id = authorID
+				socket.emit('update', author);
+
+				$('#name').text(author.name);
+				$('#email').text(author.email);
+
+				return false;
+			});
+
+			$('#cancelProfile').on('click', function() {
+				$('#profilePopup').modal('hide');
+				return false;
 			});
 
 			$('.padmenu li a').on('click', function(e) {

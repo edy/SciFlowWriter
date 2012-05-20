@@ -22,6 +22,12 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 			name: user.name,
 			email: user.email,
 			image: user.auth.image,
+			institute1: user.institute1,
+			institute2: user.institute2,
+			institute3: user.institute3,
+			street: user.street,
+			city: user.city,
+			country: user.country,
 			url: user.auth.url,
 			pads: user.pads
 		};
@@ -92,6 +98,12 @@ exports.socketio = function (hook_name, args, cb) {
 				author.name = profile.name;
 				author.email = profile.email;
 				author.auth.image = profile.image || author.auth.image;
+				author.institute1 = profile.institute1;
+				author.institute2 = profile.institute2;
+				author.institute3 = profile.institute3;
+				author.street = profile.street;
+				author.city = profile.city;
+				author.country = profile.country;
 
 				authorManager.setAuthor(profile.id, author);
 			});

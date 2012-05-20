@@ -28,3 +28,4 @@ aside .padmenu ul li.active a:after{float:right;content:"‣";}
 #content table tbody tr:hover{background-color:#e3e3e3;}
 #login{text-align:center;}#login h2{height:60px;line-height:60px;margin-bottom:20px;}
 #login #loginProvider{margin-top:40px;}#login #loginProvider img{width:140px;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px;margin:0 10px;}
+#profilePopup{display:none;}

@@ -69,6 +69,12 @@ everyauth.twitter
 					author.id = authorID;
 					author.name = twitUser.name;
 					author.email = '';
+					author.institute1 = '';
+					author.institute2 = '';
+					author.institute3 = '';
+					author.street = '';
+					author.city = '';
+					author.country = '';
 					author.auth = {
 						'user_id' : twitUser.id,
 						'type' : 'twitter',
@@ -149,6 +155,12 @@ everyauth.facebook
 					author.id = authorID;
 					author.name = fbUserMetadata.name;
 					author.email = fbUserMetadata.email;
+					author.institute1 = '';
+					author.institute2 = '';
+					author.institute3 = '';
+					author.street = '';
+					author.city = '';
+					author.country = '';
 					author.auth = {
 						'type' : 'facebook',
 						'user_id' : fbUserMetadata.id,
@@ -227,6 +239,12 @@ everyauth.mendeley
 					author.id = authorID;
 					author.name = mendeleyUser.main.name;
 					author.email = '';
+					author.institute1 = '';
+					author.institute2 = '';
+					author.institute3 = '';
+					author.street = '';
+					author.city = '';
+					author.country = '';
 					author.auth = {
 						'user_id' : mendeleyUser.main.profile_id,
 						'type' : 'mendeley',
