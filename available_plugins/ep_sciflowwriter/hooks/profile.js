@@ -38,7 +38,6 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 				});
 			}
 		}, function(err, results) {
-			console.error(results);
 			profile.pads.my = results.my;
 			profile.pads.other = results.other;
 			res.send(eejs.require("ep_sciflowwriter/templates/profile.html", {'user': profile}), { maxAge: 0 });
