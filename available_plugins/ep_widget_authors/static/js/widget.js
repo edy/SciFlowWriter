@@ -1,10 +1,11 @@
-var $ = require('ep_etherpad-lite/static/js/rjquery').$; // use jQuery
 var socket;
 
 // do something here
 exports.loadWidgets = function (hook_name, args, cb) {
 	socket = args.socket;
 	
+	$('#inviteUserPopup').modal({show: false});
+
 	// show authors widget
 	$('.widget.authors').show();
 	
@@ -24,14 +25,27 @@ exports.loadWidgets = function (hook_name, args, cb) {
 				$('<li class="clear"><img src="'+ user.auth.image +'" alt="avatar"><strong>'+ user.name +'</strong><br>'+ user.email +'</li>').appendTo('.widget.authors .widget-content ul');
 			});
 		} else if (message.action === 'inviteUser') {
-			alert('Sent invitation link: ' + message.result);
+			console.log('Sent invitation link: ' + message.result);
 		}
 	});
 
 	$('#invitelink').on('click', function(e) {
-		var email = prompt('Send invite mail to:', '');
+		$('#inviteEmail').val('');
+		$('#inviteUserPopup').modal('show');
 
-		if (email !== null) {
+		return false;
+	});
+
+	$('#cancelInvite').on('click', function(e) {
+		$('#inviteUserPopup').modal('hide');
+		return false;
+	});
+
+	$('#saveInvite').on('click', function(e) {
+		$('#inviteUserPopup').modal('hide');
+		var email = $('#inviteEmail').val();
+
+		if (email !== '') {
 			socket.emit('widget-message', {
 				'padID': pad.getPadId(),
 				'widget_name': 'ep_widget_authors',
@@ -39,7 +53,6 @@ exports.loadWidgets = function (hook_name, args, cb) {
 				'value': {'email': email}
 			});
 		}
-
 		return false;
 	});
 

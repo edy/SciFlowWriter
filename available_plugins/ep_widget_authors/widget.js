@@ -10,6 +10,12 @@ exports.eejsBlock_widgetColumn = function (hook_name, args, cb) {
 	return cb();
 };
 
+// add modal to the bottom of the page
+exports.eejsBlock_body = function(hook_name, args, cb) {
+	args.content = args.content + eejs.require("ep_widget_authors/templates/modal.html");
+	return cb();
+};
+
 // load widget style sheet
 exports.eejsBlock_styles = function(hook_name, args, cb) {
 	args.content = args.content + '<link rel="stylesheet" type="text/css" href="/static/plugins/ep_widget_authors/static/css/widget.css">';
@@ -53,7 +59,7 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 
 		var host = args.socket.handshake.headers.host;
 		var authorID = args.socket.handshake.session.auth.userId;
-		var padID = args.query.padID;
+		var padID = args.socket.handshake.padID;
 		var email = args.query.value.email;
 
 		// need email

@@ -16,3 +16,7 @@
 .widget.authors li {
 	margin-bottom: 5px;
 }
+
+#inviteUserPopup {
+	display: none;
+}

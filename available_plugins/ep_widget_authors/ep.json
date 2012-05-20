@@ -6,6 +6,7 @@
       "hooks": {
         "eejsBlock_widgetColumn": "ep_widget_authors/widget",
         "eejsBlock_styles": "ep_widget_authors/widget",
+        "eejsBlock_body": "ep_widget_authors/widget",
         "onWidgetMessage": "ep_widget_authors/widget"
       },
       "client_hooks": {
