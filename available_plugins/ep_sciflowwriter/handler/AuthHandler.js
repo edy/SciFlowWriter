@@ -371,26 +371,12 @@ everyauth.hasPadAccessMiddleware = function (req, res, next) {
 	var userID = req.user.id;
 	var message = 'access denied';
 
-	// does the pad exist?
-	padManager.doesPadExists(padID, function(err, padExists) {
-		if (! padExists) {
-			console.log('pad not found: ', padID);
-			res.send(message, 404);
-			//res.end();
-			return;
-		}
-
-		padManager.getPad(padID, function(err, pad) {
-			var padAccess = pad.getData('access');
-			if (padAccess && padAccess.user.indexOf(userID) !== -1) {
-				console.log(userID+', you have access to', padID);
-			} else {
-				console.log(userID+', you don\'t have access to', padID);
-				res.send(message, 403);
-				return;
-			}
-
+	everyauth.hasPadAccess(padID, userID, function(err, access) {
+		if (access) {
 			next();
-		});
-	});	
+			return;
+		} else {
+			res.send(message, 403);
+		}
+	});
 };
