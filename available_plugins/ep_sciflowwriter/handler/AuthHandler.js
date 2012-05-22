@@ -364,3 +364,33 @@ everyauth.hasPadAccess = function (padID, userID, callback) {
 		});
 	});	
 };
+
+// express middleware to check if a user has access to pad
+everyauth.hasPadAccessMiddleware = function (req, res, next) {
+	var padID = req.params.pad;
+	var userID = req.user.id;
+	var message = 'access denied';
+
+	// does the pad exist?
+	padManager.doesPadExists(padID, function(err, padExists) {
+		if (! padExists) {
+			console.log('pad not found: ', padID);
+			res.send(message, 404);
+			//res.end();
+			return;
+		}
+
+		padManager.getPad(padID, function(err, pad) {
+			var padAccess = pad.getData('access');
+			if (padAccess && padAccess.user.indexOf(userID) !== -1) {
+				console.log(userID+', you have access to', padID);
+			} else {
+				console.log(userID+', you don\'t have access to', padID);
+				res.send(message, 403);
+				return;
+			}
+
+			next();
+		});
+	});	
+};

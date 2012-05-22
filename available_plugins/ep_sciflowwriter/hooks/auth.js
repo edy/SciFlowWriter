@@ -17,6 +17,9 @@ exports.expressConfigure = function (hook_name, args, cb) {
 	// check if user is logged in
 	args.app.use(authHandler.loginRedirect);
 
+	// check if user has access to pad
+	args.app.get('/p/:pad', authHandler.hasPadAccessMiddleware);
+
 	// serve the login page
 	args.app.get('/login', function(req, res) {
 		if (authHandler.isLoggedIn(req)) {
