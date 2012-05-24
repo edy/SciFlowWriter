@@ -1,0 +1,22 @@
+{
+  "parts": [
+    {
+      "name": "references",
+      "pre": ["ep_sciflowwriter/widgetcontainer"],
+      "hooks": {
+        "eejsBlock_body": "ep_widget_images/widget",
+        "eejsBlock_widgetColumn": "ep_widget_images/widget",
+        "eejsBlock_styles": "ep_widget_images/widget",
+        "onWidgetMessage": "ep_widget_images/widget",
+        "expressCreateServer": "ep_widget_images/widget"
+      },
+      "client_hooks": {
+        "loadWidgets": "ep_widget_images/static/js/widget",
+        "aceAttribsToClasses": "ep_widget_images/static/js/widget",
+        "aceCreateDomLine": "ep_widget_images/static/js/widget",
+        "aceInitInnerdocbodyHead": "ep_widget_images/static/js/widget",
+        "collectContentPre": "ep_widget_images/static/js/widget"
+      }
+    }
+  ]
+}

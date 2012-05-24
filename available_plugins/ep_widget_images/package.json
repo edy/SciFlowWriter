@@ -1,0 +1,8 @@
+{
+  "name"           : "ep_widget_images",
+  "description"    : "Images Widget for SciFlowWriter",
+  "homepage"       : "https://github.com/edy-b/SciFlowWriter",
+  "keywords"       : ["etherpad", "realtime", "sciflowwriter", "collaborative", "latex", "editor", "widget", "images"],
+  "author"         : "Eduard Baun <eduard@baun.de>",
+  "version"        : "1.0.0"
+}
