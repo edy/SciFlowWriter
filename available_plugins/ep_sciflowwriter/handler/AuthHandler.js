@@ -25,6 +25,9 @@ everyauth.everymodule.findUserById( function (userID, callback) {
 everyauth.twitter
 	.consumerKey(settings.auth.twitter.consumerKey)
 	.consumerSecret(settings.auth.twitter.consumerSecret)
+	.moduleErrback(function (err) {
+		console.error('everyauth twitter error: ', err);
+	})
 	.handleAuthCallbackError( function (req, res) {
 		console.log('handleAuthCallbackError');
 		res.send('access denied');
@@ -107,6 +110,9 @@ everyauth.twitter
 
 // facebook OAuth
 everyauth.facebook
+	.moduleErrback(function (err) {
+		console.error('everyauth facebook error: ', err);
+	})
 	.appId(settings.auth.facebook.appId)
 	.appSecret(settings.auth.facebook.appSecret)
 	.scope('email')
@@ -193,6 +199,9 @@ everyauth.facebook
 
 // mendeley OAuth
 everyauth.mendeley
+	.moduleErrback(function (err) {
+		console.error('everyauth mendeley error: ', err);
+	})
 	.consumerKey(settings.auth.mendeley.consumerKey)
 	.consumerSecret(settings.auth.mendeley.consumerSecret)
 	.handleAuthCallbackError( function (req, res) {
