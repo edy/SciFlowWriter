@@ -50,7 +50,7 @@ exports.socketio = function (hook_name, args, cb) {
 		}
 
 		userID = handshake.session.auth.userId;
-		padID = new RegExp(/.*\/p\/([^\/]+)/).exec(handshake.headers.referer)[1];
+		padID = new RegExp(/.*\/p\/([^\?\/]+)/).exec(handshake.headers.referer)[1];
 		
 		// check if user has access to pad
 		// if not, bye bye
