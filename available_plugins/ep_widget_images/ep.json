@@ -1,7 +1,7 @@
 {
   "parts": [
     {
-      "name": "references",
+      "name": "images",
       "pre": ["ep_sciflowwriter/widgetcontainer"],
       "hooks": {
         "eejsBlock_body": "ep_widget_images/widget",
