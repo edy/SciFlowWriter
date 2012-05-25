@@ -64,6 +64,7 @@ exports.getPadLatex = getPadLatex;
 
 function getLatexFromAtext(pad, atext)
 {
+  var imageDatastore = pad.getData('images');
   var apool = pad.apool();
   var textLines = atext.text.slice(0, -1).split('\n');
   var attribLines = Changeset.splitAttributionLines(atext.attribs, atext.text);
@@ -105,7 +106,7 @@ function getLatexFromAtext(pad, atext)
 
   // add sciflow-attributes
   var sciflowMap = {};
-  var sciflowProps = ['sciflow-cite'];
+  var sciflowProps = ['sciflow-cite', 'sciflow-graphic'];
   apool.eachAttrib(function(key, value) {
     if (sciflowProps.indexOf(key) !== -1) {
       var propTrueNum = apool.putAttrib([key, value], true);
@@ -201,6 +202,7 @@ function getLatexFromAtext(pad, atext)
       while (iter.hasNext())
       {
         var isSciflowCite = false;
+        var isSciflowGraphic = false;
         var o = iter.next();
         var propChanged = false;
         Changeset.eachAttribNumber(o.attribs, function (a)
@@ -220,7 +222,11 @@ function getLatexFromAtext(pad, atext)
           }
 
           if (a in sciflowMap) {
-            isSciflowCite = a;
+            if (sciflowProps[sciflowMap[a]] === 'sciflow-graphic') {
+              isSciflowGraphic = a;
+            } else if (sciflowProps[sciflowMap[a]] === 'sciflow-cite'){
+              isSciflowCite = a;
+            }
           }
         });
         for (var i = 0; i < propVals.length; i++)
@@ -304,8 +310,19 @@ function getLatexFromAtext(pad, atext)
 
         // is a cite
         if (isSciflowCite) {
-          var cite = apool.getAttrib(isSciflowCite);
-          s = '\\cite{' + cite[1] + '}';
+          var id = apool.getAttrib(isSciflowCite);
+          s = '\\cite{' + id[1] + '}';
+        }
+
+        // is a graphic
+        if (isSciflowGraphic) {
+          var id = apool.getAttrib(isSciflowGraphic);
+          var image = imageDatastore[id[1]];
+          if (image) {
+            s = '\\begin{figure}\n \\centering\n'+
+            '\\includegraphics[width=\\columnwidth, keepaspectratio=true]{' +image.filename + '}\n' +
+            '\\caption{' + image.caption + '}\n\\label{' + image.id + '}\n\\end{figure}';  
+          }
         }
 
         // delete * if this line is a heading

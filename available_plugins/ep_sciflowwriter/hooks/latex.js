@@ -205,6 +205,37 @@ function generatePdfLatex(padID, revision, cb) {
 			});
 		},
 
+		// symlink images from datastore
+		function(templateVariables, callback) {
+			console.log('symlink images');
+			padManager.getPad(padID, function(err, pad) {
+				pad.getData('images', function(images) {
+					if (images) {
+						async.forEach(Object.keys(images), function(image, callback) {
+							image = images[image];
+							
+							var from = fs.realpathSync(exportPath + '../../../images/' + image.filename);
+							var to = exportPath + '/' + image.filename;
+							path.exists(from, function(exists) {
+								if (exists) {
+									fs.symlink(from, to, function(err) {
+										callback(null);
+									});
+								} else {
+									callback(null);
+								}
+							});
+							
+						}, function (err) {
+							callback(err, templateVariables);
+						});
+					} else {
+						callback(null, templateVariables);
+					}
+				});
+			});
+		},
+
 		// generate pdf
 		function(templateVariables, callback) {
 			console.log('generate pdf file');
