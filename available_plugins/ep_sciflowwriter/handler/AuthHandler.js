@@ -25,8 +25,9 @@ everyauth.everymodule.findUserById( function (userID, callback) {
 everyauth.twitter
 	.consumerKey(settings.auth.twitter.consumerKey)
 	.consumerSecret(settings.auth.twitter.consumerSecret)
-	.moduleErrback(function (err) {
+	.moduleErrback(function (err, reqres) {
 		console.error('everyauth twitter error: ', err);
+		reqres.res.send('access denied');
 	})
 	.handleAuthCallbackError( function (req, res) {
 		console.log('handleAuthCallbackError');
@@ -34,6 +35,11 @@ everyauth.twitter
 	})
 	.findOrCreateUser( function (sess, accessToken, accessSecret, twitUser, reqres) {
 		console.log('findOrCreateUser');
+		
+		if (!twitUser) {
+			reqres.res.send('access denied');
+			return;
+		}
 		
 		// load author
 		var promise = this.Promise();
@@ -110,8 +116,9 @@ everyauth.twitter
 
 // facebook OAuth
 everyauth.facebook
-	.moduleErrback(function (err) {
+	.moduleErrback(function (err, reqres) {
 		console.error('everyauth facebook error: ', err);
+		reqres.res.send('access denied');
 	})
 	.appId(settings.auth.facebook.appId)
 	.appSecret(settings.auth.facebook.appSecret)
@@ -123,6 +130,11 @@ everyauth.facebook
 	})
 	.findOrCreateUser( function (session, accessToken, accessTokExtra, fbUserMetadata, reqres) {
 		console.log('findOrCreateUser');
+
+		if (!fbUserMetadata) {
+			reqres.res.send('access denied');
+			return;
+		}
 		
 		// load author
 		var promise = this.Promise();
@@ -199,8 +211,9 @@ everyauth.facebook
 
 // mendeley OAuth
 everyauth.mendeley
-	.moduleErrback(function (err) {
+	.moduleErrback(function (err, reqres) {
 		console.error('everyauth mendeley error: ', err);
+		reqres.res.send('access denied');
 	})
 	.consumerKey(settings.auth.mendeley.consumerKey)
 	.consumerSecret(settings.auth.mendeley.consumerSecret)
@@ -210,6 +223,11 @@ everyauth.mendeley
 	})
 	.findOrCreateUser( function (sess, accessToken, accessSecret, mendeleyUser, reqres) {
 		console.log('findOrCreateUser');
+
+		if (!mendeleyUser) {
+			reqres.res.send('access denied');
+			return;
+		}
 
 		// load author
 		var promise = this.Promise();
