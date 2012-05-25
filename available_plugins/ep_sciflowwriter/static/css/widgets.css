@@ -65,7 +65,7 @@ header a:hover {
 
 /* hide chat*/
 #chaticon {
-  display: none;
+  /*display: none;*/
 }
 
 #editorcontainer {

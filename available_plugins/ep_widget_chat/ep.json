@@ -1,0 +1,16 @@
+{
+  "parts": [
+    {
+      "name": "chat",
+      "pre": ["ep_sciflowwriter/widgetcontainer"],
+      "hooks": {
+        "eejsBlock_body": "ep_widget_chat/widget",
+        "eejsBlock_widgetColumn": "ep_widget_chat/widget",
+        "eejsBlock_styles": "ep_widget_chat/widget"
+      },
+      "client_hooks": {
+        "loadWidgets": "ep_widget_chat/static/js/widget"
+      }
+    }
+  ]
+}
