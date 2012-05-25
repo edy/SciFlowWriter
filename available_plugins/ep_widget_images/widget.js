@@ -10,12 +10,15 @@ var mkdirp = require('ep_sciflowwriter/node_modules/mkdirp');
 var spawn = require("child_process").spawn;
 var fs = require('fs');
 var path = require('path');
+var formidable = require('ep_etherpad-lite/node_modules/formidable');
+var util = require('util');
 
 // add modal to the bottom of the page
 exports.eejsBlock_body = function(hook_name, args, cb) {
 	args.content = args.content +
 		eejs.require("ep_widget_images/templates/modal.html") +
-		eejs.require("ep_widget_images/templates/addimagemodal.html");
+		eejs.require("ep_widget_images/templates/addimagemodal.html") +
+		eejs.require("ep_widget_images/templates/uploadimagemodal.html");
 	return cb();
 };
 
@@ -48,6 +51,57 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 		console.error('bild: ', imagePath);
 		res.sendfile(imagePath); 
 	});
+
+	// handle image upload
+	args.app.post('/p/:pad/datastore/imageupload', function(req, res, next) {
+		var imagePath = 'var/pads/' + req.params.pad + '/images/' ;
+		var image = {
+			'id': randomString(16),
+			'caption': '',
+			'uploaded': true
+		};
+		async.series([
+			function (callback) {
+				console.error('start upload');
+				var form = new formidable.IncomingForm();
+				form
+					.on('error', function(err) {
+						callback(err);
+					})
+					.on('field', function(field, value) {
+						console.error('field', field, value);
+						if (field === 'caption') {
+							image.caption = value;
+						}
+					})
+					.on('file', function(name, file) {
+						console.error('on file', file);
+						console.error('filename', file.filename);
+						image.filename = image.id;
+						fs.rename(file.path, imagePath+image.filename);
+					})
+					.on('end', function() {
+						console.error('-> post done');
+						callback(null);
+					});
+				form.parse(req);
+			},
+			function(callback) {
+				console.error('save image')
+				saveImage(req.params.pad, image, function(err, result) {
+					callback(err, result);
+				});
+			}
+		], function(err, result) {
+			console.error('fertig. image:', JSON.stringify(image));
+			if (err) {
+				res.send("<script type='text/javascript' src='/static/js/jquery.js'></script><script> if ( (!$.browser.msie) && (!($.browser.mozilla && $.browser.version.indexOf(\"1.8.\") == 0)) ){document.domain = document.domain;} window.top._sfw.imageupload.error('"+err+"');</script>", 200);
+			} else {
+				res.send("<script type='text/javascript' src='/static/js/jquery.js'></script><script> if ( (!$.browser.msie) && (!($.browser.mozilla && $.browser.version.indexOf(\"1.8.\") == 0)) ){document.domain = document.domain;} window.top._sfw.imageupload.ready("+JSON.stringify(image)+");</script>", 200);
+			}
+			
+		});
+	});
 };
 
 exports.onWidgetMessage = function (hook_name, args, cb) {
@@ -68,8 +122,8 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 					images = {};
 				}
 
-				// if it's a new image, download it
-				if ( ! images[image.id]) {
+				// if it's a new image and was not uploaded, download it
+				if ( ! images[image.id] && !image.uploaded) {
 					images[image.id] = image;
 					
 					saveImage(args.query.padID, image, function(err, result) {
@@ -88,7 +142,24 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 							sendResponse(null, images);
 						}
 					});
+				// if it was uploaded, save it
+				} else if (image.uploaded){
+					delete image['uploaded'];
+					console.error('saving uploaded image');
+					images[image.id] = image;
+					pad.setData('images', images);
 
+					var result = {
+						'padID': args.query.padID,
+						'widget_name': 'ep_widget_images',
+						'action': 'setImage',
+						'error': err,
+						'result': result
+					};
+
+					args.socket.emit('widget-message', result);
+					sendResponse(null, images);
+				// surely it was edited
 				} else {
 					images[image.id].caption = image.caption;
 					pad.setData('images', images);
@@ -167,7 +238,14 @@ function saveImage(padID, image, callback) {
 		// download the file
 		function (callback) {
 			console.log('download');
-			http.get({url: image.url}, imagePath+image.id+'.jpg', function (err, result) {
+			if (image.uploaded) {
+				console.log('image was uploaded');
+				callback(null);
+				return;
+			}
+
+			http.get({url: image.url}, imagePath+image.id, function (err, result) {
+				image.filename = image.id;
 				if (err) {
 					callback('Error downloading file');
 				} else {
@@ -177,30 +255,30 @@ function saveImage(padID, image, callback) {
 		},
 		// check file type
 		// must be jpg, png or gif
-		// if file type is gif, then convert to png
 		function (callback) {
 			console.log('identify');
 			var filetypes = ['png', 'jpg', 'gif', 'jpeg'];
 
 			// http://www.imagemagick.org/script/escape.php
-			var identify = spawn('identify', ['-format', '%m', image.id+'.jpg'], {cwd: imagePath});
+			var identify = spawn('identify', ['-format', '%m', image.filename], {cwd: imagePath});
 			identify.stdout.on('data', function(data){
 				var type = data.toString().replace(/[\r\n]/, '').toLowerCase();
 
 				// check if the donloaded file has the allowed file type
 				if (filetypes.indexOf(type) !== -1) {
 					image.type = type;
+					var oldFilename = image.filename;
 					image.filename = image.id+'.'+type;
-
+					//console('identify image:', image);
 					// rename the file to its real extension
-					fs.rename(imagePath+image.id+'.jpg', imagePath+image.filename, function (err) {
+					fs.rename(imagePath+oldFilename, imagePath+image.filename, function (err) {
 						callback(null);
 					});
 				} else {
 					// remove downloaded file
 					fs.unlink(imagePath+image.id+'.jpg');
 
-					callback('File format is not an image: '+type);
+					callback('Not supported image format: '+type);
 				}
 				
 			});

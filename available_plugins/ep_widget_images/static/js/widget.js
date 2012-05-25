@@ -5,6 +5,21 @@ var ucfirst = function(text) {
 }
 
 window._sfw.images = {};
+window._sfw.imageupload = {
+	error: function(error) {
+		alert('Error:', error);
+	},
+	ready: function(image) {
+		console.log('image uploaded successful:', image);
+  		// save image to the datastore
+  		socket.emit('widget-message', {
+			'padID': pad.getPadId(),
+			'widget_name': 'ep_widget_images',
+			'action': 'setImage',
+			'value': image
+		});
+	}
+};
 
 exports.loadWidgets = function (hook_name, args, cb) {
 	socket = args.socket;
@@ -12,6 +27,7 @@ exports.loadWidgets = function (hook_name, args, cb) {
 	$('.widget.images').show();
 
 	$('#newImagePopup').modal({show: false});
+	$('#uploadImagePopup').modal({show: false});
 
 	// get references
 	socket.emit('widget-message', {
@@ -50,6 +66,7 @@ exports.loadWidgets = function (hook_name, args, cb) {
 				alert(message.error);
 			} else {
 				$('#newImagePopup').modal('hide');
+				$('#uploadImagePopup').modal('hide');
 			}
 		}
 	});
@@ -89,6 +106,33 @@ exports.loadWidgets = function (hook_name, args, cb) {
 			'action': 'setImage',
 			'value': values
 		});
+		return false;
+	});
+
+		// load new image popup
+	$('#imagesUpload').on('click', function() {
+		$('#uploadImageFileInput').val('');
+		$('#uploadImageCaptionInput').val('');
+
+		$('#uploadImagePopup').modal('show');
+		return false;
+	});
+
+	$('#saveUploadImage').on('click', function () {
+		//get /p/padname/datastore/imageupload
+		var pad_root_path = '/p/' + pad.getPadId() + '/datastore/imageupload';
+		//get http://example.com/p/padname/datastore/imageupload
+		var pad_root_url = document.location.href.replace(document.location.pathname, pad_root_path);
+
+		$("#imageUploadForm").attr('action', pad_root_url); 
+
+		// iframe vorbereiten
+		$("#uploadImagePopup .uploadframe").remove();
+		var iframe = $('<iframe style="display: none;" name="uploadImageIframe" class="uploadframe"></iframe>');
+		$('#uploadImagePopup').append(iframe);
+
+
+		$('#imageUploadForm').submit();
 		return false;
 	});
 

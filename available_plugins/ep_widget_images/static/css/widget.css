@@ -57,6 +57,10 @@
 	opacity: 0.7;
 }
 
-#imagesPopup, #newImagePopup {
+#imagesPopup, #newImagePopup, #uploadImagePopup {
 	display: none;
+}
+
+#imageUrl {
+    max-width: 500px;
 }
