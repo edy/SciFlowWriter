@@ -19,7 +19,9 @@ exports.eejsBlock_styles = function(hook_name, args, cb) {
 };
 
 exports.eejsBlock_scripts = function(hook_name, args, cb) {
-	args.content = args.content + '<script src="/static/plugins/ep_sciflowwriter/static/js/bootstrap-modal.js"></script>';
+	args.content = args.content +
+		'<script src="/static/plugins/ep_sciflowwriter/static/js/bootstrap-modal.js"></script>' +
+		'<script src="/static/plugins/ep_sciflowwriter/static/js/jquery-ui.min.js"></script>';
 	return cb();
 };
 
