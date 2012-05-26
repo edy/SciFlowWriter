@@ -3,6 +3,8 @@ var padManager = require('../db/PadManager');
 var authorManager = require('../db/AuthorManager');
 var authHandler = require('../handler/AuthHandler');
 var randomString = require('ep_etherpad-lite/static/js/pad_utils').randomString;
+var emailjs = require('ep_sciflowwriter/node_modules/emailjs');
+var settings = require('ep_etherpad-lite/node/utils/Settings');
 
 exports.handler = function (req, res, next) {
 	if(authHandler.isLoggedIn(req)) {
@@ -47,8 +49,23 @@ exports.sendInvite = function (padID, authorID, email, host, callback) {
 
 		db.set("padinvite:" + inviteID, inviteObject);
 
-		require('child_process').exec('echo "'+url+'" | mail -s "SciFlowWriter invitation" '+email, function (error, stdout, stderr) {});
-		
+		var emailServer  = emailjs.server.connect({
+			user: settings.email.user, 
+			password: settings.email.password, 
+			host: settings.email.host, 
+			ssl: settings.email.ssl
+		});
+
+		emailServer.send({
+			text: url, 
+			from: settings.email.from, 
+			to: email,
+			subject: "SciFlowWriter invitation"
+		}, function(err, message) {
+			if (err) console.error(err);
+			//else console.log(message);
+		});
+
 		callback(null, url);
 	});
 };

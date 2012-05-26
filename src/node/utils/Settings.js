@@ -90,7 +90,33 @@ exports.users = {};
 /**
  * OAuth settings
  */
-exports.auth = null;
+exports.auth = {
+  "debug": false,
+  "timeout": 30000,
+  "twitter": {
+    "consumerKey": null,
+    "consumerSecret": null
+  },
+  "facebook": {
+    "appId": null,
+    "appSecret": null
+  },
+  "mendeley": {
+    "consumerKey": null,
+    "consumerSecret": null
+  }
+};
+
+/**
+ * Email settings
+ */
+exports.email = {
+  "user": null,
+  "password": null,
+  "host": null,
+  "ssl": false,
+  "from": "SciFlowWriter <sciflowwriter@local.host>"
+}
 
 //checks if abiword is avaiable
 exports.abiwordAvailable = function()

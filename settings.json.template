@@ -76,20 +76,28 @@
   "maxAge": 21600000,
 
   "auth" : {
-    "debug": true,
-    "timeout": -1,
+    "debug": false,
+    "timeout": 60000,
     "twitter": {
-      "consumerKey": "vV3HvdAyLiCAmv8G0KJcyw",
-      "consumerSecret": "36DYLyrI4uistzRLUd54ok69OXIljvYxjBfGNjQ06Q"
+      "consumerKey": "",
+      "consumerSecret": ""
     },
     "facebook": {
-      "appId": "168957136502818",
-      "appSecret": "cf9f2a6a31458e454e4c8b5ae6dda28d"
+      "appId": "",
+      "appSecret": ""
     },
     "mendeley": {
-      "consumerKey": "f3e24f2536316ba599c5e99687746d1a04f6e46bd",
-      "consumerSecret": "9be95abe764bf2c4963c9ffa36b490ff"
+      "consumerKey": "",
+      "consumerSecret": ""
     }
+  },
+
+  "email" : {
+    "user": "me",
+    "password": "secret",
+    "host": "localhost",
+    "ssl": false,
+    "from": "SciFlowWriter <sciflowwriter@local.host>"
   }
 
 }
