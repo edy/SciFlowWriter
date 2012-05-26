@@ -1,6 +1,7 @@
 var eejs = require('ep_etherpad-lite/node/eejs');
 var hooks = require('ep_etherpad-lite/static/js/pluginfw/hooks');
 var authHandler = require('ep_sciflowwriter/handler/AuthHandler');
+var padManager = require('ep_sciflowwriter/db/PadManager');
 
 // insert the widget container
 exports.eejsBlock_body = function(hook_name, args, cb) {
@@ -58,6 +59,7 @@ exports.socketio = function (hook_name, args, cb) {
 		// if not, bye bye
 		authHandler.hasPadAccess(padID, userID, function(err, hasAccess) {
 			handshake.padID = padID; // save the padID for later use
+			handshake.userID = userID;
 			callback(null, hasAccess);
 		});
 	}).on('connection', function (socket) {
@@ -74,6 +76,22 @@ exports.socketio = function (hook_name, args, cb) {
 					* value (was will man haben? was soll gespeichert werden?)
 			*/
 			hooks.callAll('onWidgetMessage', {'socket': socket, 'query': query});
+		});
+
+		// handle widget positions
+		socket.on('widget-positions', function(positions) {
+			// get positions
+			if (typeof positions === 'string' && positions === 'get') {
+				padManager.getPad(socket.handshake.padID, function(err, pad) {
+					socket.emit('widget-positions', pad.getData('widget-positions'));
+				});
+
+			// set positions
+			} else if (typeof positions === 'object') {
+				padManager.getPad(socket.handshake.padID, function(err, pad) {
+					pad.setData('widget-positions', positions);
+				});
+			}
 		});
 	});
 };

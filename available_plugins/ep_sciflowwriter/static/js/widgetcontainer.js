@@ -7,8 +7,47 @@ window._sfw = {};
 
 // Add widget container to pad after ace inits
 exports.postAceInit = function (hook_name, args, cb) {
+	var widgetPositions;
 	socket = io.connect().of("/widgets");
-	hooks.callAll('loadWidgets', {'socket': socket});
+
+	// first get widget positions
+	socket.emit('widget-positions', 'get');
+
+	// then sort widgets
+	socket.on('widget-positions', function(positions){
+		widgetPositions = positions;
+
+		if (widgetPositions) {
+			var widgets = $(".widget-column").children();
+			$(".widget-column").html('');
+
+			// check if there are widgets which don't have positions
+			// and if so, then add them to the position list
+			widgets.each(function(i, widget){
+				if (widgetPositions.indexOf(widget.id) === -1) {
+					console.log('widget without position found:', widget.id);
+					widgetPositions.push(widget.id);
+				}
+			});
+
+			// place widgets to specified positions
+			$.each(widgetPositions, function(i, id) {
+				$(".widget-column").append( widgets.filter('#'+id));
+			});
+		}
+
+		$( ".widget-column" ).sortable({
+			connectWith: '.widget-column',
+			axis: 'y',
+			// store widget positions after sorting
+			stop: function(event, ui) {
+				widgetPositions = $( ".widget-column" ).sortable('toArray');
+				socket.emit('widget-positions', widgetPositions);
+			}
+		});
+
+		hooks.callAll('loadWidgets', {'socket': socket});
+	});
 
 	// latex & pdflatex export
 	var pad_root_path = new RegExp(/.*\/p\/[^\/]+/).exec(document.location.pathname)
