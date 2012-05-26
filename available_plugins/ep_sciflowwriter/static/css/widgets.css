@@ -162,11 +162,10 @@ header a:hover {
   padding: 3px;
   border-top: 1px solid #cccccc;
 }
-.ui-sortable-placeholder {
-  border: 1px dotted black;
-  visibility: visible !important;
-  height: 50px !important;
-  width: 50px !important;
+.widget-placeholder {
+  margin: 5px 5px 0;
+  border: 2px dotted black;
   background-color: transparent;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.10);
 }
-/*.ui-sortable-placeholder { visibility: visible !important; }*/

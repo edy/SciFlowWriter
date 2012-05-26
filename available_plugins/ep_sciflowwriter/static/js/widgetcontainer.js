@@ -39,11 +39,20 @@ exports.postAceInit = function (hook_name, args, cb) {
 		$( ".widget-column" ).sortable({
 			connectWith: '.widget-column',
 			axis: 'y',
+			handle: '.widget-header',
+			cursor: 'move',
+			placeholder: 'widget-placeholder',
+
 			// store widget positions after sorting
 			stop: function(event, ui) {
 				widgetPositions = $( ".widget-column" ).sortable('toArray');
 				socket.emit('widget-positions', widgetPositions);
+			},
+			// calculate placeholder height
+			start: function(e, ui){
+				ui.placeholder.height(ui.item.height());
 			}
+
 		});
 
 		hooks.callAll('loadWidgets', {'socket': socket});
