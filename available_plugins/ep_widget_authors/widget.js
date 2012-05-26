@@ -36,17 +36,22 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 				'padID': args.query.padID,
 				'widget_name': 'ep_widget_authors',
 				'action': 'getPadAuthors',
-				'result': []
+				'result': [],
+				'positions': undefined
 			};
-			
-			async.forEach(padAccess.user, function(authorID, callback){
-				authorManager.getAuthor(authorID, function(err, author) {
-					result.result.push(author);	
 
-					callback();
+			padManager.getPad(args.socket.handshake.padID, function(err, pad) {
+				result.positions = pad.getData('author-positions');
+				
+				async.forEach(padAccess.user, function(authorID, callback){
+					authorManager.getAuthor(authorID, function(err, author) {
+						result.result.push(author);	
+
+						callback();
+					});
+				}, function(err){
+					args.socket.emit('widget-message', result);
 				});
-			}, function(err){
-				args.socket.emit('widget-message', result);
 			});
 		});
 	} else if (args.query.action === 'inviteUser') {
@@ -88,7 +93,11 @@ exports.onWidgetMessage = function (hook_name, args, cb) {
 			};
 			args.socket.emit('widget-message', result);
 		});
-	}
 
-	
+	// set author positions
+	} else if (args.query.action === 'setAuthorPositions') {
+		padManager.getPad(args.socket.handshake.padID, function(err, pad) {
+			pad.setData('author-positions', args.query.value);
+		});
+	}
 };

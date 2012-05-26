@@ -118,17 +118,38 @@ function generatePdfLatex(padID, revision, cb) {
 				'abstract': ''
 			};
 
-			padManager.getPadUsers(padID, function(padAccess) {
-				var users = [];
-				
-				async.forEach(padAccess.user, function(authorID, callback){
-					authorManager.getAuthor(authorID, function(err, author) {
-						templateVariables.users.push(author);	
+			padManager.getPad(padID, function(err, pad) {
+				var positions = pad.getData('author-positions');
+				padManager.getPadUsers(padID, function(padAccess) {
+					var users = padAccess.user;
 
-						callback();
+					// sort authors
+					if (positions) {
+						users = [];
+
+						// check if there are authors without positions
+						// and if so, then add them to the position list
+						padAccess.user.forEach(function(authorID){
+							if (positions.indexOf(authorID.replace('.', '')) === -1) {
+								positions.push(authorID.replace('.', ''));
+							}
+						});
+
+						positions.forEach(function(authorID) {
+							authorID = 'a.' + authorID.substring(1);
+							users.push(authorID);
+						});
+					}
+					
+					async.forEach(users, function(authorID, callback){
+						authorManager.getAuthor(authorID, function(err, author) {
+							templateVariables.users.push(author);	
+
+							callback();
+						});
+					}, function(err){
+						callback(err, templateVariables);
 					});
-				}, function(err){
-					callback(err, templateVariables);
 				});
 			});
 		},
