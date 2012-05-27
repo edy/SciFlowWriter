@@ -66,6 +66,7 @@ echo "Ensure that all dependencies are up to date..."
   [ -e ep_widget_references ] || ln -s ../available_plugins/ep_widget_references ep_widget_references
   [ -e ep_widget_images ] || ln -s ../available_plugins/ep_widget_images ep_widget_images
   [ -e ep_widget_chat ] || ln -s ../available_plugins/ep_widget_chat ep_widget_chat
+  [ -e ep_speechinput ] || ln -s ../available_plugins/ep_speechinput ep_speechinput
   cd ep_etherpad-lite
   npm install
   cd ../ep_sciflowwriter
