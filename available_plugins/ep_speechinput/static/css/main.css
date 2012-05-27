@@ -1,6 +1,7 @@
 #insertSpeechInput {
 	position: relative;
 	overflow: hidden;
+	display: none;
 }
 
 #insertSpeechInput a {

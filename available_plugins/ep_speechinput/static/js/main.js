@@ -4,6 +4,7 @@ $(document).ready(function (){
 	var eventName = "onwebkitspeechchange" in input ? "webkitspeechchange" : "speechchange";
 
 	if (speechSupport) {
+		$('#insertSpeechInput').show();
 		$('#insertSpeechInput input').on(eventName, function(e){
 			var speech = $(this).val();
 			$(this).val('');
