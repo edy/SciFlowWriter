@@ -2,7 +2,7 @@ var path = require('path');
 var eejs = require("ep_etherpad-lite/node/eejs");
 
 exports.eejsBlock_editbarMenuLeft = function (hook_name, args, cb) {
-  args.content = args.content + eejs.require("ep_speechinput/templates/editbarButtons.html");
+  args.content = args.content + eejs.require("ep_speechinput/templates/editbarbuttons.html");
   return cb();
 };
 
