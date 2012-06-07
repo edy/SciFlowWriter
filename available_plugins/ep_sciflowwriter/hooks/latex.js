@@ -9,11 +9,12 @@ var authorManager = require('../db/AuthorManager');
 var db = require('ep_etherpad-lite/node/db/DB').db;
 var ERR = require("ep_etherpad-lite/node_modules/async-stacktrace");
 var spawn = require("child_process").spawn;
+var exec = require("child_process").exec;
 
 exports.expressCreateServer = function (hook_name, args, cb) {
 	args.app.get('/p/:pad/:rev?/export/:type', function(req, res, next) {
 		// go to next route if export isn't latex or pdflatex
-		if (["latex", "pdflatex", "pdflatexrendered"].indexOf(req.params.type) == -1) {
+		if (["latex", "pdflatex", "pdflatexrendered", "pdflatexzip"].indexOf(req.params.type) == -1) {
 			next();
 			return;
 		}
@@ -61,6 +62,40 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 			} else {
 				generate(revision);
 			}
+		} else if (req.params.type === 'pdflatexzip') {
+			var sendZip = function(revision) {
+				var exportPath = 'var/pads/' + padID + '/pdflatex/rev' + revision;
+				var zipPath = exportPath+'/'+padID+'_rev'+revision+'.zip';
+
+				// check if latex.pdf was created
+				if( ! path.existsSync(exportPath+'/latex.pdf')) {
+					res.send('please generate pdflatex first', 500);
+					return;
+				}
+
+				// if there is a zip file, send it
+				if(path.existsSync(zipPath)) {
+					res.sendfile(zipPath);
+					return;
+				}
+
+				var zip = exec('zip ' + zipPath + ' ' + exportPath + '/*', function (error, stdout, stderr) {
+					if (error !== null) {
+						console.error('zip error: ' + error);
+					}
+					res.contentType('zip');
+					res.sendfile(zipPath);
+				});
+			}
+			// get latest revision number if none given
+			if (revision === null) {
+				getLatestRevisionNumber(padID, function(err, revision) {
+					sendZip(revision);
+				});
+			} else {
+				sendZip(revision);
+			}
+			
 		} else {
 			next();
 			return;
