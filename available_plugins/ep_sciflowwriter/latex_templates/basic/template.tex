@@ -1,0 +1,34 @@
+<%
+	// generat user list
+	var myusers = [];
+	for(var x in users) {
+		var myUser = users[x].name;
+		if (users[x].email) {
+			myUser + ', \\textless' + users[x].email + '\\textgreater';
+		}
+
+		myusers.push(myUser);
+	}
+	myusers = myusers.join(', \\\\');
+%>
+
+\documentclass[final,paper=a4,paper=portrait,pagesize=auto,fontsize=11pt,version=last]{scrbook} 
+
+\usepackage[utf8]{inputenc}
+\usepackage{ulem}
+
+\title{<%= metadata.title %> \\ \small{<%= metadata.subtitle %>}}
+\author{<%= myusers %>}
+\date{\today}
+
+\begin{document}
+\maketitle
+<%= metadata.abstract %>
+
+<%= latexExport %>
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{pad}
+
+\end{document}

@@ -1,0 +1,41 @@
+<div class="modal" id="referencesPopup">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Reference</h3>
+  </div>
+  <div class="modal-body">
+  	<input type="hidden" name="title" value="" id="referenceIdInput">
+    <p>
+	    Type:<br>
+	    <select id="referenceTypeInput">
+	    	<option value="">--- Select Type ---</option>
+	    	<option value="article">Article</option>
+	    	<option value="book">Book</option>
+	    	<option value="booklet">Booklet</option>
+	    	<option value="commented">Commented</option>
+	    	<option value="conference">Conference</option>
+	    	<option value="glossdef">Glossdef</option>
+	    	<option value="inbook">Inbook</option>
+	    	<option value="incollection">Incollection</option>
+	    	<option value="inproceedings">Inproceedings</option>
+	    	<option value="jurthesis">Jurthesis</option>
+	    	<option value="manual">Manual</option>
+	    	<option value="mastersthesis">Master's Thesis</option>
+	    	<option value="Misc">Misc</option>
+	    	<option value="periodical">Periodical</option>
+	    	<option value="phdthesis">Phd Thesis</option>
+	    	<option value="proceedings">Proceedings</option>
+	    	<option value="techreport">Techreport</option>
+	    	<option value="unpublished">Unpublished</option>
+	    	<option value="url">URL</option>
+	    	<option value="electronic">Electronic</option>
+	    	<option value="webpage">Webpage</option>
+	    </select>
+	</p>
+	<div id="referenceInputFields"></div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" id="cancelReference">Cancel</a>
+    <a href="#" class="btn btn-primary" id="saveReference">Save changes</a>
+  </div>
+</div>

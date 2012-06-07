@@ -1,0 +1,7 @@
+.sciflow-graphic {
+	cursor: pointer;
+	border: 2px solid #333333;
+	margin: 2px;
+	display: inline-block;
+	line-height: 0;
+}

@@ -45,7 +45,7 @@ do
   fi
 
   #start the application
-  bin/run.sh >>$1 2>>$1
+  bin/run.sh $* >>$1 2>>$1
   
   #Send email
   if [ $ERROR_HANDLING = 1 ]; then

@@ -1,0 +1,8 @@
+{
+  "name"           : "ep_widget_references",
+  "description"    : "References Widget for SciFlowWriter",
+  "homepage"       : "https://github.com/edy-b/SciFlowWriter",
+  "keywords"       : ["etherpad", "realtime", "sciflowwriter", "collaborative", "latex", "editor", "widget", "references"],
+  "author"         : "Eduard Baun <eduard@baun.de>",
+  "version"        : "1.0.0"
+}

@@ -1,0 +1,66 @@
+.widget.images {
+	display: none;
+}
+
+.widget.images ul {
+	list-style: none;
+}
+.widget.images .image {
+	cursor: pointer;
+	float: left;
+	position: relative;
+	margin-right: 3px;
+	margin-bottom: 3px;
+	width: 85px;
+	height: 85px;
+}
+
+.widget.images .image img {
+	width: 85px;
+	height: 85px;	
+}
+
+.widget.images .image .delete {
+	position: absolute;
+	top: 0;
+	right: 2px;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 13px;
+	padding: 1px 3px 3px;
+	opacity: 0;
+	text-shadow: 0 1px 0 #ffffff;
+}
+
+.widget.images .image:hover .delete {
+	opacity: 0.3;
+}
+.widget.images .image:hover .delete:hover {
+	opacity: 0.7;
+}
+
+.widget.images .image .addGraphic {
+	position: absolute;
+	top: 2px;
+	left: 0;
+	font-size: 20px;
+	font-weight: bold;
+	line-height: 13px;
+	padding: 1px 3px 3px;
+	opacity: 0;
+	text-shadow: 0 1px 0 #ffffff;
+}
+.widget.images .image:hover .addGraphic {
+	opacity: 0.3;
+}
+.widget.images .image:hover .addGraphic:hover {
+	opacity: 0.7;
+}
+
+#imagesPopup, #newImagePopup, #uploadImagePopup {
+	display: none;
+}
+
+#imageUrl {
+    max-width: 500px;
+}

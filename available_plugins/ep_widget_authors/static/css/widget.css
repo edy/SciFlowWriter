@@ -1,0 +1,26 @@
+.widget.authors {
+	display: none;
+}
+
+.widget.authors img {
+	height: 27px;
+	vertical-align: top;
+	float:left;
+	margin-right: 5px;
+}
+
+.widget.authors ul {
+	list-style: none;
+}
+
+.widget.authors li {
+	margin-bottom: 5px;
+}
+
+#inviteUserPopup {
+	display: none;
+}
+
+.author-placeholder {
+  background-color: #E0E0E0;
+}

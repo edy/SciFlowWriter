@@ -72,20 +72,32 @@
   /* The log level we are using, can be: DEBUG, INFO, WARN, ERROR */
   "loglevel": "INFO",
 
+  /* cache 6 hours = 1000*60*60*6 */
+  "maxAge": 21600000,
+
   "auth" : {
-    "debug": true,
-    "timeout": -1,
+    "debug": false,
+    "timeout": 60000,
     "twitter": {
-      "consumerKey": "0",
-      "consumerSecret": "0"
+      "consumerKey": "",
+      "consumerSecret": ""
     },
     "facebook": {
-      "appId": "0",
-      "appSecret": "0"
+      "appId": "",
+      "appSecret": ""
     },
     "mendeley": {
-      "consumerKey": "0",
-      "consumerSecret": "0"
+      "consumerKey": "",
+      "consumerSecret": ""
     }
+  },
+
+  "email" : {
+    "user": "me",
+    "password": "secret",
+    "host": "localhost",
+    "ssl": false,
+    "from": "SciFlowWriter <sciflowwriter@local.host>"
   }
+
 }

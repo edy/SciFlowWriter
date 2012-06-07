@@ -1,0 +1,8 @@
+{
+  "name"           : "ep_widget_authors",
+  "description"    : "Author Widget for SciFlowWriter",
+  "homepage"       : "https://github.com/edy-b/SciFlowWriter",
+  "keywords"       : ["etherpad", "realtime", "sciflowwriter", "collaborative", "latex", "editor", "widget", "author"],
+  "author"         : "Eduard Baun <eduard@baun.de>",
+  "version"        : "1.0.0"
+}

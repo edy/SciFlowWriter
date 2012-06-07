@@ -1,0 +1,36 @@
+.widget.chat {
+	display: none;
+}
+
+/* reset original chat styles */
+#oldchatthrob, #oldchatbox, #oldchattext, #oldchatinputbox, #oldchatlabel, #oldchatinput, #oldchaticon, #oldchatcounter {
+	display:none;
+}
+
+#chattext {
+  background-color: white;
+  border: 1px solid white;
+  -ms-overflow-y: scroll;
+  overflow-y: scroll;
+  font-size: 12px;
+  position: relative;
+  right: auto;
+  left: auto;
+  top: auto;
+  bottom: 0;
+  z-index: auto;
+  height: 200px;
+}
+#chattext p {
+  padding: 3px;
+  -ms-overflow-x: hidden;
+  overflow-x: hidden;
+}
+#chatinput {
+  border: 1px solid #BBBBBB;
+  width: 90%;
+  float: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 5px;
+}

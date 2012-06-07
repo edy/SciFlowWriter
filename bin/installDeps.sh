@@ -59,7 +59,17 @@ echo "Ensure that all dependencies are up to date..."
   mkdir -p node_modules
   cd node_modules
   [ -e ep_etherpad-lite ] || ln -s ../src ep_etherpad-lite
+  [ -e ep_sciflowwriter ] || ln -s ../available_plugins/ep_sciflowwriter ep_sciflowwriter
+  [ -e ep_headings ] || ln -s ../available_plugins/ep_headings ep_headings
+  [ -e ep_widget_authors ] || ln -s ../available_plugins/ep_widget_authors ep_widget_authors
+  [ -e ep_widget_metadata ] || ln -s ../available_plugins/ep_widget_metadata ep_widget_metadata
+  [ -e ep_widget_references ] || ln -s ../available_plugins/ep_widget_references ep_widget_references
+  [ -e ep_widget_images ] || ln -s ../available_plugins/ep_widget_images ep_widget_images
+  [ -e ep_widget_chat ] || ln -s ../available_plugins/ep_widget_chat ep_widget_chat
+  [ -e ep_speechinput ] || ln -s ../available_plugins/ep_speechinput ep_speechinput
   cd ep_etherpad-lite
+  npm install
+  cd ../ep_sciflowwriter
   npm install
 ) || { 
   rm -rf node_modules

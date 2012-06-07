@@ -1,0 +1,48 @@
+{
+  "parts": [
+    {
+      "name": "auth",
+      "pre": ["ep_etherpad-lite/webaccess"],
+      "hooks": {
+        "expressConfigure": "ep_sciflowwriter/hooks/auth:expressConfigure"
+      }
+    },
+    {
+      "name": "profile",
+      "pre": ["ep_sciflowwriter/auth"],
+      "post": ["ep_etherpad-lite/specialpages"],
+      "hooks": {
+        "expressCreateServer": "ep_sciflowwriter/hooks/profile:expressCreateServer",
+        "socketio": "ep_sciflowwriter/hooks/profile:socketio"
+      }
+    },
+    {
+      "name": "invite",
+      "pre": ["ep_sciflowwriter/auth"],
+      "hooks": {
+        "expressCreateServer": "ep_sciflowwriter/hooks/invite:expressCreateServer"
+      }
+    },
+    {
+      "name": "latexexport",
+      "pre": ["ep_sciflowwriter/auth"],
+      "hooks": {
+        "expressCreateServer": "ep_sciflowwriter/hooks/latex:expressCreateServer"
+      }
+    },
+    {
+      "name": "widgetcontainer",
+      "pre": ["ep_sciflowwriter/auth"],
+      "hooks": {
+        "eejsBlock_styles": "ep_sciflowwriter/static/widgetcontainer",
+        "eejsBlock_scripts": "ep_sciflowwriter/static/widgetcontainer",
+        "eejsBlock_body": "ep_sciflowwriter/static/widgetcontainer",
+        "eejsBlock_exportColumn": "ep_sciflowwriter/static/widgetcontainer",
+        "socketio": "ep_sciflowwriter/static/widgetcontainer"
+      },
+      "client_hooks": {
+        "postAceInit": "ep_sciflowwriter/static/js/widgetcontainer:postAceInit"
+      }
+    }
+  ]
+}
