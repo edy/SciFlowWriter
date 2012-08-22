@@ -104,18 +104,18 @@ exports.expressConfigure = function (hook_name, args, cb) {
 
   var sessionStore, key, secret;
 
-if (!exports.sessionStore) {
-  if (settings.dbType === 'dirty') {
-    var DS = require('ep_sciflowwriter/db/DirtyStore');
-    sessionStore = new DS();
-    key = 'express_sid';
-    secret = 'some really random string!!';
-  } else {
-    sessionStore = new express.session.MemoryStore();
-    key = 'express_sid';
-    secret = randomString(32);
+  if (!exports.sessionStore) {
+    if (settings.dbType === 'dirty') {
+      var DS = require('ep_sciflowwriter/db/DirtyStore');
+      sessionStore = new DS();
+      key = 'express_sid';
+      secret = 'some really random string!!';
+    } else {
+      sessionStore = new express.session.MemoryStore();
+      key = 'express_sid';
+      secret = randomString(32);
+    }
   }
-}
 
   args.app.sessionStore = sessionStore;
   args.app.use(express.session({
