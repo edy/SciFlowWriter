@@ -278,7 +278,7 @@ function generatePdfLatex(padID, revision, cb) {
 							
 							var from = fs.realpathSync(exportPath + '../../../images/' + image.filename);
 							var to = exportPath + '/' + image.filename;
-							path.exists(from, function(exists) {
+							fs.exists(from, function(exists) {
 								if (exists) {
 									fs.symlink(from, to, function(err) {
 										callback(null);
