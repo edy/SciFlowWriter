@@ -68,13 +68,13 @@ exports.expressCreateServer = function (hook_name, args, cb) {
 				var zipPath = exportPath+'/'+padID+'_rev'+revision+'.zip';
 
 				// check if latex.pdf was created
-				if( ! path.existsSync(exportPath+'/latex.pdf')) {
+				if( ! fs.existsSync(exportPath+'/latex.pdf')) {
 					res.send('please generate pdflatex first', 500);
 					return;
 				}
 
 				// if there is a zip file, send it
-				if(path.existsSync(zipPath)) {
+				if(fs.existsSync(zipPath)) {
 					res.sendfile(zipPath);
 					return;
 				}
@@ -120,7 +120,7 @@ function generatePdfLatex(padID, revision, cb) {
 	console.log('exportPath:', exportPath);
 
 	// first check if pdf is already there
-	if(path.existsSync(exportPath+'/latex.pdf')) {
+	if(fs.existsSync(exportPath+'/latex.pdf')) {
 		cb(null, exportPath+'/latex.pdf');
 		return;
 	}
