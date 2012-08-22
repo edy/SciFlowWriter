@@ -66,7 +66,7 @@ var ProfileHandler = {
 					// add user to the pad access list
 					padManager.addUserToPad(user.id, padID, function(){
 						// add the pad to users list too
-						authorManager.addPad(user.id, 'my', padID, function(){});
+						authorManager.addPad2(user.id, 'my', padID, function(){});
 						// send pad id and uri
 						res.send({padID: padID, uri: '/p/'+padID});
 					});

@@ -16,7 +16,7 @@ exports.handler = function (req, res, next) {
 			}
 
 			padManager.addUserToPad(req.user.id, invite.pad, function(){
-				authorManager.addPad(req.user.id, invite.type, invite.pad, function(){
+				authorManager.addPad2(req.user.id, invite.type, invite.pad, function(){
 					// remove the invite id since the user has pad access now
 					db.remove("padinvite:" + req.params.id);
 					res.redirect('/p/'+invite.pad);

@@ -2,7 +2,7 @@ var authorManager = module.exports = require('ep_etherpad-lite/node/db/AuthorMan
 var db = require('ep_etherpad-lite/node/db/DB').db;
 
 // adds pad to users pad list
-authorManager.addPad = function(authorID, type, padID, callback) {
+authorManager.addPad2 = function(authorID, type, padID, callback) {
 	// get user
 	authorManager.getAuthor(authorID, function(err, author){
 		// check if pad is on the list
@@ -17,7 +17,7 @@ authorManager.addPad = function(authorID, type, padID, callback) {
 };
 
 // removes pad from users pad list
-authorManager.removePad = function(authorID, type, padID, callback) {
+authorManager.removePad2 = function(authorID, type, padID, callback) {
 	// get user
 	authorManager.getAuthor(authorID, function(err, author){
 		// TODO check if pad is on the list
