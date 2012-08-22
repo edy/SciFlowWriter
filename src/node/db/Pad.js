@@ -40,6 +40,8 @@ var Pad = function Pad(id) {
   this.passwordHash = null;
   this.id = id;
   this.savedRevisions = [];
+
+  this.datastore = {};
 };
 
 exports.Pad = Pad;

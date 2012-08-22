@@ -1,6 +1,6 @@
 var Pad = module.exports = require('ep_etherpad-lite/node/db/Pad').Pad;
 
-Pad.prototype.datastore = {};
+//Pad.prototype.datastore = {};
 
 // get data from datastore
 Pad.prototype.getData = function(name, callback) {
