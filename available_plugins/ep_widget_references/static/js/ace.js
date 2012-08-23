@@ -1,22 +1,16 @@
 $(function(){
 	$('.sciflow-cite').live('click', function(e) {
-		var id = $(this).attr('rel');
 		var $$ = parent.parent.$; // use jQuery from the parent context
 
-		var ucfirst = function(text) {
-			return text.charAt(0).toUpperCase() + text.substr(1);
-		}
+		var id = $(this).attr('rel');
+		var type = $$('#referenceTypeInput').val();
 
-		if (parent.parent._sfw.references[id]) {
-			$$.each(['type', 'title', 'authors', 'url', 'year', 'month', 'publisher', 'journal'], function(i, value) {
-	  			$$('#reference' + ucfirst(value) + 'Input').val(parent.parent._sfw.references[id][value]);
-	  		});
+		var id = $(this).attr('rel');
+		var type = parent.parent._sfw.references[id].type;
+		$$('#referenceIdInput').val(id);
+		$$('#referenceTypeInput').val(type);
+		$$('#referenceTypeInput').trigger('change');
 
-	  		$$('#referenceIdInput').val(id);
-
-			$$('#referencesPopup').modal('show');
-		} else {
-			alert('Reference not found');
-		}
+		$$('#referencesPopup').modal('show');
 	});
 });

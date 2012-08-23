@@ -1,5 +1,5 @@
 var socket = null;
-var referenceTypes = {
+window._sfw.referenceTypes = {
 	article: ['author', 'title', 'yournal', 'year', 'volume', 'number', 'pages', 'month', 'keywords'],
 	book: ['title', 'publisher', 'year', 'author', 'editor', 'volume', 'number', 'series', 'address', 'edition', 'month', 'keywords'],
 	booklet: ['title', 'author', 'howpublished', 'address', 'month', 'year', 'keywords'],
@@ -74,7 +74,7 @@ exports.loadWidgets = function (hook_name, args, cb) {
   			values.id = id;
   		}
 
-  		$.each(referenceTypes[type], function(t, v) {
+  		$.each(window._sfw.referenceTypes[type], function(t, v) {
   			values[v] = $('#reference' + ucfirst(v) + 'Input').val()
 		});
 
@@ -124,12 +124,13 @@ exports.loadWidgets = function (hook_name, args, cb) {
 	// on type change
 	$('#referenceTypeInput').on('change', function(){
 		var type = $(this).val();
-		if (type === 'none') return;
-
 		var id = $('#referenceIdInput').val();
 
 		$('#referenceInputFields').text('');
-		$.each(referenceTypes[type], function(t, v) {
+		
+		if (type === '') return;
+
+		$.each(window._sfw.referenceTypes[type], function(t, v) {
 			if (v === 'type' || v === 'id') return;
 
 			var value = '';
