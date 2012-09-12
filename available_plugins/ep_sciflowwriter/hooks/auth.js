@@ -6,12 +6,7 @@ var express = require('ep_etherpad-lite/node_modules/express');
 
 exports.expressConfigure = function (hook_name, args, cb) {
 
-	/*args.app.use(express.cookieParser());
-	args.app.use(express.session({
-		secret: 'sciflowwriter super secret string',
-		store: new DirtyStore()
-	}));*/
-
+	// everyauth middleware
 	args.app.use(authHandler.middleware());
 
 	// check if user is logged in
